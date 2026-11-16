@@ -69,7 +69,7 @@ export function Footer() {
           <div>
             <h3>Legal</h3>
             <ul>
-              <li><Link href="/imprint">Imprint (Impressum)</Link></li>
+              <li><Link href="/imprint">Imprint (legal notice)</Link></li>
               <li><Link href="/privacy">Privacy policy</Link></li>
               <li><Link href="/affiliate-disclosure">Affiliate disclosure</Link></li>
               <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
 import { JsonLd } from "@/components/JsonLd";
+import { LegalLayout } from "@/components/LegalLayout";
 import { absoluteUrl, breadcrumbLd, graph, organizationLd, prettyDate } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -10,9 +11,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
+const toc: [string, string][] = [
+  ["what-we-do", "What we do"],
+  ["methodology", "Our methodology"],
+  ["independence", "Independence"],
+  ["operator", "Who runs RefCo"],
+  ["contact", "Contact"],
+];
+
 export default function AboutPage() {
   return (
-    <div className="container">
+    <>
       <JsonLd
         data={graph(
           { "@type": "AboutPage", url: absoluteUrl("/about"), name: "About RefCo", about: { "@id": absoluteUrl("/#organization") } },
@@ -23,7 +32,7 @@ export default function AboutPage() {
           ]),
         )}
       />
-      <article className="legal">
+      <LegalLayout toc={toc}>
         <span className="eyebrow">About</span>
         <h1>About {site.name}</h1>
         <p className="lead">
@@ -31,13 +40,13 @@ export default function AboutPage() {
           before you deposit.
         </p>
 
-        <h2>What we do</h2>
+        <h2 id="what-we-do">What we do</h2>
         <p>
           We focus on the largest exchanges in CoinMarketCap&apos;s derivatives ranking and publish one page per exchange with the same structure: a quick
           answer, key facts, fees, an honest description, pros and cons, safety notes, availability and a FAQ. That makes exchanges easy to compare.
         </p>
 
-        <h2>Our methodology</h2>
+        <h2 id="methodology">Our methodology</h2>
         <ul>
           <li>
             <strong>Market data</strong> (open interest, 24h volume, number of markets) comes from CoinMarketCap&apos;s derivatives ranking and is dated on every
@@ -69,17 +78,23 @@ export default function AboutPage() {
           </li>
         </ul>
 
-        <h2>Independence</h2>
+        <h2 id="independence">Independence</h2>
         <p>
           We earn referral commissions from the exchanges we list – details in our <Link href="/affiliate-disclosure">affiliate disclosure</Link>. That
           never changes the facts we publish, and we always mention weaknesses and restrictions.
         </p>
 
-        <h2>Contact</h2>
+        <h2 id="operator">Who runs {site.name}</h2>
+        <p>
+          {site.name} is a private website, not a company. The operator is named in the <Link href="/imprint">imprint</Link>. {site.name} is not an
+          exchange and never receives or holds your money – accounts are opened directly with the exchange.
+        </p>
+
+        <h2 id="contact">Contact</h2>
         <p>
           Spotted outdated information? Email us at <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> – we correct errors quickly.
         </p>
-      </article>
-    </div>
+      </LegalLayout>
+    </>
   );
 }

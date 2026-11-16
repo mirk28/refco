@@ -482,3 +482,23 @@ table.score { min-width: 640px; }
 .hub-links a { font-weight: 650; text-decoration: none; }
 .hub-links a:hover { text-decoration: underline; }
 @media (max-width: 640px) { .lp-title-row .vs-logos .xlogo { width: 40px !important; height: 40px !important; } }
+
+/* ---------- Text pages (imprint, privacy, affiliate disclosure, about): text plus sidebar ---------- */
+.legal-layout { align-items: stretch; }
+.legal-layout .legal { max-width: none; }
+.side { display: flex; flex-direction: column; gap: 20px; padding: 32px 0 80px; }
+.side .toc { position: static; }
+.side .toc ol { margin-bottom: 0; }
+.side .side-sticky { position: sticky; top: 92px; }
+.side-codes, .side-links { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 4px; }
+.side-codes a { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 8px; margin: 0 -8px; border-radius: 10px; color: var(--ink); font-weight: 650; }
+.side-codes a:hover { background: var(--bg); color: var(--ink); }
+.side-codes code { font-family: var(--mono); font-size: 0.76rem; font-weight: 700; color: var(--accent-hover); background: var(--accent-soft); padding: 2px 6px; border-radius: 6px; }
+.side-links a { color: var(--brand); }
+.side-links a:hover { color: var(--brand-ink); text-decoration: underline; }
+@media (max-width: 960px) {
+  .legal-layout .legal { padding-bottom: 32px; }
+  .side { padding: 0 0 56px; }
+  .side-toc { display: none; }
+  .side .side-sticky { position: static; }
+}
