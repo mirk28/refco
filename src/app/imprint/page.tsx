@@ -15,7 +15,7 @@ export default function ImprintPage() {
     <div className="container">
       <article className="legal">
         <h1>Imprint (Impressum)</h1>
-        <p className="muted">Information pursuant to Art. 3 para. 1 lit. s of the Swiss Unfair Competition Act (UWG) and § 5 of the German Digital Services Act (DDG).</p>
+        <p className="muted">Legal notice: who operates {site.domain} and how to reach them.</p>
 
         <h2>Operator of this website</h2>
         <p>
@@ -28,28 +28,45 @@ export default function ImprintPage() {
           <V v={legal.country} />
         </p>
 
-        <h2>Represented by</h2>
-        <p>
-          <V v={legal.representative} />
-        </p>
+        {legal.representative ? (
+          <>
+            <h2>Represented by</h2>
+            <p>
+              <V v={legal.representative} />
+            </p>
+          </>
+        ) : null}
 
         <h2>Contact</h2>
         <p>
           Email: <a href={`mailto:${legal.email}`}>{legal.email}</a>
-          <br />
-          Phone: <V v={legal.phone} />
+          {legal.phone ? (
+            <>
+              <br />
+              Phone: <V v={legal.phone} />
+            </>
+          ) : null}
         </p>
 
-        <h2>Register entry and VAT</h2>
-        <p>
-          <V v={legal.registerEntry} />
-          <br />
-          <V v={legal.vatId} />
-        </p>
+        {legal.operatorType === "private" ? (
+          <>
+            <h2>Legal form</h2>
+            <p>This website is operated by a private individual. There is no entry in a commercial register.</p>
+          </>
+        ) : (
+          <>
+            <h2>Register entry and VAT</h2>
+            <p>
+              <V v={legal.registerEntry} />
+              <br />
+              <V v={legal.vatId} />
+            </p>
+          </>
+        )}
 
         <h2>Responsible for content</h2>
         <p>
-          <V v={legal.representative} />, address as above.
+          <V v={legal.representative || legal.operator} />, address as above.
         </p>
 
         <h2>Disclaimer</h2>

@@ -35,10 +35,6 @@ export default function PrivacyPage() {
           <br />
           Email: <a href={`mailto:${legal.email}`}>{legal.email}</a>
         </p>
-        <p>
-          If the controller is established outside the EU and the GDPR applies, the EU representative pursuant to Art. 27 GDPR is:{" "}
-          <span className="placeholder">[EU REPRESENTATIVE – only required in certain cases]</span>.
-        </p>
 
         <h2>2. Hosting and server log files</h2>
         <p>

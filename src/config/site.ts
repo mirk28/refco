@@ -25,19 +25,23 @@ export const site = {
 } as const;
 
 /**
- * Legal entity for the imprint (Impressum) and privacy policy.
- * >>> Replace all values in [BRACKETS] before going live. <<<
+ * Operator shown in the imprint (Impressum) and named as controller in the privacy policy.
+ *
+ * `operatorType: "private"` – a private individual: the imprint shows no representative, no register entry
+ * and no VAT number. Set it to "company" and fill `representative`, `registerEntry` and `vatId` if the
+ * website is run by a company. Empty optional fields (`phone`) are not shown.
  */
 export const legal = {
-  operator: "[COMPANY / FULL NAME]",
-  representative: "[NAME OF RESPONSIBLE PERSON]",
-  street: "[STREET AND NUMBER]",
-  zipCity: "[ZIP CITY]",
-  country: "[COUNTRY]",
+  operatorType: "private" as "private" | "company",
+  operator: "Vitali Vendeta",
+  representative: "",
+  street: "Plac Defilad 1",
+  zipCity: "00-901 Warszawa",
+  country: "Polska",
   email: "hello@referral-code.org",
-  phone: "[PHONE – optional]",
-  registerEntry: "[COMMERCIAL REGISTER / UID, e.g. CHE-123.456.789 – if registered]",
-  vatId: "[VAT NUMBER – if applicable]",
+  phone: "",
+  registerEntry: "",
+  vatId: "",
   hostingProvider: "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA",
 } as const;
 
