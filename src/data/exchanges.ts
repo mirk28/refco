@@ -21,7 +21,7 @@ import { gate } from "./exchanges/gate";
 import { kucoin } from "./exchanges/kucoin";
 import { mexc } from "./exchanges/mexc";
 
-export type { Exchange, Faq, FaqTopic, Fee, ReferralInfo, SignupInfo, Source, Step } from "./types";
+export type { Exchange, ExternalGuides, Faq, FaqTopic, Fee, GuideLink, ReferralInfo, SignupInfo, Source, Step } from "./types";
 
 export const exchanges: Exchange[] = [binance, okx, bybit, bitget, gate, kucoin, mexc];
 

@@ -11,6 +11,22 @@ export type Faq = { q: string; a: string; topic?: FaqTopic };
 /** An official page of the exchange that a fact on our page was checked against. */
 export type Source = { label: string; url: string };
 export type Step = { title: string; text: string };
+/** One language version of a guide published outside this site. */
+export type GuideLink = {
+  /** Language name as its readers write it, e.g. "Español". */
+  language: string;
+  /** BCP 47 language tag of the linked article, e.g. "pt-BR". */
+  hreflang: string;
+  url: string;
+};
+/** A short block of links to guides on another platform, e.g. Binance Square. */
+export type ExternalGuides = {
+  heading: string;
+  intro: string;
+  /** What every linked article is; shown before the language name in the link text. */
+  linkLabel: string;
+  links: GuideLink[];
+};
 
 /** How the referral code works on this exchange. */
 export type ReferralInfo = {
@@ -63,6 +79,8 @@ export type Exchange = {
   extraFees: { market: string; maker: string; taker: string }[];
   /** Official pages the facts were checked against. */
   sources: Source[];
+  /** Guides about this exchange on another platform; shown on the exchange page and listed in llms.txt. */
+  guides?: ExternalGuides;
   /**
    * Fee discount YOU pass on to users (kickback set in your affiliate dashboard),
    * e.g. "10% off trading fees for life". Leave empty if you don't share commission.

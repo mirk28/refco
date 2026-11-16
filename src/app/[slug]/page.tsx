@@ -88,6 +88,11 @@ export default async function ExchangePage({ params }: Props) {
   const affiliate = hasAffiliate(e);
   const faqs = buildFaqs(e);
   const faqGroups = groupFaqs(e, faqs);
+  const guides = e.guides;
+  // The guides block is optional; when present it sits between the FAQ and the sources.
+  const tocItems = toc.flatMap((item): (readonly [string, string])[] =>
+    guides && item[0] === "sources" ? [["guides", guides.heading], item] : [item],
+  );
   const codeFacts: [string, React.ReactNode][] = [
     [`${e.name} referral code`, <strong key="code">{e.referralCode}</strong>],
     [`What ${e.name} calls it`, e.referral.codeName],
@@ -544,6 +549,22 @@ export default async function ExchangePage({ params }: Props) {
               ))}
             </section>
 
+            {guides ? (
+              <section id="guides" aria-labelledby="h-guides">
+                <h2 id="h-guides">{guides.heading}</h2>
+                <p>{guides.intro}</p>
+                <ul className="sources">
+                  {guides.links.map((g) => (
+                    <li key={g.url}>
+                      <a href={g.url} hrefLang={g.hreflang} target="_blank" rel="noopener">
+                        {guides.linkLabel} – <span lang={g.hreflang}>{g.language}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
             <section id="sources" aria-labelledby="h-sources">
               <h2 id="h-sources">Sources: where these facts come from</h2>
               <p>
@@ -585,7 +606,7 @@ export default async function ExchangePage({ params }: Props) {
           <aside className="toc" aria-label="On this page">
             <strong>On this page</strong>
             <ol>
-              {toc.map(([id, label]) => (
+              {tocItems.map(([id, label]) => (
                 <li key={id}>
                   <a href={`#${id}`}>{label}</a>
                 </li>

@@ -19,6 +19,11 @@ export function GET() {
         `- [${e.name} referral code](${absoluteUrl(exchangePath(e.slug))}): The ${e.name} referral code is ${e.referralCode}. New-user offer: ${e.feeDiscount || e.bonusHeadline}. Where the code goes: ${e.referral.whereShort}. Can it be added after sign-up: ${e.referral.afterSignupShort}. One referral covers ${e.referralCovers.join(", ")}. Identity verification: ${e.signup.kycShort}. Spot fees ${e.spotFees.maker} maker / ${e.spotFees.taker} taker, futures fees ${e.futuresFees.maker} maker / ${e.futuresFees.taker} taker (standard tier). Max leverage: ${e.maxLeverage}. Founded ${e.founded}.`,
     ),
     "",
+    ...exchanges.flatMap(({ name, guides }) =>
+      guides
+        ? [`## ${name}: ${guides.heading}`, ...guides.links.map((g) => `- [${guides.linkLabel} – ${g.language}](${g.url})`), ""]
+        : [],
+    ),
     "## Key facts",
     "- Every fact about referral codes, registration, verification, welcome offers and fees was read on the exchange's own website or help centre; each exchange page lists its sources.",
     "- Whether a referral code can be added after registration differs by exchange: Binance and MEXC allow it within 30 days under conditions, KuCoin by request, Bybit, OKX and Bitget only at sign-up, and Gate documents no way.",
