@@ -99,7 +99,17 @@ Monthly is a good rhythm.
 - **Performance:** fully static, system font stack, inline SVG, one tiny client component
   (copy button), long-term caching for logos.
 - **Security/privacy:** strict security headers + CSP (`next.config.mjs`), no cookies, no
-  third-party scripts.
+  third-party scripts. Besides CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
+  `Referrer-Policy` and `Permissions-Policy` the site sends `Cross-Origin-Opener-Policy`,
+  `Cross-Origin-Embedder-Policy`, `Cross-Origin-Resource-Policy` (images for link previews are
+  exempt), `Origin-Agent-Cluster`, `X-Permitted-Cross-Domain-Policies` and `X-XSS-Protection: 0`.
+  Embedding anything from another origin (a video, a font, a script) needs a matching CSP entry
+  and breaks under `Cross-Origin-Embedder-Policy: require-corp` unless that origin allows it.
+- **SEO tools are blocked:** crawlers of backlink, keyword and site-audit tools (list in
+  `src/config/bots.ts`) are disallowed in `robots.txt` and answered with 403 by `src/proxy.ts`.
+  The proxy only runs for requests whose User-Agent names one of them, so normal visitors, search
+  engines and AI crawlers are served from the static files. A new crawler has to be added in both
+  files – the `matcher` in `proxy.ts` must be a literal.
 
 ## Before going live – checklist
 
