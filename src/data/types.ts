@@ -13,6 +13,8 @@ export type Source = { label: string; url: string };
 export type Step = { title: string; text: string };
 /** One language version of a guide published outside this site. */
 export type GuideLink = {
+  /** English name of the language, shown in front of `language`, e.g. "Hindi". Leave out where both are the same. */
+  name?: string;
   /** Language name as its readers write it, e.g. "Español". */
   language: string;
   /** BCP 47 language tag of the linked article, e.g. "pt-BR". */

@@ -588,11 +588,13 @@ export default async function ExchangePage({ params }: Props) {
               <section id="guides" aria-labelledby="h-guides">
                 <h2 id="h-guides">{guides.heading}</h2>
                 <p>{guides.intro}</p>
-                <ul className="sources">
+                <ul className="sources guides-list">
                   {guides.links.map((g) => (
                     <li key={g.url}>
                       <a href={g.url} hrefLang={g.hreflang} target="_blank" rel="noopener">
-                        {guides.linkLabel} – <span lang={g.hreflang}>{g.language}</span>
+                        {guides.linkLabel} – {g.name ? `${g.name} (` : null}
+                        <bdi lang={g.hreflang}>{g.language}</bdi>
+                        {g.name ? ")" : null}
                       </a>
                     </li>
                   ))}
