@@ -12,7 +12,7 @@ export const site = {
   locale: "en_US",
   language: "en",
   /** Date the facts on the site were last reviewed (ISO). Update whenever you re-check data. */
-  lastReviewed: "2026-10-11",
+  lastReviewed: "2026-11-16",
   /** Snapshot date of the CoinMarketCap market data shown on the pages. */
   marketDataDate: "2026-10-11",
   contactEmail: "hello@referral-code.org",

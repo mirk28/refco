@@ -24,12 +24,12 @@ export const metadata: Metadata = {
 
 const picks: { label: string; slug: string; why: string }[] = [
   { label: "Deepest liquidity", slug: "binance", why: "Largest open interest and futures volume worldwide." },
-  { label: "Options & unified margin", slug: "okx", why: "Liquid options book and one account for all products." },
+  { label: "Low fees & options", slug: "okx", why: "0.08% / 0.10% on spot, 0.03% on options and monthly proof of reserves." },
   { label: "Active futures on mobile", slug: "bybit", why: "Fast engine and one of the best trading apps." },
   { label: "Copy trading", slug: "bitget", why: "Mirror experienced futures traders automatically." },
-  { label: "Most altcoins", slug: "gate", why: "5,000+ assets and futures on niche tokens." },
-  { label: "Trading bots", slug: "kucoin", why: "Grid, DCA and futures bots in a few clicks." },
-  { label: "Lowest fees", slug: "mexc", why: "0% maker fees on the standard tier." },
+  { label: "Most altcoins", slug: "gate", why: "5,400+ assets and futures on niche tokens." },
+  { label: "Trading bots", slug: "kucoin", why: "Free trading bots for spot and futures." },
+  { label: "Lowest fees", slug: "mexc", why: "0% maker fees on spot and most futures contracts." },
 ];
 
 const faqs = [
@@ -39,7 +39,7 @@ const faqs = [
   },
   {
     q: "What are the benefits of using a referral code?",
-    a: "New users who sign up with a referral get access to the exchange's welcome offer – for example up to 100 USDT in fee rebate vouchers on Binance or welcome gifts of up to 10,000 USDT on MEXC – and, where the referrer shares commission, a lasting discount on trading fees. It costs nothing extra.",
+    a: "New users who sign up with a referral get access to the exchange's welcome offer – for example up to 250 USDT in referral rewards on Bybit or up to 10,000 USDT in new-user rewards on MEXC – and, where the referrer shares commission, part of their trading fees back, such as 10% for one year on Gate. It costs nothing extra.",
   },
   {
     q: "Does one referral code work for both spot and futures trading?",
@@ -51,19 +51,19 @@ const faqs = [
   },
   {
     q: "Can I add a referral code after creating my account?",
-    a: "Almost never. Binance, OKX, Bybit, Bitget, Gate, KuCoin and MEXC all attach referrals only during registration. Use the link before you create your account.",
+    a: "It depends on the exchange. Binance lets you bind a code within 30 days of registration if you have not deposited or traded, and MEXC lets you link a referrer yourself within 30 days of sign-up. KuCoin has a “Link Referrer” request in its Help Centre. Bybit, OKX and Bitget only accept the code during registration, and Gate documents no way to add one later. The safe way is to use the link before you create your account.",
   },
   {
     q: "Which crypto exchange has the lowest futures fees?",
-    a: `At our last review (${prettyDate(site.lastReviewed)}) MEXC had the lowest standard futures fees with 0.00% maker and about 0.01% taker. Among the largest venues, Binance and OKX charge 0.02% maker / 0.05% taker on the standard tier.`,
+    a: `At our last review (${prettyDate(site.lastReviewed)}) MEXC had the lowest standard futures fees with 0% maker and 0.02% taker on BTCUSDT. Binance, OKX and Gate charge 0.02% maker / 0.05% taker on the standard tier, Bybit 0.02% / 0.055%, and Bitget and KuCoin 0.02% / 0.06%.`,
   },
   {
     q: "Which exchange is best for crypto derivatives?",
-    a: "It depends on what you trade. Binance offers the deepest liquidity, OKX is strongest for options and portfolio margin, Bybit for fast perpetual trading, Bitget for copy trading, Gate for altcoin futures, KuCoin for bots and MEXC for the lowest fees.",
+    a: "It depends on what you trade. Binance offers the deepest liquidity, OKX combines low fees with options, Bybit is built for fast perpetual trading, Bitget for copy trading, Gate for altcoin futures, KuCoin for bots and MEXC for the lowest fees.",
   },
   {
     q: "Are these exchanges available in the US?",
-    a: "No. None of the seven exchanges listed here offer crypto derivatives to US residents on their global platforms. Availability also varies in the UK, Canada, Singapore and other regions – always check during sign-up.",
+    a: "Mostly not. Binance, Bybit, Bitget, Gate, KuCoin and MEXC list the United States as a restricted or prohibited country, and OKX restricts certain US jurisdictions. Availability also differs in the UK, Canada and the EU – every exchange page lists the restricted countries from the exchange's own terms.",
   },
   {
     q: "How often is this information updated?",
@@ -219,8 +219,8 @@ export default function HomePage() {
               <div className="feature-icon">
                 <LockIcon />
               </div>
-              <h3>Can&apos;t be added later</h3>
-              <p className="muted">Referrals only work at registration. Use the link before you create your account – afterwards the perks are gone.</p>
+              <h3>Best applied at sign-up</h3>
+              <p className="muted">Some exchanges let you add a code for 30 days, others never. Use the link before you create your account and you are safe everywhere.</p>
             </div>
           </div>
 

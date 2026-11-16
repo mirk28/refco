@@ -44,10 +44,18 @@ export default function AboutPage() {
             page.
           </li>
           <li>
+            <strong>Referral codes, registration and verification</strong> – where the code goes, whether it can be added later, the sign-up steps and
+            the KYC rules – are read on each exchange&apos;s own website and help centre. Every exchange page lists the official pages it was checked
+            against.
+          </li>
+          <li>
             <strong>Fees and leverage</strong> are taken from each exchange&apos;s official fee schedule for the standard (non-VIP) tier.
           </li>
           <li>
-            <strong>Licences and incidents</strong> are based on official announcements and reputable news coverage.
+            <strong>Welcome offers</strong> are quoted as the exchange states them, with their conditions. They differ by country and change often.
+          </li>
+          <li>
+            <strong>Licences and incidents</strong> are taken from the exchange&apos;s own licence pages and official statements.
           </li>
           <li>
             <strong>Review cycle:</strong> data is re-checked regularly; the current review date is {prettyDate(site.lastReviewed)}.

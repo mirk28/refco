@@ -30,10 +30,11 @@ Requires Node.js 20.9+.
 
 | What | File |
 |---|---|
-| **Affiliate links + referral codes** | `src/data/exchanges.ts` → `affiliateUrl`, `referralCode` per exchange |
+| **Affiliate links + referral codes** | `src/data/exchanges/<slug>.ts` → `affiliateUrl`, `referralCode` per exchange |
 | Brand name, domain, review dates, contact email | `src/config/site.ts` → `site` |
 | **Imprint / privacy placeholders** (`[BRACKETS]`) | `src/config/site.ts` → `legal` |
-| Exchange texts, fees, FAQs, pros/cons | `src/data/exchanges.ts` |
+| Exchange texts, fees, FAQs, pros/cons, sign-up steps, sources | `src/data/exchanges/<slug>.ts` (types in `src/data/types.ts`) |
+| Questions every exchange page answers (built from the data) | `src/lib/faqs.ts` |
 | Colours / design tokens | `src/app/globals.css` (`:root`) |
 | Logo mark | `src/components/Logo.tsx`, `src/app/icon.svg`, `src/lib/og.tsx` |
 
@@ -54,11 +55,13 @@ and a green badge on the landing page. One referral link always covers spot **an
 `public/logos/` contains Binance, OKX and KuCoin marks. Bybit, Bitget, Gate and MEXC show a
 monogram tile in brand colour. Download the official logos from each exchange's affiliate
 dashboard / media kit, save them as `public/logos/<slug>.svg` (square works best) and set
-`logo: "/logos/<slug>.svg"` in `src/data/exchanges.ts`.
+`logo: "/logos/<slug>.svg"` in `src/data/exchanges/<slug>.ts`.
 
 ### Keep it fresh (important for SEO)
 When you re-check data, update `lastReviewed` / `marketDataDate` in `site.ts` (titles show
-"(Month Year)", sitemap and schema use the date) and adjust fees/market numbers in `exchanges.ts`.
+"(Month Year)", sitemap and schema use the date) and adjust fees/market numbers in `src/data/exchanges/<slug>.ts`.
+Every fact about the referral code, registration, KYC, welcome offer and fees is taken from the exchange's own
+pages – the URLs are listed under `sources` in each file and shown on the page. Re-open them when you re-check.
 Monthly is a good rhythm.
 
 ## What's built in
@@ -80,7 +83,7 @@ Monthly is a good rhythm.
 
 - [ ] Fill all `[BRACKETS]` in `src/config/site.ts` (imprint + privacy)
 - [ ] Set up `hello@referral-code.org` (or change the email in `site.ts`)
-- [ ] Add affiliate links (and codes) in `src/data/exchanges.ts`
+- [ ] Add affiliate links (and codes) in `src/data/exchanges/<slug>.ts`
 - [ ] Add official logos for Bybit, Bitget, Gate, MEXC
 - [ ] Re-verify fees on each exchange's fee page
 - [ ] If you add analytics later: update the privacy policy and add a consent banner

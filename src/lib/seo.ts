@@ -81,7 +81,11 @@ export function exchangePageLd(e: Exchange, title: string, description: string) 
     publisher: { "@id": orgId },
     datePublished: "2026-10-11",
     dateModified: site.lastReviewed,
+    lastReviewed: site.lastReviewed,
+    reviewedBy: { "@id": orgId },
     primaryImageOfPage: { "@type": "ImageObject", url: `${url}/opengraph-image` },
+    speakable: { "@type": "SpeakableSpecification", cssSelector: [".answer", "#code-facts"] },
+    citation: e.sources.map((s) => ({ "@type": "WebPage", name: s.label, url: s.url })),
     about: {
       "@type": "Organization",
       name: e.name,
@@ -90,7 +94,7 @@ export function exchangePageLd(e: Exchange, title: string, description: string) 
     },
     mainEntity: {
       "@type": "Offer",
-      name: `${e.name} referral sign-up`,
+      name: `${e.name} referral code ${e.referralCode}`,
       description: `${e.feeDiscount || e.bonusHeadline}. One referral covers ${e.referralCovers.join(", ")}.`,
       url: outboundUrl(e),
       price: "0",
@@ -98,6 +102,25 @@ export function exchangePageLd(e: Exchange, title: string, description: string) 
       category: "Cryptocurrency exchange registration",
       offeredBy: { "@type": "Organization", name: e.name, url: e.homepage },
     },
+  };
+}
+
+/** The exchange's documented registration steps as a HowTo, for answer engines. */
+export function howToLd(e: Exchange) {
+  const url = absoluteUrl(exchangePath(e.slug));
+  return {
+    "@type": "HowTo",
+    "@id": `${url}#howto`,
+    name: `How to sign up on ${e.name} with the referral code ${e.referralCode}`,
+    description: `Registration steps for ${e.name} as documented by the exchange, including where the referral code ${e.referralCode} is entered.`,
+    inLanguage: site.language,
+    step: e.signup.steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.title,
+      text: s.text,
+      url: `${url}#how-to`,
+    })),
   };
 }
 

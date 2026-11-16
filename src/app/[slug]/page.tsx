@@ -10,7 +10,8 @@ import { Breadcrumbs, CtaLink, ExchangeCard, FaqList } from "@/components/Blocks
 import { CopyCode } from "@/components/CopyCode";
 import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, MinusIcon } from "@/components/Icons";
-import { breadcrumbLd, exchangePageLd, faqLd, formatBn, graph, monthYear, prettyDate, shortMonthYear } from "@/lib/seo";
+import { breadcrumbLd, exchangePageLd, faqLd, formatBn, graph, howToLd, monthYear, prettyDate, shortMonthYear } from "@/lib/seo";
+import { buildFaqs, groupFaqs, joinList } from "@/lib/faqs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,9 +22,9 @@ export function generateStaticParams() {
 }
 
 const mainBenefit = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
-const titleFor = (e: Exchange) => `${e.name} Referral Code (${shortMonthYear}): ${mainBenefit(e)}`;
+const titleFor = (e: Exchange) => `${e.name} Referral Code ${e.referralCode} (${shortMonthYear}): ${mainBenefit(e)}`;
 const descFor = (e: Exchange) =>
-  `${mainBenefit(e)} with the verified ${e.name} referral link – one sign-up for spot & futures. Fees, pros & cons and FAQ, checked ${monthYear}.`;
+  `${e.name} referral code: ${e.referralCode}. ${mainBenefit(e)} – where to enter it, sign-up steps, KYC and fees, checked ${monthYear}.`;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -35,7 +36,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: { absolute: title },
     description,
-    keywords: [`${e.name} referral code`, `${e.name} referral link`, `${e.name} invite code`, `${e.name} sign up bonus`, `${e.name} spot trading`, `${e.name} futures fees`],
+    keywords: [
+      `${e.name} referral code`,
+      `${e.name} referral code ${e.referralCode}`,
+      `${e.name} ${e.referral.codeName.toLowerCase()}`,
+      `${e.name} referral link`,
+      `${e.name} invite code`,
+      `${e.name} sign up bonus`,
+      `how to register on ${e.name}`,
+      `${e.name} KYC`,
+      `${e.name} futures fees`,
+    ],
     alternates: { canonical: path },
     openGraph: { type: "article", title, description, url: path, modifiedTime: site.lastReviewed },
     twitter: { title, description },
@@ -43,15 +54,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const toc = [
+  ["code-facts", "Code at a glance"],
   ["benefits", "Your benefits"],
-  ["key-facts", "Key facts"],
+  ["use-code", "How to use the code"],
   ["how-to", "How to sign up"],
+  ["verification", "Verification (KYC)"],
+  ["key-facts", "Key facts"],
   ["fees", "Fees"],
   ["about", "About the exchange"],
   ["pros-cons", "Pros & cons"],
   ["best-for", "Who it's for"],
   ["safety", "Safety & availability"],
   ["faq", "FAQ"],
+  ["sources", "Sources"],
   ["alternatives", "Alternatives"],
 ] as const;
 
@@ -71,21 +86,23 @@ export default async function ExchangePage({ params }: Props) {
   const others = exchanges.filter((x) => x.slug !== e.slug);
   const domain = new URL(e.homepage).hostname.replace(/^www\./, "");
   const affiliate = hasAffiliate(e);
-  const faqs = [
-    {
-      q: `Does the ${e.name} referral code also work for spot trading?`,
-      a: `Yes. One ${e.name} referral covers ${e.referralCovers.join(", ")}. You sign up once and the referral – including any fee rebate or welcome reward – applies to every product you trade on that account.`,
-    },
-    {
-      q: `What do I get with the ${e.name} referral code?`,
-      a: `${e.feeDiscount ? e.feeDiscount + ". " : ""}${e.benefits.join(". ")}. ${e.benefitNote}`,
-    },
-    ...e.faqs,
+  const faqs = buildFaqs(e);
+  const faqGroups = groupFaqs(e, faqs);
+  const codeFacts: [string, React.ReactNode][] = [
+    [`${e.name} referral code`, <strong key="code">{e.referralCode}</strong>],
+    [`What ${e.name} calls it`, e.referral.codeName],
+    ["New-user benefit", mainBenefit(e)],
+    ["Where it goes", e.referral.whereShort],
+    ["Can it be added after sign-up?", e.referral.afterSignupShort],
+    ["Valid for", e.referralCovers.join(", ")],
+    ["Identity verification (KYC)", e.signup.kycShort],
+    ["Cost", "Free – it does not raise your fees"],
+    ["Last checked", prettyDate(site.lastReviewed)],
   ];
 
   return (
     <>
-      <JsonLd data={graph(exchangePageLd(e, title, description), breadcrumbLd(crumbs), faqLd(faqs))} />
+      <JsonLd data={graph(exchangePageLd(e, title, description), breadcrumbLd(crumbs), howToLd(e), faqLd(faqs))} />
 
       {/* ---------------- Hero ---------------- */}
       <section className="lp-hero">
@@ -99,11 +116,11 @@ export default async function ExchangePage({ params }: Props) {
               <div className="lp-title-row">
                 <ExchangeLogo exchange={e} size={60} />
                 <h1>
-                  {e.name} Referral Code <span className="muted" style={{ fontWeight: 650 }}>({monthYear})</span>
+                  {e.name} Referral Code: {e.referralCode} <span className="muted" style={{ fontWeight: 650 }}>({monthYear})</span>
                 </h1>
               </div>
               <p className="lead">
-                <strong>{mainBenefit(e)}</strong> – plus one referral for {e.referralCovers.join(", ")}. Here is what you get, what it
+                <strong>{mainBenefit(e)}</strong> – plus one referral for {joinList(e.referralCovers)}. Here is what you get, what it
                 costs to trade and whether {e.name} is the right exchange for you.
               </p>
               <div className="answer">
@@ -185,11 +202,37 @@ export default async function ExchangePage({ params }: Props) {
       <div className="section" style={{ paddingTop: 56 }}>
         <div className="container layout-2">
           <article className="prose">
+            <section id="code-facts" aria-labelledby="h-code-facts">
+              <h2 id="h-code-facts">
+                {e.name} referral code {e.referralCode} at a glance
+              </h2>
+              <p>
+                The {e.name} referral code for {monthYear} is <strong>{e.referralCode}</strong>. The table sums up what it does, where it goes and what{" "}
+                {e.name} requires from a new account – each line checked against {e.name}&apos;s own pages on {prettyDate(site.lastReviewed)}.
+              </p>
+              <div className="table-wrap">
+                <table className="kv">
+                  <caption className="sr-only">
+                    {e.name} referral code {e.referralCode}: key facts
+                  </caption>
+                  <tbody>
+                    {codeFacts.map(([k, v]) => (
+                      <tr key={k}>
+                        <th scope="row">{k}</th>
+                        <td>{v}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
             <section id="benefits" aria-labelledby="h-benefits">
               <h2 id="h-benefits">Your benefits with the {e.name} referral</h2>
               <p>
-                Signing up through our {e.name} referral costs you nothing extra and unlocks the welcome offer for new users. The same link works for{" "}
-                <strong>{e.referralCovers.join(", ")}</strong> – you don&apos;t need a separate code for spot and futures.
+                Signing up with the {e.name} referral code <strong>{e.referralCode}</strong> costs you nothing extra. This is what {e.name} offers new
+                accounts at the moment. The same code works for <strong>{joinList(e.referralCovers)}</strong> – you don&apos;t need a separate one for
+                spot and futures.
               </p>
               <div className="benefit-box">
                 <div className="benefit-head">
@@ -202,7 +245,7 @@ export default async function ExchangePage({ params }: Props) {
                   {e.feeDiscount ? (
                     <li>
                       <CheckIcon /> <span>
-                        <strong>{e.feeDiscount}</strong> – exclusive to sign-ups through {site.name}
+                        <strong>{e.feeDiscount}</strong> – applied when you register through this referral
                       </span>
                     </li>
                   ) : null}
@@ -230,6 +273,34 @@ export default async function ExchangePage({ params }: Props) {
                   Claim your {e.name} welcome offer
                 </CtaLink>
               </div>
+              {e.welcomeTasks.length ? (
+                <>
+                  <h3 style={{ marginTop: 28 }}>{e.name} welcome offer: tasks and rewards</h3>
+                  <div className="table-wrap">
+                    <table className="kv">
+                      <caption className="sr-only">{e.name} new-user tasks and the reward for each</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Task</th>
+                          <th scope="col">Reward</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {e.welcomeTasks.map((t) => (
+                          <tr key={t.task}>
+                            <th scope="row">{t.task}</th>
+                            <td>{t.reward}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="small muted" style={{ marginTop: 10 }}>
+                    As listed by {e.name} on {prettyDate(site.lastReviewed)}. Offers differ by country and change often – the terms shown in your account
+                    after sign-up are the ones that apply.
+                  </p>
+                </>
+              ) : null}
               <div className="grid grid-3" style={{ marginTop: 18 }}>
                 {e.highlights.map((h) => (
                   <div key={h.title} className="card" style={{ padding: 18 }}>
@@ -240,6 +311,58 @@ export default async function ExchangePage({ params }: Props) {
                   </div>
                 ))}
               </div>
+            </section>
+
+            <section id="use-code" aria-labelledby="h-use-code">
+              <h2 id="h-use-code">How to use the {e.name} referral code {e.referralCode}</h2>
+              {e.referral.guide.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+              <h3>Where to enter the {e.name} referral code</h3>
+              <p>{e.referral.whereToEnter}</p>
+              <h3>Forgot the code? Adding it after registration</h3>
+              <p>{e.referral.afterSignup}</p>
+              <h3>What you get as an invited user</h3>
+              <p>{e.referral.inviteeReward}</p>
+            </section>
+
+            <section id="how-to" aria-labelledby="h-how">
+              <h2 id="h-how">How to register on {e.name} step by step</h2>
+              <p>
+                {e.name} lets you create an account with {joinList(e.signup.methods)}. These are the steps as {e.name} documents them, with the point
+                where the referral code <strong>{e.referralCode}</strong> comes in.
+              </p>
+              <ol className="how">
+                {e.signup.steps.map((s) => (
+                  <li key={s.title}>
+                    <div>
+                      <strong>{s.title}</strong>
+                      {s.text}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <p style={{ marginTop: 14 }}>{e.signupTip}</p>
+              <p>
+                <CtaLink exchange={e}>Start your {e.name} registration</CtaLink>
+              </p>
+            </section>
+
+            <section id="verification" aria-labelledby="h-kyc">
+              <h2 id="h-kyc">{e.name} identity verification (KYC)</h2>
+              <p>{e.signup.kyc}</p>
+              <dl className="facts">
+                <div>
+                  <dt>Verification</dt>
+                  <dd>{e.signup.kycShort}</dd>
+                </div>
+                <div>
+                  <dt>Minimum age</dt>
+                  <dd>{e.signup.minAge}</dd>
+                </div>
+              </dl>
+              <h3 style={{ marginTop: 22 }}>Accepted documents</h3>
+              <p>{e.signup.documents}</p>
             </section>
 
             <section id="key-facts" aria-labelledby="h-facts">
@@ -296,44 +419,6 @@ export default async function ExchangePage({ params }: Props) {
               </p>
             </section>
 
-            <section id="how-to" aria-labelledby="h-how">
-              <h2 id="h-how">How to sign up on {e.name} with the referral</h2>
-              <ol className="how">
-                <li>
-                  <div>
-                    <strong>Open the {e.name} sign-up page</strong>
-                    Click “Sign up on {e.name}” on this page. It opens the official {domain} website in a new tab.
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <strong>{e.referralCode ? "Check the referral code" : "Create your account"}</strong>
-                    {e.referralCode
-                      ? `Make sure the referral field shows ${e.referralCode}. If it is empty, paste the code before submitting.`
-                      : "Register with your email address or phone number and choose a strong, unique password."}
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <strong>Verify your identity (KYC)</strong>
-                    Upload an ID document and take a selfie. Verification is required for derivatives trading and withdrawals.
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <strong>Secure your account</strong>
-                    Turn on two-factor authentication, an anti-phishing code and a withdrawal whitelist before you deposit.
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <strong>Deposit and claim new-user rewards</strong>
-                    {e.signupTip}
-                  </div>
-                </li>
-              </ol>
-            </section>
-
             <section id="fees" aria-labelledby="h-fees">
               <h2 id="h-fees">{e.name} fees explained</h2>
               <p>
@@ -360,9 +445,20 @@ export default async function ExchangePage({ params }: Props) {
                       <td className="num">{e.spotFees.maker}</td>
                       <td className="num">{e.spotFees.taker}</td>
                     </tr>
+                    {e.extraFees.map((f) => (
+                      <tr key={f.market}>
+                        <th scope="row">{f.market}</th>
+                        <td className="num">{f.maker}</td>
+                        <td className="num">{f.taker}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
+              <p className="small muted" style={{ marginTop: 10 }}>
+                Standard (non-VIP) rates as published by {e.name}, checked {prettyDate(site.lastReviewed)}.
+              </p>
+              {e.tokenDiscount ? <p style={{ marginTop: 14 }}>{e.tokenDiscount}</p> : null}
               <p style={{ marginTop: 14 }}>
                 {e.feeNote} Funding rates on perpetual contracts are paid between traders, not to the exchange.{" "}
                 <a href={e.feesUrl} target="_blank" rel="noopener nofollow">
@@ -436,8 +532,34 @@ export default async function ExchangePage({ params }: Props) {
             </section>
 
             <section id="faq" aria-labelledby="h-faq">
-              <h2 id="h-faq">{e.name} referral code – FAQ</h2>
-              <FaqList faqs={faqs} />
+              <h2 id="h-faq">{e.name} referral code and registration – FAQ</h2>
+              <p>
+                {faqs.length} questions about the {e.name} referral code {e.referralCode}, creating and verifying an account, the welcome offer and fees.
+              </p>
+              {faqGroups.map((g, gi) => (
+                <div key={g.id} className="faq-group">
+                  <h3>{g.title}</h3>
+                  <FaqList faqs={g.faqs} openFirst={gi === 0} />
+                </div>
+              ))}
+            </section>
+
+            <section id="sources" aria-labelledby="h-sources">
+              <h2 id="h-sources">Sources: where these facts come from</h2>
+              <p>
+                Everything on this page about the referral code, registration, verification, the welcome offer and fees was read on {e.name}&apos;s own
+                website and help centre on {prettyDate(site.lastReviewed)}. Exchanges change offers and fees without notice and show different terms in
+                different countries, so the pages below are the final word.
+              </p>
+              <ul className="sources">
+                {e.sources.map((s) => (
+                  <li key={s.url}>
+                    <a href={s.url} target="_blank" rel="noopener nofollow">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </section>
 
             <section id="alternatives" aria-labelledby="h-alt">

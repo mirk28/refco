@@ -22,11 +22,11 @@ export function CtaLink({
   );
 }
 
-export function FaqList({ faqs }: { faqs: Faq[] }) {
+export function FaqList({ faqs, openFirst = true }: { faqs: Faq[]; openFirst?: boolean }) {
   return (
     <div className="faq">
       {faqs.map((f, i) => (
-        <details key={f.q} open={i === 0}>
+        <details key={f.q} open={openFirst && i === 0}>
           <summary>{f.q}</summary>
           <div className="faq-a">
             <p>{f.a}</p>
