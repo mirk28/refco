@@ -32,11 +32,13 @@ Requires Node.js 20.9+.
 |---|---|
 | **Affiliate links + referral codes** | `src/data/exchanges/<slug>.ts` → `affiliateUrl`, `referralCode` per exchange |
 | Brand name, domain, review dates, contact email | `src/config/site.ts` → `site` |
-| **Imprint / privacy placeholders** (`[BRACKETS]`) | `src/config/site.ts` → `legal` |
+| **Operator shown in the imprint and privacy policy** | `src/config/site.ts` → `legal` |
 | Exchange texts, fees, FAQs, pros/cons, sign-up steps, sources | `src/data/exchanges/<slug>.ts` (types in `src/data/types.ts`) |
 | Questions every exchange page answers (built from the data) | `src/lib/faqs.ts` |
 | **"[Exchange] alternatives" pages**: why people switch, products, country availability, regional platforms | `src/data/alternatives/<slug>.ts` (index: `src/data/alternatives.ts`) |
 | Comparison sentences and questions of the alternatives pages (built from the data) | `src/lib/compare.ts`, template `src/components/AlternativesPage.tsx` |
+| **"[Exchange] vs [Exchange]" pages** (21 pairs, no data of their own) | pairs and URLs `src/data/versus.ts`, logic `src/lib/versus.ts`, template `src/components/VersusPage.tsx` |
+| Comparison hub `/compare` | `src/app/compare/page.tsx` |
 | Colours / design tokens | `src/app/globals.css` (`:root`) |
 | Logo mark | `src/components/Logo.tsx`, `src/app/icon.svg`, `src/lib/og.tsx` |
 
@@ -69,10 +71,20 @@ Monthly is a good rhythm.
 ## What's built in
 
 - **Pages:** home, 7 landing pages (`/<exchange>-referral-code`), 7 comparison pages
-  (`/<exchange>-alternatives`), about/methodology, affiliate disclosure, imprint (`/impressum`
+  (`/<exchange>-alternatives`), 21 head-to-head pages (`/<a>-vs-<b>`), the comparison hub
+  (`/compare`), about/methodology, affiliate disclosure, imprint (`/impressum`
   redirects), privacy (`/datenschutz` redirects), 404.
-  Both page types are served by `src/app/[slug]/page.tsx`, because Next.js cannot match a suffix
-  inside a folder name.
+  The three single-segment page types are served by `src/app/[slug]/page.tsx`, because Next.js
+  cannot match a suffix inside a folder name.
+- **Head-to-head pages** (`/<a>-vs-<b>`): one page per pair, 21 in total, in the order of the
+  `exchanges` array (`/binance-vs-okx`). The reverse spelling is redirected in `next.config.mjs` –
+  keep the slug list there in the same order as the array when you add an exchange. The pages
+  hold no data: scorecard, verdict, country answers and FAQ are generated in `src/lib/versus.ts`
+  from the exchange and alternatives data. `/compare` lists all pairs.
+- **Internal linking:** every page is one click from the home page. Exchange pages link to their
+  alternatives page and their six pair pages; alternatives pages link to every pair page of their
+  exchange and to the other alternatives pages; pair pages link to both exchange pages (also into
+  their fees, sign-up and safety sections), both alternatives pages and the ten related pairs.
 - **Alternatives pages:** fees, leverage, KYC and referral rules are read from
   `src/data/exchanges/<slug>.ts`, so they can never differ from the referral-code pages. Only what
   those pages do not need (products, countries, regional platforms, reserves, funds, the "why
@@ -91,7 +103,7 @@ Monthly is a good rhythm.
 
 ## Before going live – checklist
 
-- [ ] Fill all `[BRACKETS]` in `src/config/site.ts` (imprint + privacy)
+- [x] Operator for imprint and privacy policy set in `src/config/site.ts` → `legal`
 - [ ] Set up `hello@referral-code.org` (or change the email in `site.ts`)
 - [ ] Add affiliate links (and codes) in `src/data/exchanges/<slug>.ts`
 - [ ] Add official logos for Bybit, Bitget, Gate, MEXC

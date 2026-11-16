@@ -191,4 +191,41 @@ export function switchHowToLd(x: Exchange, path: string, steps: { title: string;
   };
 }
 
+/* ------------------------- "[Exchange] vs [Exchange]" pages ------------------------- */
+
+/** WebPage node of a head-to-head page: the two exchanges it is about and its sources. */
+export function versusPageLd(a: Exchange, b: Exchange, path: string, title: string, description: string, citations: { label: string; url: string }[]) {
+  const url = absoluteUrl(path);
+  const org = (e: Exchange) => ({ "@type": "Organization", name: e.name, url: e.homepage, foundingDate: e.founded });
+  return {
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: title,
+    description,
+    inLanguage: site.language,
+    isPartOf: { "@id": websiteId },
+    publisher: { "@id": orgId },
+    datePublished: "2026-11-16",
+    dateModified: site.lastReviewed,
+    lastReviewed: site.lastReviewed,
+    reviewedBy: { "@id": orgId },
+    primaryImageOfPage: { "@type": "ImageObject", url: `${url}/opengraph-image` },
+    speakable: { "@type": "SpeakableSpecification", cssSelector: [".answer", "#at-a-glance"] },
+    citation: citations.map((s) => ({ "@type": "WebPage", name: s.label, url: s.url })),
+    about: [org(a), org(b)],
+  };
+}
+
+/** A list of pages, e.g. every comparison on the hub page. */
+export function pageListLd(id: string, name: string, items: { name: string; path: string }[]) {
+  return {
+    "@type": "ItemList",
+    "@id": absoluteUrl(id),
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, url: absoluteUrl(it.path) })),
+  };
+}
+
 export const graph = (...nodes: object[]) => ({ "@context": "https://schema.org", "@graph": nodes });

@@ -21,8 +21,8 @@ export const shortLeverage = (e: Exchange) => e.maxLeverage.replace(/\s*\(.*\)/,
 export const feePair = (f: Fee) => `${f.maker} / ${f.taker}`;
 export const altInfo = (e: Exchange): AlternativesInfo => alternativesData[e.slug];
 export const lcFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
-const names = (list: Exchange[]) => joinList(list.map((e) => e.name));
-const verb = (list: unknown[], singular: string, plural: string) => (list.length === 1 ? singular : plural);
+export const names = (list: Exchange[]) => joinList(list.map((e) => e.name));
+export const verb = (list: unknown[], singular: string, plural: string) => (list.length === 1 ? singular : plural);
 
 /** The other exchanges, ordered by CoinMarketCap's derivatives ranking. */
 export const alternativesTo = (e: Exchange) => exchanges.filter((x) => x.slug !== e.slug).sort((a, b) => a.market.rank - b.market.rank);

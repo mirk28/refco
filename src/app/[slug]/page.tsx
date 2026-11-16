@@ -15,17 +15,22 @@ import { buildFaqs, groupFaqs, joinList } from "@/lib/faqs";
 import { alternativesPath, getExchangeByAlternativesSlug } from "@/data/alternatives";
 import { alternativesTeaserFaq, alternativesTo, altInfo } from "@/lib/compare";
 import { AlternativesPage, alternativesMetadata } from "@/components/AlternativesPage";
+import { comparePath, getPairByPathSlug, versusLabel, versusPairs, versusPath, versusSlug } from "@/data/versus";
+import { VersusPage, versusMetadata } from "@/components/VersusPage";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
 
 /**
- * Two page types share this segment, because Next.js cannot match a suffix inside a folder name:
- * `/<slug>-referral-code` (below) and `/<slug>-alternatives` (`AlternativesPage`).
+ * Three page types share this segment, because Next.js cannot match a suffix inside a folder name:
+ * `/<slug>-referral-code` (below), `/<slug>-alternatives` (`AlternativesPage`) and `/<a>-vs-<b>` (`VersusPage`).
  */
 export function generateStaticParams() {
-  return exchanges.flatMap((e) => [{ slug: `${e.slug}-referral-code` }, { slug: `${e.slug}-alternatives` }]);
+  return [
+    ...exchanges.flatMap((e) => [{ slug: `${e.slug}-referral-code` }, { slug: `${e.slug}-alternatives` }]),
+    ...versusPairs.map((p) => ({ slug: versusSlug(p) })),
+  ];
 }
 
 const mainBenefit = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
@@ -37,6 +42,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const focus = getExchangeByAlternativesSlug(slug);
   if (focus) return alternativesMetadata(focus);
+  const pair = getPairByPathSlug(slug);
+  if (pair) return versusMetadata(pair);
   const e = getExchangeByPathSlug(slug);
   if (!e) return {};
   const title = titleFor(e);
@@ -76,13 +83,15 @@ const toc = [
   ["safety", "Safety & availability"],
   ["faq", "FAQ"],
   ["sources", "Sources"],
-  ["alternatives", "Alternatives"],
+  ["alternatives", "Alternatives & comparisons"],
 ] as const;
 
 export default async function ExchangePage({ params }: Props) {
   const { slug } = await params;
   const focus = getExchangeByAlternativesSlug(slug);
   if (focus) return <AlternativesPage exchange={focus} />;
+  const pair = getPairByPathSlug(slug);
+  if (pair) return <VersusPage pair={pair} />;
   const e = getExchangeByPathSlug(slug);
   if (!e) notFound();
 
@@ -544,7 +553,9 @@ export default async function ExchangePage({ params }: Props) {
                 <CtaLink exchange={e}>Open your {e.name} account</CtaLink>
               </p>
               <p>
-                Not a match? See <Link href={altPath}>the {alts.length} best {e.name} alternatives</Link> and what each of them is best for.
+                Not a match? See <Link href={altPath}>the {alts.length} best {e.name} alternatives</Link> and what each of them is best for, or
+                compare {e.name} head to head: <Link href={versusPath(e, alts[0])}>{versusLabel(e, alts[0])}</Link> and{" "}
+                <Link href={versusPath(e, alts[1])}>{versusLabel(e, alts[1])}</Link>.
               </p>
             </section>
 
@@ -626,12 +637,24 @@ export default async function ExchangePage({ params }: Props) {
                   <ExchangeCard key={x.slug} exchange={x} />
                 ))}
               </div>
+              <h3 style={{ marginTop: 28 }}>{e.name} head to head</h3>
+              <p>
+                Deciding between {e.name} and one other exchange? Each pair has its own comparison of fees, leverage, products, countries and referral
+                offers:
+              </p>
+              <ul className="chips">
+                {alts.map((x) => (
+                  <li key={x.slug}>
+                    <Link href={versusPath(e, x)}>{versusLabel(e, x)}</Link>
+                  </li>
+                ))}
+              </ul>
               <p style={{ marginTop: 16 }}>
                 <Link href={altPath} className="btn btn-secondary btn-sm">
                   Compare all {alts.length} {e.name} alternatives
                 </Link>{" "}
-                <Link href="/#compare" style={{ marginLeft: 12 }}>
-                  All {exchanges.length} exchanges side by side →
+                <Link href={comparePath} style={{ marginLeft: 12 }}>
+                  All exchange comparisons →
                 </Link>
               </p>
             </section>

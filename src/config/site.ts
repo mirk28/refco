@@ -48,7 +48,7 @@ export const legal = {
 export const nav = [
   { href: "/#exchanges", label: "Exchanges" },
   { href: "/#benefits", label: "Benefits" },
-  { href: "/#compare", label: "Compare" },
+  { href: "/compare", label: "Compare" },
   { href: "/#how-it-works", label: "How it works" },
   { href: "/about", label: "About" },
 ] as const;

@@ -1,7 +1,9 @@
 import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
-import { alternativesTo, altInfo } from "@/lib/compare";
+import { alternativesTo, altInfo, feePair, leverageOf } from "@/lib/compare";
+import { comparePath, versusLabel, versusPairs, versusPath } from "@/data/versus";
+import { scoreSummary } from "@/lib/versus";
 import { absoluteUrl, prettyDate } from "@/lib/seo";
 
 export const dynamic = "force-static";
@@ -25,6 +27,13 @@ export function GET() {
     ...exchanges.map((e) => {
       const alts = alternativesTo(e);
       return `- [${e.name} alternatives](${absoluteUrl(alternativesPath(e.slug))}): ${alts.length} alternatives to ${e.name} compared by fees, leverage, products, country availability, identity verification, regulation and referral codes. ${alts.map((a) => altInfo(a).pick).join(". ")}.`;
+    }),
+    "",
+    "## Head-to-head comparison pages",
+    `- [All exchange comparisons](${absoluteUrl(comparePath)}): overview of the ${versusPairs.length} head-to-head pages and the ${exchanges.length} alternatives pages.`,
+    ...versusPairs.map(({ a, b }) => {
+      const s = scoreSummary(a, b);
+      return `- [${versusLabel(a, b)}](${absoluteUrl(versusPath(a, b))}): ${a.name} charges ${feePair(a.futuresFees)} on futures and ${feePair(a.spotFees)} on spot (maker / taker), ${b.name} ${feePair(b.futuresFees)} and ${feePair(b.spotFees)}. Maximum leverage: ${leverageOf(a)}x against ${leverageOf(b)}x. Of ${s.measurable} measurable points ${a.name} is ahead on ${s.a.length}, ${b.name} on ${s.b.length} and ${s.tie.length} are level. Also compared: products, country availability, identity verification, regulation, proof of reserves and referral codes.`;
     }),
     "",
     ...exchanges.flatMap(({ name, guides }) =>

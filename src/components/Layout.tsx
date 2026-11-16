@@ -3,6 +3,7 @@ import { Logo } from "./Logo";
 import { nav, site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
+import { comparePath } from "@/data/versus";
 
 export function Header() {
   return (
@@ -59,7 +60,7 @@ export function Footer() {
           <div>
             <h3>Guides</h3>
             <ul>
-              <li><Link href="/#compare">Exchange comparison</Link></li>
+              <li><Link href={comparePath}>Exchange comparisons</Link></li>
               <li><Link href="/#how-it-works">How referral codes work</Link></li>
               <li><Link href="/#faq">FAQ</Link></li>
               <li><Link href="/about">About &amp; methodology</Link></li>

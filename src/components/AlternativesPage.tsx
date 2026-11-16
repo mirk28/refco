@@ -4,6 +4,7 @@ import { site } from "@/config/site";
 import type { Exchange, Source } from "@/data/exchanges";
 import { exchangePath } from "@/data/exchanges";
 import { alternativesPath, countryList, countryStatusLabel, featureList } from "@/data/alternatives";
+import { comparePath, versusLabel, versusPath } from "@/data/versus";
 import type { CountryStatus } from "@/data/alternatives";
 import { ExchangeLogo } from "./ExchangeLogo";
 import { Breadcrumbs, CtaLink, FaqList } from "./Blocks";
@@ -75,7 +76,7 @@ export function alternativesMetadata(x: Exchange): Metadata {
   };
 }
 
-function Mark({ has }: { has: boolean | null }) {
+export function Mark({ has }: { has: boolean | null }) {
   if (has === true)
     return (
       <span className="mark">
@@ -95,7 +96,7 @@ function Mark({ has }: { has: boolean | null }) {
   );
 }
 
-const StatusPill = ({ status }: { status: CountryStatus }) => <span className={`pill pill-${status}`}>{countryStatusLabel[status]}</span>;
+export const StatusPill = ({ status }: { status: CountryStatus }) => <span className={`pill pill-${status}`}>{countryStatusLabel[status]}</span>;
 
 /** Column header of a matrix table: logo above the exchange name. */
 const ColHead = ({ e, focus }: { e: Exchange; focus?: boolean }) => (
@@ -472,7 +473,12 @@ export function AlternativesPage({ exchange: x }: { exchange: Exchange }) {
                           <Link href={exchangePath(a.slug)}>
                             {a.name} referral code {a.referralCode}: offer, sign-up steps and KYC
                           </Link>{" "}
-                          · <Link href={alternativesPath(a.slug)}>{a.name} alternatives</Link>
+                          ·{" "}
+                          <Link href={versusPath(a, x)}>
+                            {a.name} vs {x.name}: full head-to-head comparison
+                          </Link>{" "}
+                          ·{" "}
+                          <Link href={alternativesPath(a.slug)}>{a.name} alternatives</Link>
                         </p>
                       </div>
                     </div>
@@ -908,6 +914,16 @@ export function AlternativesPage({ exchange: x }: { exchange: Exchange }) {
 
             <section id="more" aria-labelledby="h-more">
               <h2 id="h-more">More exchange comparisons</h2>
+              <h3>{x.name} head to head</h3>
+              <p>One alternative on your shortlist? The pair pages go deeper on fees, products, countries and referral offers:</p>
+              <ul className="chips">
+                {alts.map((a) => (
+                  <li key={a.slug}>
+                    <Link href={versusPath(x, a)}>{versusLabel(x, a)}</Link>
+                  </li>
+                ))}
+              </ul>
+              <h3>Alternatives to the other exchanges</h3>
               <p>The same comparison from the point of view of each of the other exchanges:</p>
               <ul className="chips">
                 {alts.map((a) => (
@@ -920,7 +936,7 @@ export function AlternativesPage({ exchange: x }: { exchange: Exchange }) {
                 <Link href={exchangePath(x.slug)}>
                   {x.name} referral code {x.referralCode}
                 </Link>{" "}
-                · <Link href="/#compare">All {all.length} exchanges side by side</Link>
+                · <Link href={comparePath}>All exchange comparisons</Link>
               </p>
             </section>
 

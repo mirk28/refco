@@ -58,7 +58,8 @@ export default function AboutPage() {
             <strong>Licences and incidents</strong> are taken from the exchange&apos;s own licence pages and official statements.
           </li>
           <li>
-            <strong>Exchange comparisons</strong> – the &quot;alternatives&quot; pages – use the same figures as the exchange pages. Products are
+            <strong>Exchange comparisons</strong> – the alternatives pages and the <Link href="/compare">head-to-head comparisons</Link> – use the
+            same figures as the exchange pages. Products are
             marked as offered only when the exchange shows them on its own site, and country availability is taken from each exchange&apos;s own
             terms, restricted-country lists and regional sites. Which exchange is &quot;ahead&quot; on a point is read off those figures, not
             ranked by us.

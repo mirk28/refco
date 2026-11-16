@@ -24,6 +24,14 @@ const securityHeaders = [
   },
 ];
 
+// Head-to-head pages exist once per pair, in the order of `exchanges` in src/data/exchanges.ts
+// (`/binance-vs-okx`). The reverse spelling (`/okx-vs-binance`) is redirected to it.
+// Keep this list in the same order as that array.
+const exchangeSlugs = ["binance", "okx", "bybit", "bitget", "gate", "kucoin", "mexc"];
+const reverseVersus = exchangeSlugs.flatMap((a, i) =>
+  exchangeSlugs.slice(i + 1).map((b) => ({ source: `/${b}-vs-${a}`, destination: `/${a}-vs-${b}`, permanent: true })),
+);
+
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -44,6 +52,8 @@ const nextConfig = {
     return [
       { source: "/impressum", destination: "/imprint", permanent: true },
       { source: "/datenschutz", destination: "/privacy", permanent: true },
+      { source: "/comparisons", destination: "/compare", permanent: true },
+      ...reverseVersus,
     ];
   },
 };

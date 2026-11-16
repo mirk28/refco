@@ -3,6 +3,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
+import { comparePath, versusLabel, versusPairs, versusPath } from "@/data/versus";
 import { ExchangeLogo } from "@/components/ExchangeLogo";
 import { ComparisonTable, CtaLink, ExchangeCard, FaqList } from "@/components/Blocks";
 import { JsonLd } from "@/components/JsonLd";
@@ -307,6 +308,20 @@ export default function HomePage() {
             Fees: standard tier as published by each exchange, checked {prettyDate(site.lastReviewed)}. Open interest and markets: CoinMarketCap,{" "}
             {prettyDate(site.marketDataDate)}. Fees change – confirm on the exchange before trading.
           </p>
+          <div className="alt-strip">
+            <h3>Compare two exchanges head to head</h3>
+            <p className="muted">
+              {versusPairs.length} pair comparisons with fees, leverage, products, countries, KYC and referral offers side by side –{" "}
+              <Link href={comparePath}>all exchange comparisons</Link>.
+            </p>
+            <ul className="chips" style={{ margin: 0 }}>
+              {versusPairs.map((p) => (
+                <li key={versusPath(p.a, p.b)}>
+                  <Link href={versusPath(p.a, p.b)}>{versusLabel(p.a, p.b)}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
