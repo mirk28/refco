@@ -58,6 +58,12 @@ export default function AboutPage() {
             <strong>Licences and incidents</strong> are taken from the exchange&apos;s own licence pages and official statements.
           </li>
           <li>
+            <strong>Exchange comparisons</strong> – the &quot;alternatives&quot; pages – use the same figures as the exchange pages. Products are
+            marked as offered only when the exchange shows them on its own site, and country availability is taken from each exchange&apos;s own
+            terms, restricted-country lists and regional sites. Which exchange is &quot;ahead&quot; on a point is read off those figures, not
+            ranked by us.
+          </li>
+          <li>
             <strong>Review cycle:</strong> data is re-checked regularly; the current review date is {prettyDate(site.lastReviewed)}.
           </li>
         </ul>

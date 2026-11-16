@@ -1,5 +1,7 @@
 import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
+import { alternativesPath } from "@/data/alternatives";
+import { alternativesTo, altInfo } from "@/lib/compare";
 import { absoluteUrl, prettyDate } from "@/lib/seo";
 
 export const dynamic = "force-static";
@@ -18,6 +20,12 @@ export function GET() {
       (e) =>
         `- [${e.name} referral code](${absoluteUrl(exchangePath(e.slug))}): The ${e.name} referral code is ${e.referralCode}. New-user offer: ${e.feeDiscount || e.bonusHeadline}. Where the code goes: ${e.referral.whereShort}. Can it be added after sign-up: ${e.referral.afterSignupShort}. One referral covers ${e.referralCovers.join(", ")}. Identity verification: ${e.signup.kycShort}. Spot fees ${e.spotFees.maker} maker / ${e.spotFees.taker} taker, futures fees ${e.futuresFees.maker} maker / ${e.futuresFees.taker} taker (standard tier). Max leverage: ${e.maxLeverage}. Founded ${e.founded}.`,
     ),
+    "",
+    "## Exchange alternatives pages",
+    ...exchanges.map((e) => {
+      const alts = alternativesTo(e);
+      return `- [${e.name} alternatives](${absoluteUrl(alternativesPath(e.slug))}): ${alts.length} alternatives to ${e.name} compared by fees, leverage, products, country availability, identity verification, regulation and referral codes. ${alts.map((a) => altInfo(a).pick).join(". ")}.`;
+    }),
     "",
     ...exchanges.flatMap(({ name, guides }) =>
       guides

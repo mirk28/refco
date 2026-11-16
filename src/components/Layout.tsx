@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 import { nav, site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
+import { alternativesPath } from "@/data/alternatives";
 
 export function Header() {
   return (
@@ -41,6 +42,16 @@ export function Footer() {
               {exchanges.map((e) => (
                 <li key={e.slug}>
                   <Link href={exchangePath(e.slug)}>{e.name} referral code</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3>Alternatives</h3>
+            <ul>
+              {exchanges.map((e) => (
+                <li key={e.slug}>
+                  <Link href={alternativesPath(e.slug)}>{e.name} alternatives</Link>
                 </li>
               ))}
             </ul>

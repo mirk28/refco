@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
+import { alternativesPath } from "@/data/alternatives";
 import { ExchangeLogo } from "@/components/ExchangeLogo";
 import { ComparisonTable, CtaLink, ExchangeCard, FaqList } from "@/components/Blocks";
 import { JsonLd } from "@/components/JsonLd";
@@ -336,6 +337,20 @@ export default function HomePage() {
                 </Link>
               );
             })}
+          </div>
+          <div className="alt-strip">
+            <h3>Looking for an alternative to your exchange?</h3>
+            <p className="muted">
+              Each comparison measures one exchange against the other {exchanges.length - 1}: fees, leverage, products, identity verification and the
+              countries it accepts.
+            </p>
+            <ul className="chips" style={{ margin: 0 }}>
+              {ranked.map((e) => (
+                <li key={e.slug}>
+                  <Link href={alternativesPath(e.slug)}>{e.name} alternatives</Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>

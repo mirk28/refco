@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
+import { alternativesPath } from "@/data/alternatives";
 import { absoluteUrl } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -12,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "weekly" as const,
       priority: 0.9,
+    })),
+    ...exchanges.map((e) => ({
+      url: absoluteUrl(alternativesPath(e.slug)),
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
     })),
     { url: absoluteUrl("/about"), lastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: absoluteUrl("/affiliate-disclosure"), lastModified, changeFrequency: "yearly", priority: 0.3 },

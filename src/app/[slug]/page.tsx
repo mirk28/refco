@@ -12,13 +12,20 @@ import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, MinusIcon } from "@/components/Icons";
 import { breadcrumbLd, exchangePageLd, faqLd, formatBn, graph, howToLd, monthYear, prettyDate, shortMonthYear } from "@/lib/seo";
 import { buildFaqs, groupFaqs, joinList } from "@/lib/faqs";
+import { alternativesPath, getExchangeByAlternativesSlug } from "@/data/alternatives";
+import { alternativesTeaserFaq, alternativesTo, altInfo } from "@/lib/compare";
+import { AlternativesPage, alternativesMetadata } from "@/components/AlternativesPage";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
 
+/**
+ * Two page types share this segment, because Next.js cannot match a suffix inside a folder name:
+ * `/<slug>-referral-code` (below) and `/<slug>-alternatives` (`AlternativesPage`).
+ */
 export function generateStaticParams() {
-  return exchanges.map((e) => ({ slug: `${e.slug}-referral-code` }));
+  return exchanges.flatMap((e) => [{ slug: `${e.slug}-referral-code` }, { slug: `${e.slug}-alternatives` }]);
 }
 
 const mainBenefit = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
@@ -28,6 +35,8 @@ const descFor = (e: Exchange) =>
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const focus = getExchangeByAlternativesSlug(slug);
+  if (focus) return alternativesMetadata(focus);
   const e = getExchangeByPathSlug(slug);
   if (!e) return {};
   const title = titleFor(e);
@@ -72,21 +81,24 @@ const toc = [
 
 export default async function ExchangePage({ params }: Props) {
   const { slug } = await params;
+  const focus = getExchangeByAlternativesSlug(slug);
+  if (focus) return <AlternativesPage exchange={focus} />;
   const e = getExchangeByPathSlug(slug);
   if (!e) notFound();
 
   const title = titleFor(e);
   const description = descFor(e);
   const path = exchangePath(e.slug);
+  const altPath = alternativesPath(e.slug);
+  const alts = alternativesTo(e);
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Referral codes", path: "/#exchanges" },
     { name: `${e.name} referral code`, path },
   ];
-  const others = exchanges.filter((x) => x.slug !== e.slug);
   const domain = new URL(e.homepage).hostname.replace(/^www\./, "");
   const affiliate = hasAffiliate(e);
-  const faqs = buildFaqs(e);
+  const faqs = [...buildFaqs(e), alternativesTeaserFaq(e)];
   const faqGroups = groupFaqs(e, faqs);
   const guides = e.guides;
   // The guides block is optional; when present it sits between the FAQ and the sources.
@@ -196,7 +208,8 @@ export default async function ExchangePage({ params }: Props) {
                 </div>
               ) : null}
               <p className="small muted" style={{ margin: "14px 0 0" }}>
-                Leveraged trading is high-risk. Not available in every country – see <a href="#safety">availability</a>.
+                Leveraged trading is high-risk. Not available in every country – see <a href="#safety">availability</a> or the{" "}
+                <Link href={altPath}>{e.name} alternatives</Link>.
               </p>
             </aside>
           </div>
@@ -471,6 +484,10 @@ export default async function ExchangePage({ params }: Props) {
                 </a>
                 .
               </p>
+              <p>
+                How do these rates compare? Our <Link href={`${altPath}#fees`}>{e.name} alternatives comparison</Link> puts {e.name}&apos;s fees next to
+                those of {joinList(alts.map((a) => a.name))}.
+              </p>
             </section>
 
             <section id="about" aria-labelledby="h-about">
@@ -526,6 +543,9 @@ export default async function ExchangePage({ params }: Props) {
               <p style={{ marginTop: 18 }}>
                 <CtaLink exchange={e}>Open your {e.name} account</CtaLink>
               </p>
+              <p>
+                Not a match? See <Link href={altPath}>the {alts.length} best {e.name} alternatives</Link> and what each of them is best for.
+              </p>
             </section>
 
             <section id="safety" aria-labelledby="h-safety">
@@ -534,6 +554,10 @@ export default async function ExchangePage({ params }: Props) {
               <div className="notice">
                 <strong>Availability:</strong> {e.restricted}
               </div>
+              <p style={{ marginTop: 14 }}>
+                Is {e.name} closed where you live? The <Link href={`${altPath}#countries`}>country table on our {e.name} alternatives page</Link> shows
+                which of the other exchanges accept your country.
+              </p>
             </section>
 
             <section id="faq" aria-labelledby="h-faq">
@@ -585,14 +609,30 @@ export default async function ExchangePage({ params }: Props) {
 
             <section id="alternatives" aria-labelledby="h-alt">
               <h2 id="h-alt">Alternatives to {e.name}</h2>
-              <p>Not sure {e.name} is the right fit? These exchanges offer referral sign-ups too:</p>
+              <p>
+                Not sure {e.name} is the right fit? These are the closest alternatives, each with its own referral sign-up. The{" "}
+                <Link href={altPath}>full {e.name} alternatives comparison</Link> measures all {alts.length} against {e.name} by fees, leverage,
+                products, verification and country availability.
+              </p>
+              <ul className="alt-links">
+                {alts.map((x) => (
+                  <li key={x.slug}>
+                    <Link href={`${altPath}#${x.slug}`}>{x.name}</Link> – {altInfo(x).role}
+                  </li>
+                ))}
+              </ul>
               <div className="grid grid-2">
-                {others.slice(0, 4).map((x) => (
+                {alts.slice(0, 4).map((x) => (
                   <ExchangeCard key={x.slug} exchange={x} />
                 ))}
               </div>
               <p style={{ marginTop: 16 }}>
-                <Link href="/#compare">Compare all {exchanges.length} exchanges →</Link>
+                <Link href={altPath} className="btn btn-secondary btn-sm">
+                  Compare all {alts.length} {e.name} alternatives
+                </Link>{" "}
+                <Link href="/#compare" style={{ marginLeft: 12 }}>
+                  All {exchanges.length} exchanges side by side →
+                </Link>
               </p>
             </section>
 

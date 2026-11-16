@@ -35,6 +35,8 @@ Requires Node.js 20.9+.
 | **Imprint / privacy placeholders** (`[BRACKETS]`) | `src/config/site.ts` → `legal` |
 | Exchange texts, fees, FAQs, pros/cons, sign-up steps, sources | `src/data/exchanges/<slug>.ts` (types in `src/data/types.ts`) |
 | Questions every exchange page answers (built from the data) | `src/lib/faqs.ts` |
+| **"[Exchange] alternatives" pages**: why people switch, products, country availability, regional platforms | `src/data/alternatives/<slug>.ts` (index: `src/data/alternatives.ts`) |
+| Comparison sentences and questions of the alternatives pages (built from the data) | `src/lib/compare.ts`, template `src/components/AlternativesPage.tsx` |
 | Colours / design tokens | `src/app/globals.css` (`:root`) |
 | Logo mark | `src/components/Logo.tsx`, `src/app/icon.svg`, `src/lib/og.tsx` |
 
@@ -66,8 +68,16 @@ Monthly is a good rhythm.
 
 ## What's built in
 
-- **Pages:** home, 7 landing pages (`/<exchange>-referral-code`), about/methodology,
-  affiliate disclosure, imprint (`/impressum` redirects), privacy (`/datenschutz` redirects), 404.
+- **Pages:** home, 7 landing pages (`/<exchange>-referral-code`), 7 comparison pages
+  (`/<exchange>-alternatives`), about/methodology, affiliate disclosure, imprint (`/impressum`
+  redirects), privacy (`/datenschutz` redirects), 404.
+  Both page types are served by `src/app/[slug]/page.tsx`, because Next.js cannot match a suffix
+  inside a folder name.
+- **Alternatives pages:** fees, leverage, KYC and referral rules are read from
+  `src/data/exchanges/<slug>.ts`, so they can never differ from the referral-code pages. Only what
+  those pages do not need (products, countries, regional platforms, reserves, funds, the "why
+  switch" texts) lives in `src/data/alternatives/<slug>.ts`, with its own `sources`. Every
+  "ahead / behind" list, fee sentence and FAQ answer is generated in `src/lib/compare.ts`.
 - **SEO:** unique titles/descriptions, canonicals, Open Graph + Twitter cards, auto-generated
   OG images per page, `sitemap.xml`, `robots.txt`, web manifest, breadcrumbs, internal linking.
 - **Schema.org (JSON-LD):** Organization, WebSite, ItemList, WebPage, Offer, BreadcrumbList,

@@ -28,6 +28,79 @@ export type ExternalGuides = {
   links: GuideLink[];
 };
 
+/* ------------------------- "[Exchange] alternatives" pages ------------------------- */
+
+/** Products compared on the alternatives pages. */
+export type FeatureKey =
+  | "copyTrading"
+  | "tradingBots"
+  | "options"
+  | "demoTrading"
+  | "p2p"
+  | "fiat"
+  | "earn"
+  | "launchpad"
+  | "web3Wallet"
+  | "card"
+  | "margin";
+/**
+ * `has: true` – the exchange shows the product on its own site (see `sources`).
+ * `has: false` – the exchange itself says it does not offer it.
+ * `has: null` – no official page for it was found at the review date.
+ */
+export type FeatureInfo = { has: boolean | null; note: string };
+
+/** Countries compared on the alternatives pages. */
+export type CountryKey = "us" | "uk" | "ca" | "de" | "fr" | "nl" | "es" | "it" | "au" | "jp" | "sg" | "hk" | "in" | "ae";
+/**
+ * `restricted` – closed to residents according to the exchange's own list of restricted countries or its own notices.
+ * `regional` – served by a separate regional platform that the exchange names.
+ * `partial` – only some products or regions are restricted.
+ * `open` – not on the restricted list at the review date (no guarantee that every product is offered).
+ */
+export type CountryStatus = "restricted" | "regional" | "partial" | "open";
+export type CountryInfo = { status: CountryStatus; note?: string };
+
+/**
+ * Content and researched facts for the alternatives pages (`src/data/alternatives/<slug>.ts`).
+ * Every fact is taken from the exchange's own pages: either from `Exchange.sources` or from `sources` here.
+ */
+export type AlternativesInfo = {
+  /* --- this exchange as an alternative to another one --- */
+  /** Short label for tables, e.g. "Copy trading". */
+  role: string;
+  /** Half sentence for quick answers, starting with the exchange name, e.g. "Gate lists the most assets (5,400+)". */
+  pick: string;
+  /** Two or three sentences on what this exchange offers as an alternative. */
+  pitch: string;
+  chooseIf: string[];
+  thinkTwiceIf: string[];
+  /* --- this exchange as the one people want to replace --- */
+  /** Lead paragraph of its alternatives page. */
+  intro: string;
+  /** Why people look for an alternative – facts about this exchange only. */
+  reasons: { title: string; text: string }[];
+  /** When staying is the better choice. */
+  stayIf: string[];
+  /** Questions specific to this exchange's alternatives page. */
+  faqs: Faq[];
+  /* --- researched facts --- */
+  /** Proof of reserves in one line, with the snapshot date. */
+  reserves: string;
+  /** User-protection or insurance fund in one line ("" if the exchange names none). */
+  fund: string;
+  features: Record<FeatureKey, FeatureInfo>;
+  countries: Record<CountryKey, CountryInfo>;
+  /** Regional platforms named by the exchange, in one or two sentences ("" if none). */
+  regional: string;
+  /** The MiCA-authorised entity the exchange names for EEA residents, e.g. "OKX Europe Limited, Malta" ("" if it names none). */
+  mica: string;
+  /** Earlier brand name people still search for, e.g. "Gate.io". */
+  formerName?: string;
+  /** Official pages the features, countries and regional platforms were checked against. */
+  sources: Source[];
+};
+
 /** How the referral code works on this exchange. */
 export type ReferralInfo = {
   /** What the exchange itself calls the code, e.g. "Referral ID". */
