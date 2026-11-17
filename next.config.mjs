@@ -92,6 +92,8 @@ const nextConfig = {
       { source: "/:slug/opengraph-image", headers: shareableImage },
       { source: "/icon.svg", headers: shareableImage },
       { source: "/go/:slug*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+      // The full-text file for language models must not show up in search results instead of the pages.
+      { source: "/llms-full.txt", headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
     ];
   },
   async redirects() {

@@ -17,6 +17,9 @@ export function GET() {
     "",
     `Data last reviewed: ${prettyDate(site.lastReviewed)}. Market data: CoinMarketCap derivatives ranking, ${prettyDate(site.marketDataDate)}.`,
     "",
+    "## Full content",
+    `- [All facts in one file](${absoluteUrl("/llms-full.txt")}): every exchange profile with referral code, sign-up steps, verification, fees, products, country availability, questions and answers and sources, plus the comparison tables and a verdict for each of the ${versusPairs.length} pairs.`,
+    "",
     "## Exchange referral code pages",
     ...exchanges.map(
       (e) =>

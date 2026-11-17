@@ -95,7 +95,9 @@ Monthly is a good rhythm.
   OG images per page, `sitemap.xml`, `robots.txt`, web manifest, breadcrumbs, internal linking.
 - **Schema.org (JSON-LD):** Organization, WebSite, ItemList, WebPage, Offer, BreadcrumbList,
   FAQPage, AboutPage.
-- **GEO/AEO:** "Quick answer" blocks, fact tables with dates and sources, FAQ, `/llms.txt`,
+- **GEO/AEO:** "Quick answer" blocks, fact tables with dates and sources, FAQ, `/llms.txt` (index)
+  and `/llms-full.txt` (every exchange profile, the comparison tables and a verdict per pair in one
+  Markdown file, generated in `src/lib/llms-full.ts`, served with `X-Robots-Tag: noindex`),
   AI crawlers explicitly allowed in `robots.txt`.
 - **Performance:** fully static, system font stack, inline SVG, one tiny client component
   (copy button), long-term caching for logos.
