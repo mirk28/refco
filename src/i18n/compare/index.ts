@@ -5,10 +5,11 @@ import { es } from "./es";
 import { pt } from "./pt";
 import { tr } from "./tr";
 import { de } from "./de";
+import { hi } from "./hi";
 
 export type { AltFaqGroup, CompareText } from "./en";
 
-const texts: Record<Locale, CompareText> = { en, es, pt, tr, de };
+const texts: Record<Locale, CompareText> = { en, es, pt, tr, de, hi };
 
 /**
  * The sentences of the comparison pages in one language (see `./en.ts`).

@@ -99,7 +99,8 @@ function alternativesFields(x, english) {
 const { localeInfo } = await import(pathToFileURL(path.join(root, "src/i18n/config.ts")).href);
 const numbers = (text, decimal = ".") =>
   (text.match(/\d+(?:[.,]\d+)*/g) ?? [])
-    .map((n) => (decimal === "," ? n.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : n.replace(/,(?=\d{3}\b)/g, "")))
+    // With a decimal point every comma between digits groups thousands – also the Indian "1,00,000" (= 100,000).
+    .map((n) => (decimal === "," ? n.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : n.replace(/,(?=\d)/g, "")))
     .sort();
 const quoted = (text) => text.match(/“[^”]*”/g) ?? [];
 const count = (text, needle) => (needle ? text.split(needle).length - 1 : 0);

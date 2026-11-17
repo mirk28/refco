@@ -509,7 +509,8 @@ export function VersusPage({ pair, locale }: { pair: Pair; locale: Locale }) {
                     </h3>
                     <p className="small">{e.signup.kyc}</p>
                     <p className="small">
-                      <strong>{t.documents}</strong> {e.signup.documents} <strong>{t.minAge}</strong> {e.signup.minAge}.
+                      <strong>{t.documents}</strong> {e.signup.documents} <strong>{t.minAge}</strong> {e.signup.minAge}
+                      {localeInfo[locale].fullStop ?? "."}
                     </p>
                     <p className="small" style={{ margin: 0 }}>
                       <Link href={`${exchangePath(e.slug, locale)}#how-to`}>{t.howToRegister(e)}</Link>

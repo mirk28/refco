@@ -3,7 +3,7 @@ import { getDictionary } from "@/i18n";
 import { alternativesTexts } from "@/i18n/alternatives";
 import type { Locale } from "@/i18n/config";
 import { alternativesTo, feePair, leverageOf } from "./compare";
-import { renderOg } from "./og";
+import { renderCard } from "./og";
 import { findPage } from "./pages";
 import { monthYearFor } from "./seo";
 
@@ -11,7 +11,7 @@ import { monthYearFor } from "./seo";
  * Share card of the page behind `/<locale>/<segment>` – used by `src/app/<locale>/[page]/opengraph-image.tsx`
  * of every language other than English. (The English cards: `src/app/[slug]/opengraph-image/route.tsx`.)
  */
-export function renderPageOg(segment: string, locale: Locale) {
+export async function renderPageOg(segment: string, locale: Locale) {
   const t = getDictionary(locale).og;
   const kicker = t.exchangeKicker(monthYearFor(locale));
   const page = findPage(segment, locale);
@@ -19,7 +19,7 @@ export function renderPageOg(segment: string, locale: Locale) {
   if (page?.type === "alternatives") {
     const x = page.exchange;
     const texts = alternativesTexts(locale);
-    return renderOg({
+    return renderCard(locale, {
       badge: x.name,
       badgeColor: x.brandColor,
       badgeInk: x.brandInk,
@@ -31,7 +31,7 @@ export function renderPageOg(segment: string, locale: Locale) {
   }
   if (page?.type === "versus") {
     const { a, b } = page.pair;
-    return renderOg({
+    return renderCard(locale, {
       badge: t.versusBadge,
       kicker,
       title: `${a.name} vs ${b.name}`,
@@ -41,7 +41,7 @@ export function renderPageOg(segment: string, locale: Locale) {
   }
   if (page?.type === "referral") {
     const e = page.exchange;
-    return renderOg({
+    return renderCard(locale, {
       badge: e.name,
       badgeColor: e.brandColor,
       badgeInk: e.brandInk,
@@ -52,7 +52,7 @@ export function renderPageOg(segment: string, locale: Locale) {
     });
   }
   // Hub, about and legal pages show the general card of the language.
-  return renderOg({
+  return renderCard(locale, {
     kicker: t.homeKicker(monthYearFor(locale)),
     title: t.homeTitle,
     subtitle: exchangesFor(locale)

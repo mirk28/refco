@@ -72,7 +72,7 @@ const shareableImage = [{ key: "Cross-Origin-Resource-Policy", value: "cross-ori
 // (`/es/okx-vs-binance` → `/es/binance-vs-okx`).
 // Keep `exchangeSlugs` in the same order as that array and `languageFolders` in step with `locales` in src/i18n/config.ts.
 const exchangeSlugs = ["binance", "okx", "bybit", "bitget", "gate", "kucoin", "mexc"];
-const languageFolders = ["", "/es", "/pt", "/tr", "/de"];
+const languageFolders = ["", "/es", "/pt", "/tr", "/de", "/hi"];
 const reverseVersus = languageFolders.flatMap((folder) =>
   exchangeSlugs.flatMap((a, i) =>
     exchangeSlugs.slice(i + 1).map((b) => ({ source: `${folder}/${b}-vs-${a}`, destination: `${folder}/${a}-vs-${b}`, permanent: true })),

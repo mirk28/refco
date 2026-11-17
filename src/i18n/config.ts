@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr", "de"] as const;
+export const locales = ["en", "es", "pt", "tr", "de", "hi"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -32,6 +32,14 @@ export type LocaleInfo = {
   percentSpace?: boolean;
   /** Writing direction; only set for right-to-left languages. */
   dir?: "rtl";
+  /**
+   * Font of the share cards for scripts whose letters must be joined (conjuncts, vowel signs), such as Devanagari.
+   * `next/og` draws letters one by one, so the texts of these cards are shaped by sharp (Pango with HarfBuzz) with the
+   * font files in `src/fonts/<family without spaces>/` – see `src/lib/og-shape.ts`. Without it the card uses Geist.
+   */
+  cardFont?: string;
+  /** Mark at the end of a sentence that a template closes itself; default ".". Hindi uses the danda "।". */
+  fullStop?: string;
 };
 
 export const localeInfo: Record<Locale, LocaleInfo> = {
@@ -40,6 +48,7 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
   pt: { name: "Português (Brasil)", short: "PT", htmlLang: "pt-BR", alsoHreflang: ["pt"], ogLocale: "pt_BR", dateLocale: "pt-BR", decimal: "," },
   tr: { name: "Türkçe", short: "TR", htmlLang: "tr", ogLocale: "tr_TR", dateLocale: "tr", decimal: ",", percentBefore: true },
   de: { name: "Deutsch", short: "DE", htmlLang: "de", ogLocale: "de_DE", dateLocale: "de-DE", decimal: ",", percentSpace: true },
+  hi: { name: "हिन्दी", short: "HI", htmlLang: "hi", ogLocale: "hi_IN", dateLocale: "hi-IN", decimal: ".", cardFont: "Noto Sans Devanagari", fullStop: "।" },
 };
 
 /**
@@ -109,6 +118,14 @@ const segments: Record<Locale, Segments> = {
     alternatives: (slug) => `${slug}-alternativen`,
     alternativesPattern: /^([a-z0-9]+)-alternativen$/,
     static: { compare: "boersenvergleich", about: "ueber-uns", affiliateDisclosure: "affiliate-hinweis", imprint: "impressum", privacy: "datenschutz" },
+  },
+  // Indian readers search in Latin letters ("binance referral code"), so the Hindi addresses keep the English words.
+  hi: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
   },
 };
 /** Head-to-head pages are spelled the same way in every language: `binance-vs-okx`. */

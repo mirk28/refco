@@ -5,10 +5,11 @@ import { es } from "./es";
 import { pt } from "./pt";
 import { tr } from "./tr";
 import { de } from "./de";
+import { hi } from "./hi";
 
 export type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
-const texts: Record<Locale, VersusText> = { en, es, pt, tr, de };
+const texts: Record<Locale, VersusText> = { en, es, pt, tr, de, hi };
 
 /**
  * The head-to-head pages and the comparison hub in one language (see `./en.tsx`).
