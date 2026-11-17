@@ -11,6 +11,7 @@ export function renderOg({
   badge,
   badgeColor = "#1D4ED8",
   badgeInk = "#FFFFFF",
+  footer = ["Verified links", "Fees and facts", "Official sources"],
 }: {
   kicker: string;
   title: string;
@@ -18,6 +19,8 @@ export function renderOg({
   badge?: string;
   badgeColor?: string;
   badgeInk?: string;
+  /** The three words at the bottom of the card (`og.footer` in src/i18n/ for other languages). */
+  footer?: string[];
 }) {
   return new ImageResponse(
     (
@@ -75,11 +78,11 @@ export function renderOg({
         </div>
 
         <div style={{ display: "flex", gap: 28, fontSize: 22, color: "#9FB0CC" }}>
-          <span>Verified links</span>
+          <span>{footer[0]}</span>
           <span>·</span>
-          <span>Fees and facts</span>
+          <span>{footer[1]}</span>
           <span>·</span>
-          <span>Official sources</span>
+          <span>{footer[2]}</span>
         </div>
       </div>
     ),

@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { site } from "@/config/site";
+import { getDictionary } from "@/i18n";
+import { homePath } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 
 /**
  * RefCo mark: a navy tile holding a "code ticket" (notched coupon) with a
@@ -24,9 +27,9 @@ export function LogoMark({ size = 38 }: { size?: number }) {
   );
 }
 
-export function Logo() {
+export function Logo({ locale = "en" }: { locale?: Locale }) {
   return (
-    <Link href="/" className="brand" aria-label={`${site.name} – ${site.domain} home`}>
+    <Link href={homePath(locale)} className="brand" aria-label={getDictionary(locale).layout.homeLabel}>
       <LogoMark />
       <span className="brand-text">
         <span className="brand-name">

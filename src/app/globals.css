@@ -93,9 +93,27 @@ ul, ol { padding-left: 1.2em; margin: 0 0 1em; }
 .main-nav a.btn-primary, .toc a.btn-primary, .main-nav a.btn-primary:hover, .toc a.btn-primary:hover { color: #fff; }
 .main-nav a.btn-primary:hover, .toc a.btn-primary:hover { background: var(--accent-hover); }
 .nav-toggle { display: none; }
-@media (max-width: 760px) {
+.main-nav a, .lang-menu summary { white-space: nowrap; }
+@media (max-width: 880px) {
   .main-nav .nav-link { display: none; }
 }
+
+/* Language menu (header) */
+.lang-menu { position: relative; }
+.lang-menu summary {
+  list-style: none; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;
+  color: var(--ink-2); font-weight: 600; font-size: 0.88rem; padding: 8px 10px; border-radius: 10px;
+}
+.lang-menu summary::-webkit-details-marker { display: none; }
+.lang-menu summary:hover, .lang-menu[open] summary { background: var(--bg); color: var(--ink); }
+.lang-menu ul {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 60; min-width: 152px;
+  margin: 0; padding: 6px; list-style: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-lg);
+}
+.lang-menu li a, .lang-menu li span { display: block; padding: 8px 12px; border-radius: 8px; font-size: 0.94rem; font-weight: 600; }
+.lang-menu li span { color: var(--muted); }
+.footer-lang strong { color: #dfe6f1; font-weight: 600; }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -113,6 +131,10 @@ ul, ol { padding-left: 1.2em; margin: 0 0 1em; }
 .btn-sm { padding: 10px 14px; font-size: 0.9rem; border-radius: 10px; }
 .btn-lg { padding: 17px 26px; font-size: 1.06rem; }
 .btn-block { width: 100%; }
+/* Long button labels (they are longer in other languages) wrap on small screens instead of running out of the page. */
+@media (max-width: 560px) {
+  main .btn { white-space: normal; text-align: center; line-height: 1.15; max-width: 100%; }
+}
 
 /* ---------- Hero ---------- */
 .hero {
@@ -130,14 +152,14 @@ ul, ol { padding-left: 1.2em; margin: 0 0 1em; }
   mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 70%);
   -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 70%);
 }
-.hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; padding: 72px 0 80px; }
+.hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; padding-top: 72px; padding-bottom: 80px; }
 .hero h1 { margin-bottom: 18px; }
 .hero h1 .hl { background: linear-gradient(90deg, var(--brand), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 22px; }
 .trust-row { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding: 0; margin: 0; color: var(--ink-2); font-size: 0.92rem; font-weight: 600; }
 .trust-row li { display: inline-flex; align-items: center; gap: 8px; }
 .check { width: 18px; height: 18px; flex: none; }
-@media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; padding: 48px 0 56px; gap: 36px; } }
+@media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; padding-top: 48px; padding-bottom: 56px; gap: 36px; } }
 
 /* Ticket stack (home hero visual) */
 .ticket-stack { display: grid; gap: 12px; }

@@ -1,0 +1,11 @@
+import type { Locale } from "./config";
+import { en } from "./en";
+import type { Dictionary } from "./en";
+import { es } from "./es";
+
+export type { Dictionary, PageLinks } from "./en";
+
+const dictionaries: Record<Locale, Dictionary> = { en, es };
+
+/** Interface texts of a language. */
+export const getDictionary = (locale: Locale = "en"): Dictionary => dictionaries[locale];

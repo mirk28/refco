@@ -30,6 +30,52 @@ export type ExternalGuides = {
   links: GuideLink[];
 };
 
+/* ------------------------------ Language versions ------------------------------ */
+
+/**
+ * The text of an exchange entry in another language (`src/data/i18n/<locale>/<slug>.ts`).
+ *
+ * Only text lives here. Codes, links, fee numbers, market data and source URLs are always taken from the
+ * English entry in `src/data/exchanges/<slug>.ts`, so a translation cannot change a fact by accident.
+ * Every array must have the same length and order as in the English entry; `scripts/check-i18n.mjs`
+ * verifies that, and that every number of the English text also appears in the translation.
+ */
+export type ExchangeText = {
+  referral: ReferralInfo;
+  signup: SignupInfo;
+  welcomeTasks: { task: string; reward: string }[];
+  tokenDiscount: string;
+  /** Names of the markets in `extraFees`, same order. */
+  extraFeeMarkets: string[];
+  /** Labels of `sources`, same order. The linked pages stay the official (English) ones. */
+  sourceLabels: string[];
+  /** Texts of the `guides` block; leave out if the English entry has none. */
+  guides?: { heading: string; intro: string; linkLabel: string };
+  feeDiscount: string;
+  referralCovers: string[];
+  bonusHeadline: string;
+  benefits: string[];
+  benefitNote: string;
+  headquarters: string;
+  regulation: string;
+  users: string;
+  assets: string;
+  maxLeverage: string;
+  feeNote: string;
+  products: string[];
+  tagline: string;
+  quickAnswer: string;
+  about: string[];
+  highlights: { title: string; text: string }[];
+  pros: string[];
+  cons: string[];
+  bestFor: string[];
+  signupTip: string;
+  safety: string;
+  restricted: string;
+  faqs: Faq[];
+};
+
 /* ------------------------- "[Exchange] alternatives" pages ------------------------- */
 
 /** Products compared on the alternatives pages. */

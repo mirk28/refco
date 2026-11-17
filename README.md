@@ -39,9 +39,33 @@ Requires Node.js 20.9+.
 | **"[Exchange] alternatives" pages**: why people switch, products, country availability, regional platforms | `src/data/alternatives/<slug>.ts` (index: `src/data/alternatives.ts`) |
 | Comparison sentences and questions of the alternatives pages (built from the data) | `src/lib/compare.ts`, template `src/components/AlternativesPage.tsx` |
 | **"[Exchange] vs [Exchange]" pages** (21 pairs, no data of their own) | pairs and URLs `src/data/versus.ts`, logic `src/lib/versus.ts`, template `src/components/VersusPage.tsx` |
-| Comparison hub `/compare` | `src/app/compare/page.tsx` |
+| Comparison hub `/compare` | `src/app/(en)/compare/page.tsx` |
+| **Language versions** (interface texts, exchange texts, routes) | `src/i18n/`, `src/data/i18n/<locale>/`, `src/app/<locale>/` – see "Language versions" below |
 | Colours / design tokens | `src/app/globals.css` (`:root`) |
 | Logo mark | `src/components/Logo.tsx`, `src/app/icon.svg`, `src/lib/og.tsx` |
+
+### Language versions
+English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`
+(`/es/codigo-de-referido-binance`). Translated so far: the home page and the seven referral-code pages.
+The alternatives, head-to-head, about and legal pages exist in English only; other languages link to
+them marked "(en inglés)".
+
+- **Interface texts** (headings, labels, sentences around the facts, the common questions):
+  `src/i18n/en.tsx` defines the keys, `src/i18n/es.tsx` has the same keys in Spanish.
+- **Exchange texts**: `src/data/i18n/es/<slug>.ts` holds text only (type `ExchangeText`). Codes, links,
+  fee numbers, market data and source URLs always come from the English entry, so a translation cannot
+  change a fact. When you change a text in `src/data/exchanges/<slug>.ts`, change it in every language.
+- **Check**: `npm run check:i18n` compares every translation with the English entry (list lengths,
+  numbers, quoted interface labels, the referral code). The build also stops if a list has a different length.
+- **Routes**: every language has its own root layout so that `<html lang>` is right:
+  `src/app/(en)/` for English, `src/app/es/` for Spanish. Pages, metadata, `hreflang`, sitemap and
+  `llms.txt` are generated from `locales` in `src/i18n/config.ts`.
+- **Adding a language**: add it to `src/i18n/config.ts`, write `src/i18n/<locale>.tsx` and
+  `src/data/i18n/<locale>/<slug>.ts`, register them in `src/i18n/index.ts` and `src/data/i18n/index.ts`,
+  copy `src/app/es/` to `src/app/<locale>/` and change the locale in its five files.
+- The share cards of the English pages are route handlers (`src/app/opengraph-image/`,
+  `src/app/[slug]/opengraph-image/`), not `opengraph-image.tsx` files, because that file convention
+  adds a hash to the URL inside a route group. The 404 page for unknown URLs is `src/app/global-not-found.tsx`.
 
 ### Affiliate links
 While `affiliateUrl` is empty, every button links to the official homepage and the sign-up box says

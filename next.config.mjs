@@ -81,6 +81,9 @@ const nextConfig = {
   compress: true,
   trailingSlash: false,
   images: { formats: ["image/avif", "image/webp"] },
+  // Every language has its own root layout (src/app/(en), src/app/es), so the 404 page for unmatched URLs
+  // is src/app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
@@ -90,6 +93,8 @@ const nextConfig = {
       },
       { source: "/opengraph-image", headers: shareableImage },
       { source: "/:slug/opengraph-image", headers: shareableImage },
+      // Language versions (`/es/codigo-de-referido-binance/opengraph-image`); `/es/opengraph-image` is matched by the line above.
+      { source: "/:locale/:page/opengraph-image", headers: shareableImage },
       { source: "/icon.svg", headers: shareableImage },
       { source: "/go/:slug*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       // The full-text file for language models must not show up in search results instead of the pages.

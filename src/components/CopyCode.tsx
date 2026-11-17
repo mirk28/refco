@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-export function CopyCode({ code }: { code: string }) {
+/** The labels are passed in, so the button shows the language of the page (see `blocks.copy` in src/i18n/). */
+export function CopyCode({ code, label = "Copy", copiedLabel = "Copied ✓" }: { code: string; label?: string; copiedLabel?: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -15,7 +16,7 @@ export function CopyCode({ code }: { code: string }) {
   };
   return (
     <button type="button" className="copy-btn" onClick={copy} aria-live="polite">
-      {copied ? "Copied ✓" : "Copy"}
+      {copied ? copiedLabel : label}
     </button>
   );
 }

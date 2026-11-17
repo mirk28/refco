@@ -23,6 +23,7 @@ import {
   shortMonthYear,
   switchHowToLd,
 } from "@/lib/seo";
+import { shareImages } from "@/lib/seo";
 import { joinList } from "@/lib/faqs";
 import {
   addLater,
@@ -71,8 +72,8 @@ export function alternativesMetadata(x: Exchange): Metadata {
       ...alts.map((a) => `${a.name} vs ${x.name}`),
     ],
     alternates: { canonical: path },
-    openGraph: { type: "article", title, description, url: path, modifiedTime: site.lastReviewed },
-    twitter: { title, description },
+    openGraph: { type: "article", title, description, url: path, modifiedTime: site.lastReviewed, images: shareImages(path, title) },
+    twitter: { card: "summary_large_image", title, description, images: shareImages(path, title) },
   };
 }
 

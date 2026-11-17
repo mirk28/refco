@@ -1,18 +1,39 @@
 import { site } from "@/config/site";
 import type { Exchange, Faq } from "@/data/exchanges";
 import { exchangePath, outboundUrl } from "@/data/exchanges";
+import { getDictionary } from "@/i18n";
+import { homePath, localeInfo } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 
 export const absoluteUrl = (path = "/") => new URL(path, site.url).toString();
 
 const reviewDate = new Date(`${site.lastReviewed}T00:00:00Z`);
 
-/** e.g. "October 2026" – used in titles/H1 for freshness signals. */
-export const monthYear = reviewDate.toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
-export const shortMonthYear = reviewDate.toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
-export const prettyDate = (iso: string) =>
-  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+/** e.g. "October 2026" (Spanish: "octubre de 2026") – used in titles/H1 for freshness signals. */
+export const monthYearFor = (locale: Locale) =>
+  reviewDate.toLocaleDateString(localeInfo[locale].dateLocale, { month: "long", year: "numeric", timeZone: "UTC" });
+export const shortMonthYearFor = (locale: Locale) =>
+  reviewDate.toLocaleDateString(localeInfo[locale].dateLocale, { month: "short", year: "numeric", timeZone: "UTC" });
+export const monthYear = monthYearFor("en");
+export const shortMonthYear = shortMonthYearFor("en");
+export const prettyDate = (iso: string, locale: Locale = "en") =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString(localeInfo[locale].dateLocale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
-export const formatBn = (n: number) => `$${n.toFixed(n >= 10 ? 1 : 2)}B`;
+export const formatBn = (n: number, locale: Locale = "en") => getDictionary(locale).format.billions(n);
+
+/**
+ * The share card (Open Graph / X) of an English page, for the `openGraph.images` and `twitter.images` fields.
+ *
+ * The English pages live in the route group `src/app/(en)/`. An `opengraph-image.tsx` inside a route group
+ * gets a hash in its URL, so the image files stay outside it (`src/app/opengraph-image.tsx`,
+ * `src/app/[slug]/opengraph-image.tsx`) and keep their URLs – but Next.js then no longer adds them to the
+ * pages by itself. Other languages (`src/app/es/`) are not in a route group and need none of this.
+ *
+ * @param path  Path of the page whose own card is meant, e.g. `/binance-referral-code`; empty for the general card.
+ */
+export const shareImages = (path = "", alt = "RefCo – verified crypto exchange referral codes") => [
+  { url: `${path}/opengraph-image?v=${site.lastReviewed}`, width: 1200, height: 630, type: "image/png", alt },
+];
 
 /* ----------------------------- JSON-LD builders ---------------------------- */
 
@@ -68,18 +89,37 @@ export function faqLd(faqs: Faq[]) {
   };
 }
 
-export function exchangePageLd(e: Exchange, title: string, description: string) {
-  const url = absoluteUrl(exchangePath(e.slug));
+/** WebPage node of the home page in a language other than English (the English home page is the WebSite node). */
+export function homePageLd(locale: Locale, title: string, description: string) {
+  const url = absoluteUrl(homePath(locale));
   return {
     "@type": "WebPage",
     "@id": `${url}#webpage`,
     url,
     name: title,
     description,
-    inLanguage: site.language,
+    inLanguage: localeInfo[locale].htmlLang,
     isPartOf: { "@id": websiteId },
     publisher: { "@id": orgId },
-    datePublished: "2026-10-11",
+    dateModified: site.lastReviewed,
+  };
+}
+
+export function exchangePageLd(e: Exchange, title: string, description: string, locale: Locale = "en") {
+  const t = getDictionary(locale).exchange;
+  const url = absoluteUrl(exchangePath(e.slug, locale));
+  return {
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: title,
+    description,
+    inLanguage: localeInfo[locale].htmlLang,
+    // A translated page names the English page it was translated from.
+    ...(locale === "en" ? {} : { translationOfWork: { "@id": `${absoluteUrl(exchangePath(e.slug))}#webpage` } }),
+    isPartOf: { "@id": websiteId },
+    publisher: { "@id": orgId },
+    datePublished: locale === "en" ? "2026-10-11" : site.lastReviewed,
     dateModified: site.lastReviewed,
     lastReviewed: site.lastReviewed,
     reviewedBy: { "@id": orgId },
@@ -94,26 +134,27 @@ export function exchangePageLd(e: Exchange, title: string, description: string) 
     },
     mainEntity: {
       "@type": "Offer",
-      name: `${e.name} referral code ${e.referralCode}`,
-      description: `${e.feeDiscount || e.bonusHeadline}. One referral covers ${e.referralCovers.join(", ")}.`,
+      name: t.offerName(e),
+      description: t.offerDescription(e),
       url: outboundUrl(e),
       price: "0",
       priceCurrency: "USD",
-      category: "Cryptocurrency exchange registration",
+      category: t.offerCategory,
       offeredBy: { "@type": "Organization", name: e.name, url: e.homepage },
     },
   };
 }
 
 /** The exchange's documented registration steps as a HowTo, for answer engines. */
-export function howToLd(e: Exchange) {
-  const url = absoluteUrl(exchangePath(e.slug));
+export function howToLd(e: Exchange, locale: Locale = "en") {
+  const t = getDictionary(locale).exchange;
+  const url = absoluteUrl(exchangePath(e.slug, locale));
   return {
     "@type": "HowTo",
     "@id": `${url}#howto`,
-    name: `How to sign up on ${e.name} with the referral code ${e.referralCode}`,
-    description: `Registration steps for ${e.name} as documented by the exchange, including where the referral code ${e.referralCode} is entered.`,
-    inLanguage: site.language,
+    name: t.howToName(e),
+    description: t.howToDescription(e),
+    inLanguage: localeInfo[locale].htmlLang,
     step: e.signup.steps.map((s, i) => ({
       "@type": "HowToStep",
       position: i + 1,

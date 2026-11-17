@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { site } from "@/config/site";
 
 /**
@@ -69,7 +68,10 @@ function removeAnalytics(id: string) {
   for (const name of names) document.cookie = `${name}=; Max-Age=0; path=/`;
 }
 
-export function Analytics() {
+/** Texts of the consent banner; they come from the dictionary of the page's language (`consent` in src/i18n/). */
+export type ConsentTexts = { label: string; text: React.ReactNode; decline: string; allow: string };
+
+export function Analytics({ texts }: { texts: ConsentTexts }) {
   const id = site.analyticsId;
   const [open, setOpen] = useState(false);
 
@@ -95,17 +97,14 @@ export function Analytics() {
 
   if (!id || !open) return null;
   return (
-    <div className="consent" role="dialog" aria-live="polite" aria-label="Analytics consent">
-      <p>
-        <strong>Analytics – your choice.</strong> We would like to use Google Analytics to see which pages are read. It sets cookies and sends usage
-        data to Google, and it only starts if you allow it. No advertising cookies either way. Details: <Link href="/privacy#analytics">privacy policy</Link>.
-      </p>
+    <div className="consent" role="dialog" aria-live="polite" aria-label={texts.label}>
+      <p>{texts.text}</p>
       <div className="consent-actions">
         <button type="button" className="btn btn-secondary btn-sm" onClick={() => decide("denied")}>
-          Decline
+          {texts.decline}
         </button>
         <button type="button" className="btn btn-primary btn-sm" onClick={() => decide("granted")}>
-          Allow analytics
+          {texts.allow}
         </button>
       </div>
     </div>
@@ -113,11 +112,11 @@ export function Analytics() {
 }
 
 /** Footer link that reopens the consent banner, so a choice can be changed at any time. */
-export function ConsentSettingsButton() {
+export function ConsentSettingsButton({ label = "Cookie settings" }: { label?: string }) {
   if (!site.analyticsId) return null;
   return (
     <button type="button" className="link-button" onClick={() => window.dispatchEvent(new Event(openEvent))}>
-      Cookie settings
+      {label}
     </button>
   );
 }

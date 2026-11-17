@@ -13,6 +13,8 @@
  * Market data (`market`) = CoinMarketCap derivatives ranking snapshot (see site.marketDataDate).
  */
 import type { Exchange } from "./types";
+import { referralPath } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 import { binance } from "./exchanges/binance";
 import { okx } from "./exchanges/okx";
 import { bybit } from "./exchanges/bybit";
@@ -25,7 +27,8 @@ export type { Exchange, ExternalGuides, Faq, FaqTopic, Fee, GuideLink, ReferralI
 
 export const exchanges: Exchange[] = [binance, okx, bybit, bitget, gate, kucoin, mexc];
 
-export const exchangePath = (slug: string) => `/${slug}-referral-code`;
+/** Path of the referral-code page: `/binance-referral-code`, in Spanish `/es/codigo-de-referido-binance`. */
+export const exchangePath = (slug: string, locale: Locale = "en") => referralPath(slug, locale);
 export const getExchangeByPathSlug = (pathSlug: string) =>
   exchanges.find((e) => `${e.slug}-referral-code` === pathSlug);
 export const getExchange = (slug: string) => exchanges.find((e) => e.slug === slug);

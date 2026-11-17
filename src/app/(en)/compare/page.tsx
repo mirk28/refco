@@ -8,7 +8,7 @@ import { ExchangeLogo } from "@/components/ExchangeLogo";
 import { Breadcrumbs, ComparisonTable, FaqList } from "@/components/Blocks";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowIcon } from "@/components/Icons";
-import { absoluteUrl, breadcrumbLd, faqLd, formatBn, graph, monthYear, pageListLd, prettyDate, shortMonthYear } from "@/lib/seo";
+import { absoluteUrl, breadcrumbLd, faqLd, formatBn, graph, monthYear, pageListLd, prettyDate, shareImages, shortMonthYear } from "@/lib/seo";
 import { joinList } from "@/lib/faqs";
 import {
   addLater,
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: comparePath },
-  openGraph: { type: "website", title, description, url: comparePath },
-  twitter: { title, description },
+  openGraph: { type: "website", title, description, url: comparePath, images: shareImages() },
+  twitter: { card: "summary_large_image", title, description, images: shareImages() },
 };
 
 export default function ComparePage() {

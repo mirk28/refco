@@ -12,7 +12,7 @@ import { CopyCode } from "./CopyCode";
 import { JsonLd } from "./JsonLd";
 import { ArrowIcon, CheckIcon, MinusIcon } from "./Icons";
 import { Mark, StatusPill } from "./AlternativesPage";
-import { breadcrumbLd, faqLd, formatBn, graph, monthYear, prettyDate, shortMonthYear, versusPageLd } from "@/lib/seo";
+import { breadcrumbLd, faqLd, formatBn, graph, monthYear, prettyDate, shareImages, shortMonthYear, versusPageLd } from "@/lib/seo";
 import { advantages, altInfo, feePair, feeSentence, leverageOf } from "@/lib/compare";
 import {
   buildVersusFaqs,
@@ -50,8 +50,8 @@ export function versusMetadata({ a, b }: Pair): Metadata {
       ...former.flatMap(([old, other]) => [`${old} vs ${other}`, `${other} vs ${old}`]),
     ],
     alternates: { canonical: path },
-    openGraph: { type: "article", title, description, url: path, modifiedTime: site.lastReviewed },
-    twitter: { title, description },
+    openGraph: { type: "article", title, description, url: path, modifiedTime: site.lastReviewed, images: shareImages(path, title) },
+    twitter: { card: "summary_large_image", title, description, images: shareImages(path, title) },
   };
 }
 

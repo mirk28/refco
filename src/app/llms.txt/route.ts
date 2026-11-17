@@ -5,8 +5,14 @@ import { alternativesTo, altInfo, feePair, leverageOf } from "@/lib/compare";
 import { comparePath, versusLabel, versusPairs, versusPath } from "@/data/versus";
 import { scoreSummary } from "@/lib/versus";
 import { absoluteUrl, prettyDate } from "@/lib/seo";
+import { getDictionary } from "@/i18n";
+import { homePath, localeInfo, locales } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 
 export const dynamic = "force-static";
+
+/** English names of the languages, for the section headings of this (English) file. */
+const englishName: Record<Locale, string> = { en: "English", es: "Spanish" };
 
 /** llms.txt – a concise, machine-readable summary for AI answer engines (GEO). */
 export function GET() {
@@ -44,6 +50,14 @@ export function GET() {
         ? [`## ${name}: ${guides.heading}`, ...guides.links.map((g) => `- [${guides.linkLabel} – ${g.name ? `${g.name} (${g.language})` : g.language}](${g.url})`), ""]
         : [],
     ),
+    ...locales
+      .filter((l) => l !== "en")
+      .flatMap((l) => [
+        `## Pages in ${englishName[l]} (${localeInfo[l].name})`,
+        `- [${getDictionary(l).layout.referralCodes}](${absoluteUrl(homePath(l))}): the home page in ${englishName[l]} – the same facts as the English pages, translated.`,
+        ...exchanges.map((e) => `- [${getDictionary(l).layout.referralCodeOf(e.name)}](${absoluteUrl(exchangePath(e.slug, l))}): ${englishName[l]} version of the ${e.name} referral code page (code ${e.referralCode}).`),
+        "",
+      ]),
     "## Key facts",
     "- Every fact about referral codes, registration, verification, welcome offers and fees was read on the exchange's own website or help centre; each exchange page lists its sources.",
     "- Whether a referral code can be added after registration differs by exchange: Binance and MEXC allow it within 30 days under conditions, KuCoin by request, Bybit, OKX and Bitget only at sign-up, and Gate documents no way.",
