@@ -15,6 +15,11 @@ import type { CardFont } from "@/i18n/config";
  * harmless, as the font files are given directly.
  */
 
+// Only the fonts in src/fonts (src/fonts/fonts.conf): a build machine's own fontconfig rules can slip its fonts between
+// ours. Set before the first text is drawn, when fontconfig reads its configuration. (On Windows the variable does
+// not reach fontconfig; there the default configuration draws the same cards.)
+process.env.FONTCONFIG_FILE = path.join(process.cwd(), "src/fonts/fonts.conf");
+
 const weightFiles = { 400: ["Regular"], 700: ["Bold", "Regular"], 800: ["ExtraBold", "Bold", "Regular"] } as const;
 export type CardWeight = keyof typeof weightFiles;
 
