@@ -25,9 +25,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const focus = getExchangeByAlternativesSlug(slug);
-  if (focus) return alternativesMetadata(focus);
+  if (focus) return alternativesMetadata(focus, "en");
   const pair = getPairByPathSlug(slug);
-  if (pair) return versusMetadata(pair);
+  if (pair) return versusMetadata(pair, "en");
   const e = getExchangeByPathSlug(slug);
   if (!e) return {};
   return exchangeMetadata(e, "en");
@@ -36,9 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { slug } = await params;
   const focus = getExchangeByAlternativesSlug(slug);
-  if (focus) return <AlternativesPage exchange={focus} />;
+  if (focus) return <AlternativesPage exchange={focus} locale="en" />;
   const pair = getPairByPathSlug(slug);
-  if (pair) return <VersusPage pair={pair} />;
+  if (pair) return <VersusPage pair={pair} locale="en" />;
   const e = getExchangeByPathSlug(slug);
   if (!e) notFound();
   return <ExchangePage exchange={e} locale="en" />;

@@ -1,4 +1,6 @@
-// Checks the exchange translations in src/data/i18n/<locale>/ against the English entries in src/data/exchanges/.
+// Checks the translations in src/data/i18n/<locale>/ against the English entries:
+//   <locale>/<slug>.ts               against src/data/exchanges/<slug>.ts     (referral-code pages)
+//   <locale>/alternatives/<slug>.ts  against src/data/alternatives/<slug>.ts  (comparison pages)
 //
 //   node scripts/check-i18n.mjs            all languages
 //   node scripts/check-i18n.mjs es         one language
@@ -26,6 +28,8 @@ const accepted = {
   "es/binance/pros[2]": "US$1 billion is written as 1,000 millones de dólares",
   "es/binance/faqs[17].a": "US$1 billion is written as 1,000 millones de dólares",
   "es/bybit/sourceLabels[4]": "name of a Bybit page, kept in English",
+  "es/alternatives/binance/fund": "US$1 billion is written as 1,000 millones de dólares",
+  "es/alternatives/binance/stayIf[2]": "US$1 billion is written as 1,000 millones de dólares",
 };
 
 const load = async (file, name) => (await import(pathToFileURL(file).href))[name];
@@ -67,6 +71,29 @@ function fields(x, english) {
   return out;
 }
 
+/** All texts of an alternatives entry as [field, text], in the shape of `AlternativesText`. */
+function alternativesFields(x, english) {
+  const out = [];
+  const add = (key, value) => out.push([key, value ?? ""]);
+  for (const k of ["role", "pick", "pitch", "intro", "reserves", "fund", "regional", "mica"]) add(k, x[k]);
+  for (const k of ["chooseIf", "thinkTwiceIf", "stayIf"]) x[k].forEach((v, i) => add(`${k}[${i}]`, v));
+  x.reasons.forEach((r, i) => {
+    add(`reasons[${i}].title`, r.title);
+    add(`reasons[${i}].text`, r.text);
+  });
+  x.faqs.forEach((f, i) => {
+    add(`faqs[${i}].q`, f.q);
+    add(`faqs[${i}].a`, f.a);
+  });
+  for (const k of Object.keys(english ? x.features : x.featureNotes)) add(`featureNotes.${k}`, english ? x.features[k].note : x.featureNotes[k]);
+  for (const k of Object.keys(english ? x.countries : x.countryNotes)) {
+    const note = english ? x.countries[k].note : x.countryNotes[k];
+    if (note) add(`countryNotes.${k}`, note);
+  }
+  (english ? x.sources.map((src) => src.label) : x.sourceLabels).forEach((l, i) => add(`sourceLabels[${i}]`, l));
+  return out;
+}
+
 // "10,000" and "10000" count as the same number; a trailing dot or comma is punctuation.
 const numbers = (text) => (text.match(/\d+(?:[.,]\d+)*/g) ?? []).map((n) => n.replace(/,(?=\d{3}\b)/g, "")).sort();
 const quoted = (text) => text.match(/“[^”]*”/g) ?? [];
@@ -79,51 +106,62 @@ const locales = fs
   .filter((d) => d.isDirectory() && (!only || d.name === only))
   .map((d) => d.name);
 
+/** Compares the texts of one translated entry (`translated`) with the English ones (`a`). */
+function compare(id, locale, a, translated, referralCode) {
+  const b = new Map(translated);
+  const error = (field, msg) => {
+    errors++;
+    console.log(`ERROR  ${id}/${field}: ${msg}`);
+  };
+  if (a.length !== b.size) error("*", `${b.size} texts instead of ${a.length} – a list has a different length`);
+  for (const [field, source] of a) {
+    if (!b.has(field)) {
+      error(field, "missing in the translation");
+      continue;
+    }
+    const target = b.get(field);
+    if (field.endsWith(".topic")) {
+      if (source !== target) error(field, `topic "${target}" instead of "${source}"`);
+      continue;
+    }
+    if (Boolean(source) !== Boolean(target)) error(field, "empty in one language only");
+    if (!source) continue;
+    for (const q of quoted(source)) if (!target.includes(q) && field !== "referral.codeName") error(field, `interface label ${q} is missing`);
+    if (count(source, referralCode) !== count(target, referralCode)) error(field, `referral code ${referralCode} appears a different number of times`);
+    if (accepted[`${id}/${field}`]) continue;
+    const na = numbers(source);
+    const nb = numbers(target);
+    const missing = na.filter((n) => !nb.includes(n));
+    const extra = nb.filter((n) => !na.includes(n));
+    if (missing.length || extra.length) {
+      reviews++;
+      console.log(`REVIEW ${id}/${field}: numbers differ${missing.length ? ` – missing ${missing.join(" ")}` : ""}${extra.length ? ` – extra ${extra.join(" ")}` : ""}`);
+      console.log(`         en: ${source.slice(0, 260)}`);
+      console.log(`         ${locale}: ${target.slice(0, 260)}`);
+    }
+    if (source === target && source.length > 30 && /\s/.test(source) && !accepted[`${id}/${field}`]) {
+      reviews++;
+      console.log(`REVIEW ${id}/${field}: identical to the English text – "${source.slice(0, 80)}"`);
+    }
+  }
+  console.log(`checked ${id}: ${a.length} texts`);
+}
+
+const tsFiles = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".ts")) : []);
+
 for (const locale of locales) {
-  const files = fs.readdirSync(path.join(i18nDir, locale)).filter((f) => f.endsWith(".ts"));
-  for (const file of files) {
+  for (const file of tsFiles(path.join(i18nDir, locale))) {
     const slug = file.replace(/\.ts$/, "");
     const en = await load(path.join(root, "src/data/exchanges", file), slug);
     const tr = await load(path.join(i18nDir, locale, file), slug);
-    const a = fields(en, true);
-    const b = new Map(fields(tr, false));
-    const id = `${locale}/${slug}`;
-    const error = (field, msg) => {
-      errors++;
-      console.log(`ERROR  ${id}/${field}: ${msg}`);
-    };
-    if (a.length !== b.size) error("*", `${b.size} texts instead of ${a.length} – a list has a different length`);
-    for (const [field, source] of a) {
-      if (!b.has(field)) {
-        error(field, "missing in the translation");
-        continue;
-      }
-      const target = b.get(field);
-      if (field.endsWith(".topic")) {
-        if (source !== target) error(field, `topic "${target}" instead of "${source}"`);
-        continue;
-      }
-      if (Boolean(source) !== Boolean(target)) error(field, "empty in one language only");
-      if (!source) continue;
-      for (const q of quoted(source)) if (!target.includes(q) && field !== "referral.codeName") error(field, `interface label ${q} is missing`);
-      if (count(source, en.referralCode) !== count(target, en.referralCode)) error(field, `referral code ${en.referralCode} appears a different number of times`);
-      if (accepted[`${id}/${field}`]) continue;
-      const na = numbers(source);
-      const nb = numbers(target);
-      const missing = na.filter((n) => !nb.includes(n));
-      const extra = nb.filter((n) => !na.includes(n));
-      if (missing.length || extra.length) {
-        reviews++;
-        console.log(`REVIEW ${id}/${field}: numbers differ${missing.length ? ` – missing ${missing.join(" ")}` : ""}${extra.length ? ` – extra ${extra.join(" ")}` : ""}`);
-        console.log(`         en: ${source.slice(0, 260)}`);
-        console.log(`         ${locale}: ${target.slice(0, 260)}`);
-      }
-      if (source === target && source.length > 30 && /\s/.test(source) && !accepted[`${id}/${field}`]) {
-        reviews++;
-        console.log(`REVIEW ${id}/${field}: identical to the English text – "${source.slice(0, 80)}"`);
-      }
-    }
-    console.log(`checked ${id}: ${a.length} texts`);
+    compare(`${locale}/${slug}`, locale, fields(en, true), fields(tr, false), en.referralCode);
+  }
+  for (const file of tsFiles(path.join(i18nDir, locale, "alternatives"))) {
+    const slug = file.replace(/\.ts$/, "");
+    const exchange = await load(path.join(root, "src/data/exchanges", file), slug);
+    const en = await load(path.join(root, "src/data/alternatives", file), slug);
+    const tr = await load(path.join(i18nDir, locale, "alternatives", file), slug);
+    compare(`${locale}/alternatives/${slug}`, locale, alternativesFields(en, true), alternativesFields(tr, false), exchange.referralCode);
   }
 }
 console.log(`\n${errors} errors, ${reviews} items to review`);

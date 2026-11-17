@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { exchanges, exchangePath } from "@/data/exchanges";
+import { exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
-import { comparePath, versusLabel, versusPath } from "@/data/versus";
+import { exchangesFor } from "@/data/i18n";
+import { comparePathFor, versusLabel, versusPath } from "@/data/versus";
+import type { Locale } from "@/i18n/config";
+import { pageTexts } from "@/i18n/pages";
 import { ExchangeLogo } from "./ExchangeLogo";
 
 /**
@@ -10,17 +13,19 @@ import { ExchangeLogo } from "./ExchangeLogo";
  * most-used comparisons. On narrow screens the sidebar moves below the text and the table of
  * contents is hidden.
  *
- * `toc` lists the ids of the `<h2>` elements of the page with their labels.
+ * `toc` lists the ids of the `<h2>` elements of the page with their labels. The sidebar labels come
+ * from `src/i18n/pages/`, and every link leads to the page in the language of `locale`.
  */
-export function LegalLayout({ toc, children }: { toc: [string, string][]; children: React.ReactNode }) {
-  const ranked = [...exchanges].sort((a, b) => a.market.rank - b.market.rank);
+export function LegalLayout({ toc, locale, children }: { toc: [string, string][]; locale: Locale; children: React.ReactNode }) {
+  const t = pageTexts(locale).layout;
+  const ranked = [...exchangesFor(locale)].sort((a, b) => a.market.rank - b.market.rank);
   const [first, second, third] = ranked;
   return (
     <div className="container layout-2 legal-layout">
       <article className="legal">{children}</article>
-      <aside className="side" aria-label="On this page and more">
-        <nav className="toc side-toc" aria-label="On this page">
-          <strong>On this page</strong>
+      <aside className="side" aria-label={t.aside}>
+        <nav className="toc side-toc" aria-label={t.onThisPage}>
+          <strong>{t.onThisPage}</strong>
           <ol>
             {toc.map(([id, label]) => (
               <li key={id}>
@@ -30,11 +35,11 @@ export function LegalLayout({ toc, children }: { toc: [string, string][]; childr
           </ol>
         </nav>
         <div className="toc side-sticky">
-          <strong>Referral codes</strong>
+          <strong>{t.referralCodes}</strong>
           <ul className="side-codes">
             {ranked.map((e) => (
               <li key={e.slug}>
-                <Link href={exchangePath(e.slug)}>
+                <Link href={exchangePath(e.slug, locale)}>
                   <ExchangeLogo exchange={e} size={24} />
                   <span>{e.name}</span>
                   <code>{e.referralCode}</code>
@@ -42,19 +47,19 @@ export function LegalLayout({ toc, children }: { toc: [string, string][]; childr
               </li>
             ))}
           </ul>
-          <strong style={{ display: "block", marginTop: 18 }}>Compare exchanges</strong>
+          <strong style={{ display: "block", marginTop: 18 }}>{t.compare}</strong>
           <ul className="side-links">
             <li>
-              <Link href={versusPath(first, second)}>{versusLabel(first, second)}</Link>
+              <Link href={versusPath(first, second, locale)}>{versusLabel(first, second)}</Link>
             </li>
             <li>
-              <Link href={versusPath(first, third)}>{versusLabel(first, third)}</Link>
+              <Link href={versusPath(first, third, locale)}>{versusLabel(first, third)}</Link>
             </li>
             <li>
-              <Link href={alternativesPath(first.slug)}>{first.name} alternatives</Link>
+              <Link href={alternativesPath(first.slug, locale)}>{t.alternativesOf(first.name)}</Link>
             </li>
             <li>
-              <Link href={comparePath}>All exchange comparisons →</Link>
+              <Link href={comparePathFor(locale)}>{t.allComparisons}</Link>
             </li>
           </ul>
         </div>

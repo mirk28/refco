@@ -105,6 +105,12 @@ export function homePageLd(locale: Locale, title: string, description: string) {
   };
 }
 
+/** A translated page names the English page it was translated from. */
+export const translationOfLd = (locale: Locale, englishPath: string) =>
+  locale === "en" ? {} : { translationOfWork: { "@id": `${absoluteUrl(englishPath)}#webpage` } };
+/** A translated page counts as published on the day of the last review. */
+export const publishedOn = (locale: Locale, englishDate: string) => (locale === "en" ? englishDate : site.lastReviewed);
+
 export function exchangePageLd(e: Exchange, title: string, description: string, locale: Locale = "en") {
   const t = getDictionary(locale).exchange;
   const url = absoluteUrl(exchangePath(e.slug, locale));
@@ -175,6 +181,9 @@ export function alternativesPageLd(
   title: string,
   description: string,
   citations: { label: string; url: string }[],
+  /** Language of the page and the path of its English version (the same path on the English page). */
+  locale: Locale = "en",
+  englishPath: string = path,
 ) {
   const url = absoluteUrl(path);
   return {
@@ -183,10 +192,11 @@ export function alternativesPageLd(
     url,
     name: title,
     description,
-    inLanguage: site.language,
+    inLanguage: localeInfo[locale].htmlLang,
+    ...translationOfLd(locale, englishPath),
     isPartOf: { "@id": websiteId },
     publisher: { "@id": orgId },
-    datePublished: "2026-11-16",
+    datePublished: publishedOn(locale, "2026-11-16"),
     dateModified: site.lastReviewed,
     lastReviewed: site.lastReviewed,
     reviewedBy: { "@id": orgId },
@@ -200,13 +210,22 @@ export function alternativesPageLd(
 }
 
 /** The compared exchanges as an ordered list. */
-export function alternativesListLd(x: Exchange, alts: Exchange[], path: string, roles: Record<string, string>) {
+export function alternativesListLd(
+  x: Exchange,
+  alts: Exchange[],
+  path: string,
+  roles: Record<string, string>,
+  texts: { name: string; description: string } = {
+    name: `${x.name} alternatives`,
+    description: `Exchanges compared with ${x.name}, in the order of CoinMarketCap's derivatives ranking.`,
+  },
+) {
   const url = absoluteUrl(path);
   return {
     "@type": "ItemList",
     "@id": `${url}#alternatives`,
-    name: `${x.name} alternatives`,
-    description: `Exchanges compared with ${x.name}, in the order of CoinMarketCap's derivatives ranking.`,
+    name: texts.name,
+    description: texts.description,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: alts.length,
     itemListElement: alts.map((a, i) => ({
@@ -220,14 +239,23 @@ export function alternativesListLd(x: Exchange, alts: Exchange[], path: string, 
 }
 
 /** Steps for moving from one exchange to another, for answer engines. */
-export function switchHowToLd(x: Exchange, path: string, steps: { title: string; text: string }[]) {
+export function switchHowToLd(
+  x: Exchange,
+  path: string,
+  steps: { title: string; text: string }[],
+  texts: { name: string; description: string } = {
+    name: `How to switch from ${x.name} to another exchange`,
+    description: `What to check and in which order when you move from ${x.name} to another crypto exchange.`,
+  },
+  locale: Locale = "en",
+) {
   const url = absoluteUrl(path);
   return {
     "@type": "HowTo",
     "@id": `${url}#howto`,
-    name: `How to switch from ${x.name} to another exchange`,
-    description: `What to check and in which order when you move from ${x.name} to another crypto exchange.`,
-    inLanguage: site.language,
+    name: texts.name,
+    description: texts.description,
+    inLanguage: localeInfo[locale].htmlLang,
     step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.title, text: s.text, url: `${url}#switch` })),
   };
 }
@@ -235,7 +263,17 @@ export function switchHowToLd(x: Exchange, path: string, steps: { title: string;
 /* ------------------------- "[Exchange] vs [Exchange]" pages ------------------------- */
 
 /** WebPage node of a head-to-head page: the two exchanges it is about and its sources. */
-export function versusPageLd(a: Exchange, b: Exchange, path: string, title: string, description: string, citations: { label: string; url: string }[]) {
+export function versusPageLd(
+  a: Exchange,
+  b: Exchange,
+  path: string,
+  title: string,
+  description: string,
+  citations: { label: string; url: string }[],
+  /** Language of the page and the path of its English version (the same path on the English page). */
+  locale: Locale = "en",
+  englishPath: string = path,
+) {
   const url = absoluteUrl(path);
   const org = (e: Exchange) => ({ "@type": "Organization", name: e.name, url: e.homepage, foundingDate: e.founded });
   return {
@@ -244,10 +282,11 @@ export function versusPageLd(a: Exchange, b: Exchange, path: string, title: stri
     url,
     name: title,
     description,
-    inLanguage: site.language,
+    inLanguage: localeInfo[locale].htmlLang,
+    ...translationOfLd(locale, englishPath),
     isPartOf: { "@id": websiteId },
     publisher: { "@id": orgId },
-    datePublished: "2026-11-16",
+    datePublished: publishedOn(locale, "2026-11-16"),
     dateModified: site.lastReviewed,
     lastReviewed: site.lastReviewed,
     reviewedBy: { "@id": orgId },

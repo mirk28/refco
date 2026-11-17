@@ -37,32 +37,60 @@ Requires Node.js 20.9+.
 | Exchange texts, fees, FAQs, pros/cons, sign-up steps, sources | `src/data/exchanges/<slug>.ts` (types in `src/data/types.ts`) |
 | Questions every exchange page answers (built from the data) | `src/lib/faqs.ts` |
 | **"[Exchange] alternatives" pages**: why people switch, products, country availability, regional platforms | `src/data/alternatives/<slug>.ts` (index: `src/data/alternatives.ts`) |
-| Comparison sentences and questions of the alternatives pages (built from the data) | `src/lib/compare.ts`, template `src/components/AlternativesPage.tsx` |
-| **"[Exchange] vs [Exchange]" pages** (21 pairs, no data of their own) | pairs and URLs `src/data/versus.ts`, logic `src/lib/versus.ts`, template `src/components/VersusPage.tsx` |
-| Comparison hub `/compare` | `src/app/(en)/compare/page.tsx` |
+| Comparison sentences and questions of the alternatives pages (built from the data) | logic `src/lib/compare.ts`, sentences `src/i18n/compare/<locale>.ts`, template `src/components/AlternativesPage.tsx`, its texts `src/i18n/alternatives/` |
+| **"[Exchange] vs [Exchange]" pages** (21 pairs, no data of their own) | pairs and URLs `src/data/versus.ts`, logic `src/lib/versus.ts`, sentences and texts `src/i18n/versus/`, template `src/components/VersusPage.tsx` |
+| Comparison hub `/compare` | `src/components/CompareHubPage.tsx`, texts in `src/i18n/versus/` |
+| About, affiliate disclosure, imprint, privacy policy | `src/i18n/pages/<locale>.tsx`, template `src/components/TextPages.tsx` |
 | **Language versions** (interface texts, exchange texts, routes) | `src/i18n/`, `src/data/i18n/<locale>/`, `src/app/<locale>/` – see "Language versions" below |
 | Colours / design tokens | `src/app/globals.css` (`:root`) |
 | Logo mark | `src/components/Logo.tsx`, `src/app/icon.svg`, `src/lib/og.tsx` |
 
 ### Language versions
-English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`
-(`/es/codigo-de-referido-binance`). Translated so far: the home page and the seven referral-code pages.
-The alternatives, head-to-head, about and legal pages exist in English only; other languages link to
-them marked "(en inglés)".
+English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`.
+Every page exists in both languages; the last part of the address carries the keyword in that language:
 
-- **Interface texts** (headings, labels, sentences around the facts, the common questions):
-  `src/i18n/en.tsx` defines the keys, `src/i18n/es.tsx` has the same keys in Spanish.
-- **Exchange texts**: `src/data/i18n/es/<slug>.ts` holds text only (type `ExchangeText`). Codes, links,
-  fee numbers, market data and source URLs always come from the English entry, so a translation cannot
-  change a fact. When you change a text in `src/data/exchanges/<slug>.ts`, change it in every language.
-- **Check**: `npm run check:i18n` compares every translation with the English entry (list lengths,
+| Page | English | Spanish |
+|---|---|---|
+| Referral code | `/binance-referral-code` | `/es/codigo-de-referido-binance` |
+| Alternatives | `/binance-alternatives` | `/es/alternativas-a-binance` |
+| Head to head | `/binance-vs-okx` | `/es/binance-vs-okx` |
+| Hub, about, legal | `/compare`, `/about`, `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/comparar`, `/es/acerca-de`, `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` |
+
+All of these address parts are defined in `src/i18n/config.ts`.
+
+- **Facts are never translated.** Codes, links, fee numbers, market data, which products an exchange has, the
+  status of a country and all source URLs come from the English data files. A translation holds text only,
+  so it cannot change a fact.
+- **Exchange texts**: `src/data/i18n/es/<slug>.ts` (referral-code page, type `ExchangeText`) and
+  `src/data/i18n/es/alternatives/<slug>.ts` (comparison pages, type `AlternativesText`). When you change a
+  text in `src/data/exchanges/<slug>.ts` or `src/data/alternatives/<slug>.ts`, change it in every language.
+- **Check**: `npm run check:i18n` compares every translated data file with the English one (list lengths,
   numbers, quoted interface labels, the referral code). The build also stops if a list has a different length.
-- **Routes**: every language has its own root layout so that `<html lang>` is right:
-  `src/app/(en)/` for English, `src/app/es/` for Spanish. Pages, metadata, `hreflang`, sitemap and
-  `llms.txt` are generated from `locales` in `src/i18n/config.ts`.
-- **Adding a language**: add it to `src/i18n/config.ts`, write `src/i18n/<locale>.tsx` and
-  `src/data/i18n/<locale>/<slug>.ts`, register them in `src/i18n/index.ts` and `src/data/i18n/index.ts`,
-  copy `src/app/es/` to `src/app/<locale>/` and change the locale in its five files.
+- **Interface texts** (headings, labels, sentences around the facts), one folder per page type, each with an
+  `en` file that defines the keys and one file per language with the same keys:
+  - `src/i18n/en.tsx`, `es.tsx` – layout, home page, referral-code page, share cards
+  - `src/i18n/alternatives/` – alternatives pages
+  - `src/i18n/versus/` – head-to-head pages and the comparison hub
+  - `src/i18n/pages/` – about, affiliate disclosure, imprint, privacy policy
+- **Sentences built from the data** ("OKX is cheaper for makers …", the generated questions and answers):
+  `src/i18n/compare/<locale>.ts` and `src/i18n/versus/`. Every language writes these functions in its own
+  grammar; the logic they use (who is cheaper, which country is open) is shared in `src/lib/compare.ts` and
+  `src/lib/versus.ts`.
+- **Routes**: every language has its own root layout so that `<html lang>` is right: `src/app/(en)/` for
+  English, `src/app/es/` for Spanish. The Spanish folder has five small files; `[page]/page.tsx` serves every
+  page below `/es` through `src/components/LocalePage.tsx`. `hreflang`, sitemap and `llms.txt` are generated
+  from `locales` in `src/i18n/config.ts`.
+- **Legal pages** in other languages carry a notice that the English version is the binding one.
+- **Adding a language**:
+  1. `src/i18n/config.ts`: add it to `locales`, `localeInfo` and `segments` (the address parts), and add its
+     folder to `languageFolders` in `next.config.mjs` (redirects for reversed pair addresses).
+  2. Write `src/i18n/<locale>.tsx` and one file in each of `src/i18n/compare/`, `alternatives/`, `versus/`,
+     `pages/`; register each in the `index.ts` next to it (and `src/i18n/index.ts`).
+  3. Write `src/data/i18n/<locale>/<slug>.ts` and `src/data/i18n/<locale>/alternatives/<slug>.ts` for the seven
+     exchanges and register them in `src/data/i18n/index.ts`.
+  4. Copy `src/app/es/` to `src/app/<locale>/` and change the locale in its five files.
+  5. Add the English name of the language to `englishName` in `src/app/llms.txt/route.ts`, run
+     `npm run check:i18n` and `npm run build`.
 - The share cards of the English pages are route handlers (`src/app/opengraph-image/`,
   `src/app/[slug]/opengraph-image/`), not `opengraph-image.tsx` files, because that file convention
   adds a hash to the URL inside a route group. The 404 page for unknown URLs is `src/app/global-not-found.tsx`.

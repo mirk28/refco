@@ -1,13 +1,22 @@
 /**
  * Exchange entries in other languages.
  *
- * A translation (`./<locale>/<slug>.ts`) holds text only. `localizeExchange` lays it over the English entry,
- * so codes, links, fee numbers, market data and source URLs always come from `src/data/exchanges/`.
+ * A translation holds text only: `./<locale>/<slug>.ts` for the referral-code pages and
+ * `./<locale>/alternatives/<slug>.ts` for the comparison pages. `localizeExchange` and `localizeAlternatives`
+ * lay it over the English entry, so codes, links, fee numbers, market data, product and country facts and
+ * source URLs always come from `src/data/exchanges/` and `src/data/alternatives/`.
  * A translation whose lists do not match the English entry stops the build; `scripts/check-i18n.mjs`
  * additionally compares the numbers in every text.
  */
-import type { Exchange, ExchangeText } from "../types";
+import type { AlternativesInfo, AlternativesText, CountryKey, Exchange, ExchangeText, FeatureKey } from "../types";
 import { exchanges } from "../exchanges";
+import { binance as enAltBinance } from "../alternatives/binance";
+import { okx as enAltOkx } from "../alternatives/okx";
+import { bybit as enAltBybit } from "../alternatives/bybit";
+import { bitget as enAltBitget } from "../alternatives/bitget";
+import { gate as enAltGate } from "../alternatives/gate";
+import { kucoin as enAltKucoin } from "../alternatives/kucoin";
+import { mexc as enAltMexc } from "../alternatives/mexc";
 import type { Locale } from "@/i18n/config";
 import { binance as esBinance } from "./es/binance";
 import { okx as esOkx } from "./es/okx";
@@ -16,6 +25,13 @@ import { bitget as esBitget } from "./es/bitget";
 import { gate as esGate } from "./es/gate";
 import { kucoin as esKucoin } from "./es/kucoin";
 import { mexc as esMexc } from "./es/mexc";
+import { binance as esAltBinance } from "./es/alternatives/binance";
+import { okx as esAltOkx } from "./es/alternatives/okx";
+import { bybit as esAltBybit } from "./es/alternatives/bybit";
+import { bitget as esAltBitget } from "./es/alternatives/bitget";
+import { gate as esAltGate } from "./es/alternatives/gate";
+import { kucoin as esAltKucoin } from "./es/alternatives/kucoin";
+import { mexc as esAltMexc } from "./es/alternatives/mexc";
 
 const texts: Partial<Record<Locale, Record<string, ExchangeText>>> = {
   es: { binance: esBinance, okx: esOkx, bybit: esBybit, bitget: esBitget, gate: esGate, kucoin: esKucoin, mexc: esMexc },
@@ -82,3 +98,75 @@ export function exchangesFor(locale: Locale): Exchange[] {
 }
 
 export const exchangeFor = (slug: string, locale: Locale) => exchangesFor(locale).find((e) => e.slug === slug);
+
+/* ------------------------------ alternatives entries ------------------------------ */
+
+// Imported from the files, not from `../alternatives`, which itself builds on this module's neighbours.
+const englishAlternatives: Record<string, AlternativesInfo> = {
+  binance: enAltBinance,
+  okx: enAltOkx,
+  bybit: enAltBybit,
+  bitget: enAltBitget,
+  gate: enAltGate,
+  kucoin: enAltKucoin,
+  mexc: enAltMexc,
+};
+
+const alternativesTexts: Partial<Record<Locale, Record<string, AlternativesText>>> = {
+  es: { binance: esAltBinance, okx: esAltOkx, bybit: esAltBybit, bitget: esAltBitget, gate: esAltGate, kucoin: esAltKucoin, mexc: esAltMexc },
+};
+
+function alternativesProblems(info: AlternativesInfo, t: AlternativesText): string[] {
+  const lists: [string, unknown[], unknown[]][] = [
+    ["chooseIf", info.chooseIf, t.chooseIf],
+    ["thinkTwiceIf", info.thinkTwiceIf, t.thinkTwiceIf],
+    ["reasons", info.reasons, t.reasons],
+    ["stayIf", info.stayIf, t.stayIf],
+    ["faqs", info.faqs, t.faqs],
+    ["sourceLabels", info.sources, t.sourceLabels],
+  ];
+  const problems = lists.filter(([, a, b]) => a.length !== b.length).map(([key, a, b]) => `${key}: ${b.length} instead of ${a.length}`);
+  for (const key of ["fund", "regional", "mica", "reserves"] as const) {
+    if (Boolean(info[key]) !== Boolean(t[key])) problems.push(`${key}: set in one language only`);
+  }
+  for (const key of Object.keys(info.features) as FeatureKey[]) {
+    if (Boolean(info.features[key].note) !== Boolean(t.featureNotes[key])) problems.push(`featureNotes.${key}: set in one language only`);
+  }
+  for (const key of Object.keys(info.countries) as CountryKey[]) {
+    if (Boolean(info.countries[key].note) !== Boolean(t.countryNotes[key])) problems.push(`countryNotes.${key}: set in one language only`);
+  }
+  return problems;
+}
+
+export function localizeAlternatives(info: AlternativesInfo, t: AlternativesText, locale: string, slug: string): AlternativesInfo {
+  const problems = alternativesProblems(info, t);
+  if (problems.length) throw new Error(`Translation "${locale}" of the alternatives entry ${slug} does not match the English entry – ${problems.join("; ")}`);
+  const { featureNotes, countryNotes, sourceLabels, ...text } = t;
+  const features = Object.fromEntries(
+    (Object.keys(info.features) as FeatureKey[]).map((key) => [key, { ...info.features[key], note: featureNotes[key] }]),
+  ) as AlternativesInfo["features"];
+  const countries = Object.fromEntries(
+    (Object.keys(info.countries) as CountryKey[]).map((key) => [key, countryNotes[key] ? { ...info.countries[key], note: countryNotes[key] } : info.countries[key]]),
+  ) as AlternativesInfo["countries"];
+  return { ...info, ...text, features, countries, sources: info.sources.map((s, i) => ({ ...s, label: sourceLabels[i] })) };
+}
+
+const alternativesCache = new Map<Locale, Record<string, AlternativesInfo>>();
+
+/** The alternatives entries of all exchanges with their texts in the given language, by exchange slug. */
+export function alternativesFor(locale: Locale): Record<string, AlternativesInfo> {
+  if (locale === "en") return englishAlternatives;
+  const cached = alternativesCache.get(locale);
+  if (cached) return cached;
+  const set = alternativesTexts[locale];
+  if (!set) throw new Error(`No alternatives texts for language "${locale}"`);
+  const localized = Object.fromEntries(
+    Object.entries(englishAlternatives).map(([slug, info]) => {
+      const t = set[slug];
+      if (!t) throw new Error(`No "${locale}" alternatives text for ${slug}`);
+      return [slug, localizeAlternatives(info, t, locale, slug)];
+    }),
+  );
+  alternativesCache.set(locale, localized);
+  return localized;
+}

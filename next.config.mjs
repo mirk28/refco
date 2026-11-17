@@ -68,11 +68,15 @@ const securityHeaders = [
 const shareableImage = [{ key: "Cross-Origin-Resource-Policy", value: "cross-origin" }];
 
 // Head-to-head pages exist once per pair, in the order of `exchanges` in src/data/exchanges.ts
-// (`/binance-vs-okx`). The reverse spelling (`/okx-vs-binance`) is redirected to it.
-// Keep this list in the same order as that array.
+// (`/binance-vs-okx`). The reverse spelling (`/okx-vs-binance`) is redirected to it, in every language
+// (`/es/okx-vs-binance` → `/es/binance-vs-okx`).
+// Keep `exchangeSlugs` in the same order as that array and `languageFolders` in step with `locales` in src/i18n/config.ts.
 const exchangeSlugs = ["binance", "okx", "bybit", "bitget", "gate", "kucoin", "mexc"];
-const reverseVersus = exchangeSlugs.flatMap((a, i) =>
-  exchangeSlugs.slice(i + 1).map((b) => ({ source: `/${b}-vs-${a}`, destination: `/${a}-vs-${b}`, permanent: true })),
+const languageFolders = ["", "/es"];
+const reverseVersus = languageFolders.flatMap((folder) =>
+  exchangeSlugs.flatMap((a, i) =>
+    exchangeSlugs.slice(i + 1).map((b) => ({ source: `${folder}/${b}-vs-${a}`, destination: `${folder}/${a}-vs-${b}`, permanent: true })),
+  ),
 );
 
 const nextConfig = {

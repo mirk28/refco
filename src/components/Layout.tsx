@@ -3,14 +3,15 @@ import { Logo } from "./Logo";
 import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
-import { comparePath } from "@/data/versus";
+import { comparePathFor } from "@/data/versus";
 import { getDictionary } from "@/i18n";
-import { homeAnchor, homePath, localeInfo, locales } from "@/i18n/config";
+import { homeAnchor, homePath, localeInfo, locales, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { ConsentSettingsButton } from "./Analytics";
 import { LangMenu } from "./LangMenu";
 
-export function Header({ locale = "en" }: { locale?: Locale }) {
+/** `unknownPage`: the address is not a page of the site (404), so the language menu leads to the home pages. */
+export function Header({ locale = "en", unknownPage = false }: { locale?: Locale; unknownPage?: boolean }) {
   const t = getDictionary(locale).layout;
   return (
     <header className="site-header">
@@ -22,7 +23,7 @@ export function Header({ locale = "en" }: { locale?: Locale }) {
               {n.label}
             </Link>
           ))}
-          <LangMenu locale={locale} label={t.language} />
+          <LangMenu locale={locale} label={t.language} homeOnly={unknownPage} />
           <Link href={homeAnchor(locale, "exchanges")} className="btn btn-primary btn-sm">
             {t.getCodes}
           </Link>
@@ -32,15 +33,10 @@ export function Header({ locale = "en" }: { locale?: Locale }) {
   );
 }
 
-/**
- * The comparison, about and legal pages exist in English only. The footer of another language links to
- * them in a column of its own and marks them as English.
- */
+/** The same footer in every language; its links lead to the pages of that language. */
 export function Footer({ locale = "en" }: { locale?: Locale }) {
   const t = getDictionary(locale).layout;
-  const english = locale === "en";
   const year = new Date(`${site.lastReviewed}T00:00:00Z`).getUTCFullYear();
-  const mark = english ? null : <> {t.englishOnly}</>;
   return (
     <footer className="site-footer">
       <div className="container">
@@ -59,51 +55,31 @@ export function Footer({ locale = "en" }: { locale?: Locale }) {
               ))}
             </ul>
           </div>
-          {english ? (
-            <div>
-              <h3>{t.alternatives}</h3>
-              <ul>
-                {exchanges.map((e) => (
-                  <li key={e.slug}>
-                    <Link href={alternativesPath(e.slug)}>{t.alternativesOf(e.name)}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
+          <div>
+            <h3>{t.alternatives}</h3>
+            <ul>
+              {exchanges.map((e) => (
+                <li key={e.slug}>
+                  <Link href={alternativesPath(e.slug, locale)}>{t.alternativesOf(e.name)}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div>
             <h3>{t.guides}</h3>
             <ul>
-              {english ? (
-                <li><Link href={comparePath}>{t.comparisons}</Link></li>
-              ) : (
-                <li><Link href={homeAnchor(locale, "compare")}>{t.comparisons}</Link></li>
-              )}
+              <li><Link href={comparePathFor(locale)}>{t.comparisons}</Link></li>
               <li><Link href={homeAnchor(locale, "how-it-works")}>{t.howCodesWork}</Link></li>
               <li><Link href={homeAnchor(locale, "faq")}>{t.faq}</Link></li>
-              {english ? <li><Link href="/about">{t.about}</Link></li> : null}
+              <li><Link href={pagePath("about", locale)}>{t.about}</Link></li>
             </ul>
           </div>
-          {english ? null : (
-            <div>
-              <h3>{t.inEnglish}</h3>
-              <ul>
-                <li><a href={comparePath} hrefLang="en">Exchange comparisons</a></li>
-                {exchanges.slice(0, 3).map((e) => (
-                  <li key={e.slug}>
-                    <a href={alternativesPath(e.slug)} hrefLang="en">{e.name} alternatives</a>
-                  </li>
-                ))}
-                <li><a href="/about" hrefLang="en">About &amp; methodology</a></li>
-              </ul>
-            </div>
-          )}
           <div>
             <h3>{t.legal}</h3>
             <ul>
-              <li><Link href="/imprint" hrefLang={english ? undefined : "en"}>{t.imprint}</Link>{mark}</li>
-              <li><Link href="/privacy" hrefLang={english ? undefined : "en"}>{t.privacy}</Link>{mark}</li>
-              <li><Link href="/affiliate-disclosure" hrefLang={english ? undefined : "en"}>{t.disclosure}</Link>{mark}</li>
+              <li><Link href={pagePath("imprint", locale)}>{t.imprint}</Link></li>
+              <li><Link href={pagePath("privacy", locale)}>{t.privacy}</Link></li>
+              <li><Link href={pagePath("affiliateDisclosure", locale)}>{t.disclosure}</Link></li>
               <li><ConsentSettingsButton label={t.cookieSettings} /></li>
               <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
             </ul>

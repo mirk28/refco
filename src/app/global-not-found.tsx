@@ -22,7 +22,7 @@ export const viewport = rootViewport;
 
 export default function GlobalNotFound() {
   return (
-    <SiteShell locale="en">
+    <SiteShell locale="en" unknownPage>
       <NotFound />
       <p className="small muted" style={{ textAlign: "center", margin: "-28px 0 56px" }}>
         {locales

@@ -12,6 +12,8 @@
  */
 import type { AlternativesInfo, CountryKey, CountryStatus, FeatureKey } from "./types";
 import { exchanges } from "./exchanges";
+import { alternativesPagePath, alternativesPageSlug } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 import { binance } from "./alternatives/binance";
 import { okx } from "./alternatives/okx";
 import { bybit } from "./alternatives/bybit";
@@ -20,14 +22,19 @@ import { gate } from "./alternatives/gate";
 import { kucoin } from "./alternatives/kucoin";
 import { mexc } from "./alternatives/mexc";
 
-export type { AlternativesInfo, CountryInfo, CountryKey, CountryStatus, FeatureInfo, FeatureKey } from "./types";
+export type { AlternativesInfo, AlternativesText, CountryInfo, CountryKey, CountryStatus, FeatureInfo, FeatureKey } from "./types";
 
+/** The English entries. Other languages: `alternativesFor(locale)` in `./i18n`. */
 export const alternativesData: Record<string, AlternativesInfo> = { binance, okx, bybit, bitget, gate, kucoin, mexc };
 
-export const alternativesPath = (slug: string) => `/${slug}-alternatives`;
-export const getExchangeByAlternativesSlug = (pathSlug: string) => exchanges.find((e) => `${e.slug}-alternatives` === pathSlug);
+/** Path of the alternatives page: `/binance-alternatives`, in Spanish `/es/alternativas-a-binance`. */
+export const alternativesPath = (slug: string, locale: Locale = "en") => alternativesPagePath(slug, locale);
+export const getExchangeByAlternativesSlug = (pathSlug: string) => exchanges.find((e) => alternativesPageSlug(e.slug) === pathSlug);
 
-/** Rows of the product table, in display order. `noun` is used in sentences ("offers copy trading"). */
+/**
+ * Rows of the product table, in display order. `noun` is used in sentences ("offers copy trading").
+ * These are the English words; every language has the same list in `src/i18n/compare/<locale>.ts`.
+ */
 export const featureList: { key: FeatureKey; label: string; noun: string }[] = [
   { key: "copyTrading", label: "Copy trading", noun: "copy trading" },
   { key: "tradingBots", label: "Trading bots", noun: "trading bots" },
@@ -42,7 +49,10 @@ export const featureList: { key: FeatureKey; label: string; noun: string }[] = [
   { key: "card", label: "Crypto card", noun: "a crypto card" },
 ];
 
-/** Rows of the country table, in display order. `name` already carries the article where English needs one. */
+/**
+ * Rows of the country table, in display order. `name` already carries the article where English needs one.
+ * These are the English words; every language has the same list in `src/i18n/compare/<locale>.ts`.
+ */
 export const countryList: { key: CountryKey; name: string; short: string; residents: string }[] = [
   { key: "us", name: "the United States", short: "United States", residents: "US residents" },
   { key: "uk", name: "the United Kingdom", short: "United Kingdom", residents: "UK residents" },

@@ -22,7 +22,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
   const { slug } = await params;
   const focus = getExchangeByAlternativesSlug(slug);
   if (focus) {
-    const alts = alternativesTo(focus);
+    const alts = alternativesTo(focus, "en");
     return renderOg({
       badge: focus.name,
       badgeColor: focus.brandColor,

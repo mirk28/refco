@@ -2,11 +2,11 @@ import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
 import { alternativesTo, altInfo, feePair, leverageOf } from "@/lib/compare";
-import { comparePath, versusLabel, versusPairs, versusPath } from "@/data/versus";
+import { comparePath, comparePathFor, versusLabel, versusPairs, versusPath } from "@/data/versus";
 import { scoreSummary } from "@/lib/versus";
 import { absoluteUrl, prettyDate } from "@/lib/seo";
 import { getDictionary } from "@/i18n";
-import { homePath, localeInfo, locales } from "@/i18n/config";
+import { homePath, localeInfo, locales, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 
 export const dynamic = "force-static";
@@ -34,8 +34,8 @@ export function GET() {
     "",
     "## Exchange alternatives pages",
     ...exchanges.map((e) => {
-      const alts = alternativesTo(e);
-      return `- [${e.name} alternatives](${absoluteUrl(alternativesPath(e.slug))}): ${alts.length} alternatives to ${e.name} compared by fees, leverage, products, country availability, identity verification, regulation and referral codes. ${alts.map((a) => altInfo(a).pick).join(". ")}.`;
+      const alts = alternativesTo(e, "en");
+      return `- [${e.name} alternatives](${absoluteUrl(alternativesPath(e.slug))}): ${alts.length} alternatives to ${e.name} compared by fees, leverage, products, country availability, identity verification, regulation and referral codes. ${alts.map((a) => altInfo(a, "en").pick).join(". ")}.`;
     }),
     "",
     "## Head-to-head comparison pages",
@@ -52,12 +52,19 @@ export function GET() {
     ),
     ...locales
       .filter((l) => l !== "en")
-      .flatMap((l) => [
-        `## Pages in ${englishName[l]} (${localeInfo[l].name})`,
-        `- [${getDictionary(l).layout.referralCodes}](${absoluteUrl(homePath(l))}): the home page in ${englishName[l]} – the same facts as the English pages, translated.`,
-        ...exchanges.map((e) => `- [${getDictionary(l).layout.referralCodeOf(e.name)}](${absoluteUrl(exchangePath(e.slug, l))}): ${englishName[l]} version of the ${e.name} referral code page (code ${e.referralCode}).`),
-        "",
-      ]),
+      .flatMap((l) => {
+        const t = getDictionary(l).layout;
+        return [
+          `## Pages in ${englishName[l]} (${localeInfo[l].name})`,
+          `Every page of this site also exists in ${englishName[l]} – the same facts as the English pages, translated.`,
+          `- [${t.referralCodes}](${absoluteUrl(homePath(l))}): the home page in ${englishName[l]}.`,
+          ...exchanges.map((e) => `- [${t.referralCodeOf(e.name)}](${absoluteUrl(exchangePath(e.slug, l))}): ${englishName[l]} version of the ${e.name} referral code page (code ${e.referralCode}).`),
+          ...exchanges.map((e) => `- [${t.alternativesOf(e.name)}](${absoluteUrl(alternativesPath(e.slug, l))}): ${englishName[l]} version of the ${e.name} alternatives page.`),
+          `- [${t.comparisons}](${absoluteUrl(comparePathFor(l))}): ${englishName[l]} version of the overview of all comparisons; the ${versusPairs.length} head-to-head pages have the same addresses as in English below ${absoluteUrl(homePath(l))}/, e.g. ${absoluteUrl(versusPath(versusPairs[0].a, versusPairs[0].b, l))}.`,
+          `- [${t.about}](${absoluteUrl(pagePath("about", l))})`,
+          "",
+        ];
+      }),
     "## Key facts",
     "- Every fact about referral codes, registration, verification, welcome offers and fees was read on the exchange's own website or help centre; each exchange page lists its sources.",
     "- Whether a referral code can be added after registration differs by exchange: Binance and MEXC allow it within 30 days under conditions, KuCoin by request, Bybit, OKX and Bitget only at sign-up, and Gate documents no way.",

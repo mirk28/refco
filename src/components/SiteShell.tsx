@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { site } from "@/config/site";
 import { getDictionary } from "@/i18n";
-import { homePath, localeInfo } from "@/i18n/config";
+import { homePath, localeInfo, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { absoluteUrl, shareImages } from "@/lib/seo";
 import { Footer, Header } from "./Layout";
@@ -60,7 +60,7 @@ export const rootViewport: Viewport = {
   initialScale: 1,
 };
 
-export function SiteShell({ locale, children }: { locale: Locale; children: React.ReactNode }) {
+export function SiteShell({ locale, children, unknownPage = false }: { locale: Locale; children: React.ReactNode; unknownPage?: boolean }) {
   const dict = getDictionary(locale);
   const consent = dict.consent;
   return (
@@ -69,10 +69,10 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
         <a href="#main" className="skip-link">
           {dict.layout.skip}
         </a>
-        <Header locale={locale} />
+        <Header locale={locale} unknownPage={unknownPage} />
         <main id="main">{children}</main>
         <Footer locale={locale} />
-        <Analytics texts={{ label: consent.label, text: consent.text("/privacy#analytics"), decline: consent.decline, allow: consent.allow }} />
+        <Analytics texts={{ label: consent.label, text: consent.text(`${pagePath("privacy", locale)}#analytics`), decline: consent.decline, allow: consent.allow }} />
       </body>
     </html>
   );

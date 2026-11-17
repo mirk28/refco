@@ -5,10 +5,10 @@ import { exchangePath, hasAffiliate, qrUrl } from "@/data/exchanges";
 import type { Exchange } from "@/data/exchanges";
 import { exchangeFor } from "@/data/i18n";
 import { alternativesPath } from "@/data/alternatives";
-import { comparePath, versusLabel, versusPath } from "@/data/versus";
+import { comparePathFor, versusLabel, versusPath } from "@/data/versus";
 import { getDictionary } from "@/i18n";
 import type { PageLinks } from "@/i18n";
-import { homeAnchor, homePath, languageAlternates, localeInfo } from "@/i18n/config";
+import { homeAnchor, homePath, languageAlternates, localeInfo, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { QrCode } from "@/components/QrCode";
 import { ExchangeLogo } from "@/components/ExchangeLogo";
@@ -18,7 +18,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, MinusIcon } from "@/components/Icons";
 import { breadcrumbLd, exchangePageLd, faqLd, graph, howToLd, monthYearFor, prettyDate, shareImages, shortMonthYearFor } from "@/lib/seo";
 import { buildFaqs, groupFaqs } from "@/lib/faqs";
-import { alternativesTeaserFaq, alternativesTo, altInfo } from "@/lib/compare";
+import { alternativesTo, altInfo } from "@/lib/compare";
+import { compareText } from "@/i18n/compare";
 
 /*
  * Referral-code page of one exchange, in every language. The words come from `exchange` in the dictionary
@@ -82,13 +83,14 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
   const title = titleFor(e, locale);
   const description = descFor(e, locale);
   const path = exchangePath(e.slug, locale);
-  const altPath = alternativesPath(e.slug);
-  const alts = alternativesTo(e).map((a) => exchangeFor(a.slug, locale) ?? a);
+  const altPath = alternativesPath(e.slug, locale);
+  const alts = alternativesTo(e, locale);
+  const pairLink = (x: Exchange) => ({ href: versusPath(e, x, locale), label: versusLabel(e, x) });
   const links: PageLinks = {
     home: homePath(locale),
     compareTable: homeAnchor(locale, "compare"),
     alternatives: altPath,
-    compareHub: comparePath,
+    compareHub: comparePathFor(locale),
     referral: (slug) => exchangePath(slug, locale),
   };
   const crumbs = [
@@ -98,8 +100,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
   ];
   const domain = new URL(e.homepage).hostname.replace(/^www\./, "");
   const affiliate = hasAffiliate(e);
-  // The teaser question quotes the English alternatives data, so it is part of the English page only.
-  const faqs = english ? [...buildFaqs(e), alternativesTeaserFaq(e)] : buildFaqs(e, locale);
+  const faqs = [...buildFaqs(e, locale), compareText(locale).alternativesTeaserFaq(e)];
   const faqGroups = groupFaqs(e, faqs, locale);
   const guides = e.guides;
   // The guides block is optional; when present it sits between the FAQ and the sources.
@@ -506,15 +507,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
               <p style={{ marginTop: 18 }}>
                 <CtaLink exchange={e}>{t.openAccount(e)}</CtaLink>
               </p>
-              {english ? (
-                <p>
-                  Not a match? See <Link href={altPath}>the {alts.length} best {e.name} alternatives</Link> and what each of them is best for, or compare{" "}
-                  {e.name} head to head: <Link href={versusPath(e, alts[0])}>{versusLabel(e, alts[0])}</Link> and{" "}
-                  <Link href={versusPath(e, alts[1])}>{versusLabel(e, alts[1])}</Link>.
-                </p>
-              ) : (
-                <p>{t.notAMatch(e, alts, links)}</p>
-              )}
+              <p>{t.notAMatch(e, alts.length, links, [pairLink(alts[0]), pairLink(alts[1])])}</p>
             </section>
 
             <section id="safety" aria-labelledby="h-safety">
@@ -569,68 +562,40 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
 
             <section id="alternatives" aria-labelledby="h-alt">
               <h2 id="h-alt">{t.alternativesTitle(e)}</h2>
-              {english ? (
-                <>
-                  <p>
-                    Not sure {e.name} is the right fit? These are the closest alternatives, each with its own referral sign-up. The{" "}
-                    <Link href={altPath}>full {e.name} alternatives comparison</Link> measures all {alts.length} against {e.name} by fees, leverage,
-                    products, verification and country availability.
-                  </p>
-                  <ul className="alt-links">
-                    {alts.map((x) => (
-                      <li key={x.slug}>
-                        <Link href={`${altPath}#${x.slug}`}>{x.name}</Link> – {altInfo(x).role}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <p>{t.alternativesIntro(e)}</p>
-                  <ul className="chips">
-                    {alts.map((x) => (
-                      <li key={x.slug}>
-                        <Link href={exchangePath(x.slug, locale)}>{t.crumbPage(x)}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
+              <p>{t.alternativesIntro(e, alts.length, links)}</p>
+              <ul className="alt-links">
+                {alts.map((x) => (
+                  <li key={x.slug}>
+                    <Link href={`${altPath}#${x.slug}`}>{x.name}</Link> – {altInfo(x, locale).role}
+                  </li>
+                ))}
+              </ul>
               <div className="grid grid-2">
                 {alts.slice(0, 4).map((x) => (
                   <ExchangeCard key={x.slug} exchange={x} locale={locale} />
                 ))}
               </div>
-              {english ? (
-                <>
-                  <h3 style={{ marginTop: 28 }}>{e.name} head to head</h3>
-                  <p>
-                    Deciding between {e.name} and one other exchange? Each pair has its own comparison of fees, leverage, products, countries and referral
-                    offers:
-                  </p>
-                  <ul className="chips">
-                    {alts.map((x) => (
-                      <li key={x.slug}>
-                        <Link href={versusPath(e, x)}>{versusLabel(e, x)}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                  <p style={{ marginTop: 16 }}>
-                    <Link href={altPath} className="btn btn-secondary btn-sm">
-                      Compare all {alts.length} {e.name} alternatives
-                    </Link>{" "}
-                    <Link href={comparePath} style={{ marginLeft: 12 }}>
-                      All exchange comparisons →
-                    </Link>
-                  </p>
-                </>
-              ) : (
-                <p style={{ marginTop: 18 }}>{t.alternativesMore(e, alts.length, links)}</p>
-              )}
+              <h3 style={{ marginTop: 28 }}>{t.headToHeadTitle(e)}</h3>
+              <p>{t.headToHeadIntro(e)}</p>
+              <ul className="chips">
+                {alts.map((x) => (
+                  <li key={x.slug}>
+                    <Link href={pairLink(x).href}>{pairLink(x).label}</Link>
+                  </li>
+                ))}
+              </ul>
+              <p style={{ marginTop: 16 }}>
+                <Link href={altPath} className="btn btn-secondary btn-sm">
+                  {t.compareAll(e, alts.length)}
+                </Link>{" "}
+                <Link href={comparePathFor(locale)} style={{ marginLeft: 12 }}>
+                  {t.allComparisons}
+                </Link>
+              </p>
             </section>
 
             <div className="notice" style={{ marginTop: 48 }}>
-              {t.riskNotice("/affiliate-disclosure")}
+              {t.riskNotice(pagePath("affiliateDisclosure", locale))}
             </div>
           </article>
 

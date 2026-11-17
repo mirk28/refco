@@ -149,6 +149,35 @@ export type AlternativesInfo = {
   sources: Source[];
 };
 
+/**
+ * The text of an alternatives entry in another language (`src/data/i18n/<locale>/alternatives/<slug>.ts`).
+ *
+ * Only text lives here. Whether a product exists (`has`), the status of a country, the former brand name and
+ * the source URLs are always taken from the English entry in `src/data/alternatives/<slug>.ts`.
+ * Every array must have the same length and order as in the English entry.
+ */
+export type AlternativesText = {
+  role: string;
+  pick: string;
+  pitch: string;
+  chooseIf: string[];
+  thinkTwiceIf: string[];
+  intro: string;
+  reasons: { title: string; text: string }[];
+  stayIf: string[];
+  faqs: Faq[];
+  reserves: string;
+  fund: string;
+  /** The `note` of every product in `features` ("" where the English note is empty). */
+  featureNotes: Record<FeatureKey, string>;
+  /** The `note` of every country in `countries` that has one in the English entry. */
+  countryNotes: Partial<Record<CountryKey, string>>;
+  regional: string;
+  mica: string;
+  /** Labels of `sources`, same order. The linked pages stay the official ones. */
+  sourceLabels: string[];
+};
+
 /** How the referral code works on this exchange. */
 export type ReferralInfo = {
   /** What the exchange itself calls the code, e.g. "Referral ID". */

@@ -2,16 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { counterpartPaths, localeInfo, locales } from "@/i18n/config";
+import { counterpartPaths, homePath, localeInfo, locales } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 
 /**
- * Language menu in the header. It links to the same page in the other languages where that page exists
- * (home page, referral-code pages) and to their home page otherwise. Plain links, because every language
- * has its own root layout and changing it loads a new document.
+ * Language menu in the header. It links to the same page in the other languages (on the 404 page: to their
+ * home page). Plain links, because every language has its own root layout and changing it loads a new document.
  */
-export function LangMenu({ locale, label }: { locale: Locale; label: string }) {
-  const paths = counterpartPaths(usePathname() ?? "/");
+export function LangMenu({ locale, label, homeOnly = false }: { locale: Locale; label: string; homeOnly?: boolean }) {
+  const pathname = usePathname() ?? "/";
+  // On the 404 page the address is not a page of the site, so there is no counterpart to link to.
+  const paths = homeOnly ? (Object.fromEntries(locales.map((l) => [l, homePath(l)])) as Record<Locale, string>) : counterpartPaths(pathname);
   const ref = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {

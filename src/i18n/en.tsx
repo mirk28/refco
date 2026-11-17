@@ -16,19 +16,21 @@ const benefit = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
 const list = (items: string[]) => (items.length <= 1 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`);
 const shortLeverage = (e: Exchange) => e.maxLeverage.replace(/\s*\(.*\)/, "");
 
-/** Paths a text links to. They are passed in so that a dictionary holds words only. */
+/** Paths a text links to. They are passed in so that a dictionary holds words only. All lead to pages in the language of the dictionary. */
 export type PageLinks = {
-  /** Home page of this language. */
+  /** Home page. */
   home: string;
-  /** Comparison table on the home page of this language. */
+  /** Comparison table on the home page. */
   compareTable: string;
-  /** English alternatives page of the exchange. */
+  /** Alternatives page of the exchange. */
   alternatives: string;
-  /** English hub of all comparisons. */
+  /** Hub of all comparisons. */
   compareHub: string;
-  /** Referral-code page of another exchange in this language. */
+  /** Referral-code page of another exchange. */
   referral: (slug: string) => string;
 };
+/** A link to a head-to-head page: its path and its label ("Binance vs OKX"). */
+export type PairLink = { href: string; label: string };
 
 export const en = {
   list,
@@ -64,10 +66,6 @@ export const en = {
     howCodesWork: "How referral codes work",
     faq: "FAQ",
     about: "About & methodology",
-    /** Heading of the column with pages that exist in English only (not used on the English site). */
-    inEnglish: "",
-    /** Appended to links from another language to an English page (empty on the English site). */
-    englishOnly: "",
     legal: "Legal",
     imprint: "Imprint (legal notice)",
     privacy: "Privacy policy",
@@ -115,6 +113,9 @@ export const en = {
     exchangeKicker: (monthYear: string) => `Checked ${monthYear}`,
     exchangeTitle: (e: Exchange) => `${e.name} Referral Code`,
     exchangeSubtitle: (e: Exchange) => `${benefit(e)} · Spot & futures with one link`,
+    versusBadge: "Head to head",
+    versusSubtitle: (feesA: string, feesB: string, leverageA: number, leverageB: number) =>
+      `Futures fees ${feesA} vs ${feesB} · ${leverageA}x vs ${leverageB}x leverage · KYC, countries, bonus`,
   },
 
   blocks: {
@@ -207,7 +208,22 @@ export const en = {
     compareNote: (reviewed: string, market: string) =>
       `Fees: standard tier as published by each exchange, checked ${reviewed}. Open interest and markets: CoinMarketCap, ${market}. Fees change – confirm on the exchange before trading.`,
     /** Shown below the table where the pair comparisons and alternatives pages exist in English only (not used in English). */
-    compareMore: null as { title: string; text: (links: PageLinks, pairs: number) => ReactNode } | null,
+    /** Strip under the comparison table: links to every head-to-head page. */
+    versusStrip: {
+      title: "Compare two exchanges head to head",
+      text: (pairs: number, hubHref: string): ReactNode => (
+        <>
+          {pairs} pair comparisons with fees, leverage, products, countries, KYC and referral offers side by side –{" "}
+          <Link href={hubHref}>all exchange comparisons</Link>.
+        </>
+      ),
+    },
+    /** Strip under the picks: links to every alternatives page. */
+    alternativesStrip: {
+      title: "Looking for an alternative to your exchange?",
+      text: (others: number) =>
+        `Each comparison measures one exchange against the other ${others}: fees, leverage, products, identity verification and the countries it accepts.`,
+    },
 
     picksEyebrow: "Quick answer",
     picksTitle: "Which exchange is best for you?",
@@ -500,7 +516,12 @@ export const en = {
     bestForTitle: (e: Exchange) => `Who is ${e.name} best for?`,
     openAccount: (e: Exchange) => `Open your ${e.name} account`,
     /** Where to look if the exchange does not fit – for languages without alternatives pages (the English page links to those). */
-    notAMatch: (e: Exchange, others: Exchange[], links: PageLinks): ReactNode => null,
+    notAMatch: (e: Exchange, count: number, links: PageLinks, pairs: PairLink[]): ReactNode => (
+      <>
+        Not a match? See <Link href={links.alternatives}>the {count} best {e.name} alternatives</Link> and what each of them is best for, or compare{" "}
+        {e.name} head to head: <Link href={pairs[0].href}>{pairs[0].label}</Link> and <Link href={pairs[1].href}>{pairs[1].label}</Link>.
+      </>
+    ),
 
     /* Safety */
     safetyTitle: (e: Exchange) => `Is ${e.name} safe?`,
@@ -533,8 +554,18 @@ export const en = {
 
     /* Alternatives – the texts of a language whose comparison pages exist in English only. */
     alternativesTitle: (e: Exchange) => `Alternatives to ${e.name}`,
-    alternativesIntro: (e: Exchange) => "",
-    alternativesMore: (e: Exchange, count: number, links: PageLinks): ReactNode => null,
+    alternativesIntro: (e: Exchange, count: number, links: PageLinks): ReactNode => (
+      <>
+        Not sure {e.name} is the right fit? These are the closest alternatives, each with its own referral sign-up. The{" "}
+        <Link href={links.alternatives}>full {e.name} alternatives comparison</Link> measures all {count} against {e.name} by fees, leverage, products,
+        verification and country availability.
+      </>
+    ),
+    headToHeadTitle: (e: Exchange) => `${e.name} head to head`,
+    headToHeadIntro: (e: Exchange) =>
+      `Deciding between ${e.name} and one other exchange? Each pair has its own comparison of fees, leverage, products, countries and referral offers:`,
+    compareAll: (e: Exchange, count: number) => `Compare all ${count} ${e.name} alternatives`,
+    allComparisons: "All exchange comparisons →",
 
     /* Risk notice and closing call to action */
     riskNotice: (disclosureHref: string): ReactNode => (

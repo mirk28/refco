@@ -13,8 +13,14 @@ import { alternativesPath, countryList, countryStatusLabel, featureList } from "
 import { comparePath, versusLabel, versusPairs, versusPath } from "@/data/versus";
 import { buildFaqs } from "./faqs";
 import { absoluteUrl, formatBn, prettyDate } from "./seo";
-import { alternativesTeaserFaq, alternativesTo, altInfo, feePair, quickAnswer } from "./compare";
+import { compareText } from "@/i18n/compare";
+import { alternativesTo as alternativesIn, altInfo as altInfoIn, feePair } from "./compare";
 import { scoreRows, versusAnswer } from "./versus";
+
+// This file is English only: the comparison sentences and the alternatives entries are the English ones.
+const { alternativesTeaserFaq, quickAnswer } = compareText("en");
+const altInfo = (e: Exchange) => altInfoIn(e, "en");
+const alternativesTo = (e: Exchange) => alternativesIn(e, "en");
 
 const cell = (s: string | number) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const table = (head: string[], rows: (string | number)[][]) => [

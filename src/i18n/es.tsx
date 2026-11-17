@@ -23,7 +23,6 @@ const lcFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 const shortLeverage = (e: Exchange) => e.maxLeverage.replace(/\s*\(.*\)/, "");
 /** Thousands of millions of US dollars: 12.3 → "$12,300 M" ("M" = millones). */
 const millions = (bn: number) => `$${Math.round(bn * 1000).toLocaleString("en-US")} M`;
-const inEnglish = "(en inglés)";
 
 export const es: Dictionary = {
   list,
@@ -59,12 +58,10 @@ export const es: Dictionary = {
     alternatives: "Alternativas",
     alternativesOf: (name) => `Alternativas a ${name}`,
     guides: "Guías",
-    comparisons: "Comparar exchanges",
+    comparisons: "Comparaciones de exchanges",
     howCodesWork: "Cómo funcionan los códigos de referido",
     faq: "Preguntas frecuentes",
     about: "Quiénes somos y metodología",
-    inEnglish: "En inglés",
-    englishOnly: inEnglish,
     legal: "Legal",
     imprint: "Aviso legal",
     privacy: "Política de privacidad",
@@ -92,10 +89,7 @@ export const es: Dictionary = {
       <>
         <strong>Analítica – tú decides.</strong> Nos gustaría usar Google Analytics para ver qué páginas se leen. Instala cookies y envía datos de uso a
         Google, y solo se activa si lo permites. En ningún caso hay cookies publicitarias. Detalles:{" "}
-        <Link href={privacyHref} hrefLang="en">
-          política de privacidad
-        </Link>{" "}
-        {inEnglish}.
+        <Link href={privacyHref}>política de privacidad</Link>.
       </>
     ),
     decline: "Rechazar",
@@ -113,10 +107,13 @@ export const es: Dictionary = {
     homeAlt: "RefCo – códigos de referido verificados para exchanges de criptomonedas",
     homeKicker: (monthYear) => `Actualizado en ${monthYear}`,
     homeTitle: "Códigos de referido para exchanges cripto, verificados.",
-    exchangeAlt: "Código de referido del exchange – RefCo",
+    exchangeAlt: "Código de referido, alternativas y comparaciones de exchanges – RefCo",
     exchangeKicker: (monthYear) => `Comprobado en ${monthYear}`,
     exchangeTitle: (e) => `Código de referido de ${e.name}`,
     exchangeSubtitle: (e) => `${benefit(e)} · Spot y futuros con un solo enlace`,
+    versusBadge: "Cara a cara",
+    versusSubtitle: (feesA, feesB, leverageA, leverageB) =>
+      `Comisiones de futuros ${feesA} vs ${feesB} · apalancamiento ${leverageA}x vs ${leverageB}x · KYC, países, bono`,
   },
 
   blocks: {
@@ -214,18 +211,19 @@ export const es: Dictionary = {
       "Ofertas para nuevos usuarios, comisiones estándar (no VIP) de spot y futuros, apalancamiento y profundidad de mercado de un vistazo.",
     compareNote: (reviewed, market) =>
       `Comisiones: nivel estándar publicado por cada exchange, comprobado el ${reviewed}. Interés abierto y mercados: CoinMarketCap, ${market}. Las comisiones cambian – confírmalas en el exchange antes de operar.`,
-    compareMore: {
-      title: "Comparaciones en detalle",
-      text: (links, pairs) => (
+    versusStrip: {
+      title: "Compara dos exchanges cara a cara",
+      text: (pairs, hubHref) => (
         <>
-          Las {pairs} comparaciones directas entre dos exchanges y las páginas de alternativas a cada uno – con comisiones, apalancamiento, productos,
-          países y verificación – están por ahora solo en inglés:{" "}
-          <a href={links.compareHub} hrefLang="en">
-            todas las comparaciones de exchanges
-          </a>{" "}
-          {inEnglish}.
+          {pairs} comparaciones por pares con comisiones, apalancamiento, productos, países, KYC y ofertas de referidos lado a lado –{" "}
+          <Link href={hubHref}>todas las comparaciones de exchanges</Link>.
         </>
       ),
+    },
+    alternativesStrip: {
+      title: "¿Buscas una alternativa a tu exchange?",
+      text: (others) =>
+        `Cada comparación mide un exchange frente a los otros ${others}: comisiones, apalancamiento, productos, verificación de identidad y los países que acepta.`,
     },
 
     picksEyebrow: "Respuesta rápida",
@@ -420,9 +418,10 @@ export const es: Dictionary = {
         . Funciona en iOS y Android.
       </>
     ),
-    riskLine: () => (
+    riskLine: (e, links) => (
       <>
-        El trading con apalancamiento es de alto riesgo. No está disponible en todos los países – consulta la <a href="#safety">disponibilidad</a>.
+        El trading con apalancamiento es de alto riesgo. No está disponible en todos los países – consulta la <a href="#safety">disponibilidad</a> o las{" "}
+        <Link href={links.alternatives}>alternativas a {e.name}</Link>.
       </>
     ),
 
@@ -525,8 +524,8 @@ export const es: Dictionary = {
     liveSchedule: (e) => `Consulta la tabla de comisiones actual de ${e.name}`,
     feesCompare: (e, others, links) => (
       <>
-        ¿Cómo quedan estas tarifas frente a las demás? La <Link href={links.compareTable}>tabla comparativa</Link> pone las comisiones de {e.name} junto a
-        las de {list(others)}.
+        ¿Cómo quedan estas tarifas frente a las demás? Nuestra <Link href={`${links.alternatives}#fees`}>comparación de alternativas a {e.name}</Link> pone
+        las comisiones de {e.name} junto a las de {list(others)}.
       </>
     ),
 
@@ -538,11 +537,10 @@ export const es: Dictionary = {
     cons: "Inconvenientes",
     bestForTitle: (e) => `¿Para quién es mejor ${e.name}?`,
     openAccount: (e) => `Abre tu cuenta en ${e.name}`,
-    notAMatch: (e, others, links) => (
+    notAMatch: (e, count, links, pairs) => (
       <>
-        ¿{e.name} no es lo que buscas? Compara los {others.length + 1} exchanges en la <Link href={links.compareTable}>tabla comparativa</Link> o mira
-        el <Link href={links.referral(others[0].slug)}>código de referido de {others[0].name}</Link> y el{" "}
-        <Link href={links.referral(others[1].slug)}>código de referido de {others[1].name}</Link>.
+        ¿No es lo que buscas? Mira <Link href={links.alternatives}>las {count} mejores alternativas a {e.name}</Link> y en qué destaca cada una, o compara{" "}
+        {e.name} cara a cara: <Link href={pairs[0].href}>{pairs[0].label}</Link> y <Link href={pairs[1].href}>{pairs[1].label}</Link>.
       </>
     ),
 
@@ -552,10 +550,8 @@ export const es: Dictionary = {
     closedWhereYouLive: (e, links) => (
       <>
         ¿{e.name} no está disponible donde vives? La{" "}
-        <a href={`${links.alternatives}#countries`} hrefLang="en">
-          tabla de países de nuestra página de alternativas a {e.name}
-        </a>{" "}
-        {inEnglish} muestra cuáles de los otros exchanges aceptan tu país.
+        <Link href={`${links.alternatives}#countries`}>tabla de países de nuestra página de alternativas a {e.name}</Link> muestra cuáles de los otros
+        exchanges aceptan tu país.
       </>
     ),
 
@@ -577,22 +573,18 @@ export const es: Dictionary = {
 
     /* Alternatives */
     alternativesTitle: (e) => `Alternativas a ${e.name}`,
-    alternativesIntro: (e) =>
-      `¿No tienes claro que ${e.name} sea lo que buscas? Estos son los otros exchanges de esta web, cada uno con su propio código de referido y su propia página.`,
-    alternativesMore: (e, count, links) => (
+    alternativesIntro: (e, count, links) => (
       <>
-        La comparación completa – {e.name} frente a sus {count} alternativas en comisiones, apalancamiento, productos, verificación y países – está por
-        ahora solo en inglés:{" "}
-        <a href={links.alternatives} hrefLang="en">
-          alternativas a {e.name}
-        </a>{" "}
-        y{" "}
-        <a href={links.compareHub} hrefLang="en">
-          todas las comparaciones de exchanges
-        </a>{" "}
-        {inEnglish}.
+        ¿No tienes claro que {e.name} sea lo que buscas? Estas son las alternativas más cercanas, cada una con su propio registro con referido. La{" "}
+        <Link href={links.alternatives}>comparación completa de alternativas a {e.name}</Link> mide las {count} frente a {e.name} en comisiones,
+        apalancamiento, productos, verificación y disponibilidad por país.
       </>
     ),
+    headToHeadTitle: (e) => `${e.name} cara a cara`,
+    headToHeadIntro: (e) =>
+      `¿Dudas entre ${e.name} y otro exchange? Cada par tiene su propia comparación de comisiones, apalancamiento, productos, países y ofertas de referidos:`,
+    compareAll: (e, count) => `Compara las ${count} alternativas a ${e.name}`,
+    allComparisons: "Todas las comparaciones de exchanges →",
 
     /* Risk notice and closing call to action */
     riskNotice: (disclosureHref) => (
@@ -600,10 +592,7 @@ export const es: Dictionary = {
         <strong>Advertencia de riesgo:</strong> Los derivados de criptomonedas son instrumentos complejos. El apalancamiento multiplica las ganancias y
         las pérdidas, y puedes perder todo tu margen en cuestión de minutos. Esta página es solo informativa y no constituye asesoramiento financiero.
         Podemos recibir una comisión si te registras a través de nuestros enlaces – consulta nuestra{" "}
-        <a href={disclosureHref} hrefLang="en">
-          divulgación de afiliación
-        </a>{" "}
-        {inEnglish}.
+        <Link href={disclosureHref}>divulgación de afiliación</Link>.
       </>
     ),
     joinTitle: (e) => `Únete a ${e.name} en 3 minutos`,

@@ -4,7 +4,7 @@ import { site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { exchangesFor } from "@/data/i18n";
 import { alternativesData, alternativesPath } from "@/data/alternatives";
-import { comparePath, versusLabel, versusPairs, versusPath } from "@/data/versus";
+import { comparePathFor, versusLabel, versusPairs, versusPath } from "@/data/versus";
 import { getDictionary } from "@/i18n";
 import type { PageLinks } from "@/i18n";
 import { homeAnchor, homePath, languageAlternates, localeInfo } from "@/i18n/config";
@@ -69,8 +69,8 @@ export function HomePage({ locale = "en" }: { locale?: Locale }) {
   const links: PageLinks = {
     home: homePath(locale),
     compareTable: homeAnchor(locale, "compare"),
-    alternatives: comparePath,
-    compareHub: comparePath,
+    alternatives: comparePathFor(locale),
+    compareHub: comparePathFor(locale),
     referral: (slug) => exchangePath(slug, locale),
   };
 
@@ -281,29 +281,17 @@ export function HomePage({ locale = "en" }: { locale?: Locale }) {
           <p className="small muted" style={{ marginTop: 12 }}>
             {t.compareNote(reviewed, marketDate)}
           </p>
-          {english ? (
-            <div className="alt-strip">
-              <h3>Compare two exchanges head to head</h3>
-              <p className="muted">
-                {versusPairs.length} pair comparisons with fees, leverage, products, countries, KYC and referral offers side by side –{" "}
-                <Link href={comparePath}>all exchange comparisons</Link>.
-              </p>
-              <ul className="chips" style={{ margin: 0 }}>
-                {versusPairs.map((p) => (
-                  <li key={versusPath(p.a, p.b)}>
-                    <Link href={versusPath(p.a, p.b)}>{versusLabel(p.a, p.b)}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : t.compareMore ? (
-            <div className="alt-strip">
-              <h3>{t.compareMore.title}</h3>
-              <p className="muted" style={{ marginBottom: 0 }}>
-                {t.compareMore.text(links, versusPairs.length)}
-              </p>
-            </div>
-          ) : null}
+          <div className="alt-strip">
+            <h3>{t.versusStrip.title}</h3>
+            <p className="muted">{t.versusStrip.text(versusPairs.length, comparePathFor(locale))}</p>
+            <ul className="chips" style={{ margin: 0 }}>
+              {versusPairs.map((p) => (
+                <li key={versusPath(p.a, p.b)}>
+                  <Link href={versusPath(p.a, p.b, locale)}>{versusLabel(p.a, p.b)}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -335,22 +323,17 @@ export function HomePage({ locale = "en" }: { locale?: Locale }) {
               );
             })}
           </div>
-          {english ? (
-            <div className="alt-strip">
-              <h3>Looking for an alternative to your exchange?</h3>
-              <p className="muted">
-                Each comparison measures one exchange against the other {exchanges.length - 1}: fees, leverage, products, identity verification and the
-                countries it accepts.
-              </p>
-              <ul className="chips" style={{ margin: 0 }}>
-                {ranked.map((e) => (
-                  <li key={e.slug}>
-                    <Link href={alternativesPath(e.slug)}>{e.name} alternatives</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
+          <div className="alt-strip">
+            <h3>{t.alternativesStrip.title}</h3>
+            <p className="muted">{t.alternativesStrip.text(exchanges.length - 1)}</p>
+            <ul className="chips" style={{ margin: 0 }}>
+              {ranked.map((e) => (
+                <li key={e.slug}>
+                  <Link href={alternativesPath(e.slug, locale)}>{dict.layout.alternativesOf(e.name)}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

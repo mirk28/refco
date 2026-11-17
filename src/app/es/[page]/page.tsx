@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { exchanges } from "@/data/exchanges";
-import { exchangeFor } from "@/data/i18n";
-import { ExchangePage, exchangeMetadata } from "@/components/ExchangePage";
-import { exchangeSlugFromPage, referralPageSlug } from "@/i18n/config";
+import { LocalePage, localePageMetadata } from "@/components/LocalePage";
+import { pageSegments } from "@/lib/pages";
 
 const locale = "es";
 
@@ -11,23 +8,18 @@ type Props = { params: Promise<{ page: string }> };
 
 export const dynamicParams = false;
 
-/** `/es/codigo-de-referido-<slug>` – the referral-code page of each exchange in Spanish. */
+/**
+ * Every Spanish page below `/es`: `/es/codigo-de-referido-<slug>`, `/es/alternativas-a-<slug>`, `/es/<a>-vs-<b>`,
+ * `/es/comparar`, `/es/acerca-de` and the legal pages (segments: `src/i18n/config.ts`).
+ */
 export function generateStaticParams() {
-  return exchanges.map((e) => ({ page: referralPageSlug(e.slug, locale) }));
+  return pageSegments(locale).map((page) => ({ page }));
 }
 
-const exchangeOf = (page: string) => {
-  const slug = exchangeSlugFromPage(page, locale);
-  return slug ? exchangeFor(slug, locale) : undefined;
-};
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const e = exchangeOf((await params).page);
-  return e ? exchangeMetadata(e, locale) : {};
+  return localePageMetadata((await params).page, locale);
 }
 
 export default async function Page({ params }: Props) {
-  const e = exchangeOf((await params).page);
-  if (!e) notFound();
-  return <ExchangePage exchange={e} locale={locale} />;
+  return <LocalePage segment={(await params).page} locale={locale} />;
 }
