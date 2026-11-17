@@ -9,10 +9,11 @@ import { hi } from "./hi";
 import { ur } from "./ur";
 import { ko } from "./ko";
 import { ar } from "./ar";
+import { vi } from "./vi";
 
 export type { AlternativesTexts } from "./en";
 
-const texts: Record<Locale, AlternativesTexts> = { en, es, pt, tr, de, hi, ur, ko, ar };
+const texts: Record<Locale, AlternativesTexts> = { en, es, pt, tr, de, hi, ur, ko, ar, vi };
 
 /** Texts of the "[Exchange] alternatives" pages in one language. */
 export const alternativesTexts = (locale: Locale): AlternativesTexts => texts[locale];

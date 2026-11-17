@@ -9,10 +9,11 @@ import { hi } from "./hi";
 import { ur } from "./ur";
 import { ko } from "./ko";
 import { ar } from "./ar";
+import { vi } from "./vi";
 
 export type { AltFaqGroup, CompareText } from "./en";
 
-const texts: Record<Locale, CompareText> = { en, es, pt, tr, de, hi, ur, ko, ar };
+const texts: Record<Locale, CompareText> = { en, es, pt, tr, de, hi, ur, ko, ar, vi };
 
 /**
  * The sentences of the comparison pages in one language (see `./en.ts`).

@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko", "ar"] as const;
+export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko", "ar", "vi"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -87,6 +87,7 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
     cardFont: { families: ["Noto Sans", "Noto Sans Arabic"], lineHeight: 1.35 },
     comma: "، ",
   },
+  vi: { name: "Tiếng Việt", short: "VI", htmlLang: "vi", ogLocale: "vi_VN", dateLocale: "vi-VN", decimal: ",", cardFont: { families: ["Noto Sans"] } },
 };
 
 /**
@@ -191,6 +192,13 @@ const segments: Record<Locale, Segments> = {
     alternatives: (slug) => `${slug}-alternatives`,
     alternativesPattern: /^([a-z0-9]+)-alternatives$/,
     static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  vi: {
+    referral: (slug) => `ma-gioi-thieu-${slug}`,
+    referralPattern: /^ma-gioi-thieu-([a-z0-9]+)$/,
+    alternatives: (slug) => `san-thay-the-${slug}`,
+    alternativesPattern: /^san-thay-the-([a-z0-9]+)$/,
+    static: { compare: "so-sanh-san-giao-dich", about: "gioi-thieu", affiliateDisclosure: "cong-bo-lien-ket-tiep-thi", imprint: "thong-tin-phap-ly", privacy: "chinh-sach-bao-mat" },
   },
 };
 /** Head-to-head pages are spelled the same way in every language: `binance-vs-okx`. */

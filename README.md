@@ -48,7 +48,7 @@ Requires Node.js 20.9+.
 ### Language versions
 English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`,
 Brazilian Portuguese at `/pt` (hreflang `pt-BR` and `pt`), Turkish at `/tr`, German at `/de`, Hindi at `/hi`, Urdu at
-`/ur` (right to left), Korean at `/ko`, Arabic at `/ar` (right to left). Every
+`/ur` (right to left), Korean at `/ko`, Arabic at `/ar` (right to left), Vietnamese at `/vi`. Every
 page exists in every language;
 the last part of the address carries the keyword in that language:
 
@@ -62,7 +62,8 @@ the last part of the address carries the keyword in that language:
 | Legal | `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` | `/pt/divulgacao-de-afiliados`, `/pt/aviso-legal`, `/pt/privacidade` | `/tr/satis-ortakligi-aciklamasi`, `/tr/kunye`, `/tr/gizlilik-politikasi` | `/de/affiliate-hinweis`, `/de/impressum`, `/de/datenschutz` |
 
 Hindi, Urdu, Korean and Arabic keep the English address parts (`/hi/binance-referral-code`, `/ur/compare` …): Indian and
-Pakistani readers search in Latin letters, and Urdu or Arabic letters or Hangul would be percent-encoded. All of these address parts are defined in `src/i18n/config.ts`.
+Pakistani readers search in Latin letters, and Urdu or Arabic letters or Hangul would be percent-encoded. Vietnamese has its own address parts without tone marks (`/vi/ma-gioi-thieu-binance`,
+`/vi/san-thay-the-binance`, `/vi/so-sanh-san-giao-dich`). All of these address parts are defined in `src/i18n/config.ts`.
 
 - **Written natively, not translated.** Portuguese, Turkish and German were written in the language from the English source:
   same facts, sections and list items, about the same length, with the search terms of that market. (The Spanish

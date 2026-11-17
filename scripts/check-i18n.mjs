@@ -50,6 +50,13 @@ const accepted = {
   "ar/gate/faqs[1].a": "1 year is written سنة واحدة – Arabic does not put the digit 1 before a noun",
 };
 
+// Further accepted differences, one file per language and exchange: scripts/i18n-accepted/<locale>-<slug>.json
+// ({ "<locale>/<slug>/<field>": "why" }). The writers of a language record them there; the reasons are in English.
+const acceptedDir = path.join(root, "scripts/i18n-accepted");
+if (fs.existsSync(acceptedDir)) {
+  for (const f of fs.readdirSync(acceptedDir).filter((f) => f.endsWith(".json"))) Object.assign(accepted, JSON.parse(fs.readFileSync(path.join(acceptedDir, f), "utf8")));
+}
+
 const load = async (file, name) => (await import(pathToFileURL(file).href))[name];
 
 /** All texts of an entry as [field, text], in the shape of `ExchangeText`. */
@@ -128,8 +135,15 @@ const unitWords = {
   ko: { 조: 1e12, 천억: 1e11, 백억: 1e10, 십억: 1e9, 억: 1e8, 천만: 1e7, 백만: 1e6, 십만: 1e5, 만: 1e4, 천: 1e3 },
 };
 
-/** Numbers a language writes where English writes a word: Korean dates give the month as a number ("2026년 11월 16일"). */
-const wordNumbers = { ko: /(?<![\d.,])\d{1,2}(?=월)/g };
+/**
+ * Numbers a language writes where English writes a word: Korean and Vietnamese dates give the month as a number
+ * ("2026년 11월 16일", "16 tháng 11, 2026").
+ */
+const wordNumbers = { ko: /(?<![\d.,])\d{1,2}(?=월)/g, vi: /(?<=tháng\s)\d{1,2}(?![\d.,])/gi };
+
+/** Languages that group thousands with a space ("10 000", also with a no-break or narrow no-break space). */
+const spaceGrouping = new Set(["fr", "ru", "uk"]);
+const joinGroups = (text) => text.replace(/(?<![\d.,])\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?![\d])/g, (n) => n.replace(/[ \u00a0\u202f]/g, ""));
 
 function numbers(text, decimal = ".", units, skip) {
   if (skip) text = text.replace(skip, " ");
@@ -193,7 +207,8 @@ function compare(id, locale, a, translated, referralCode) {
     if (accepted[`${id}/${field}`]) continue;
     const units = unitWords[locale];
     const na = numbers(source, ".", units && englishUnits);
-    const nb = numbers(target, localeInfo[locale]?.decimal, units && { ...englishUnits, ...units }, wordNumbers[locale]);
+    const local = spaceGrouping.has(locale) ? joinGroups(target) : target;
+    const nb = numbers(local, localeInfo[locale]?.decimal, units && { ...englishUnits, ...units }, wordNumbers[locale]);
     const missing = na.filter((n) => !nb.includes(n));
     const extra = nb.filter((n) => !na.includes(n));
     if (missing.length || extra.length) {

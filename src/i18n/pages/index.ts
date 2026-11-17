@@ -9,10 +9,11 @@ import { hi } from "./hi";
 import { ur } from "./ur";
 import { ko } from "./ko";
 import { ar } from "./ar";
+import { vi } from "./vi";
 
 export type { PageTexts, TextContext, TextSection } from "./en";
 
-const texts: Record<Locale, PageTexts> = { en, es, pt, tr, de, hi, ur, ko, ar };
+const texts: Record<Locale, PageTexts> = { en, es, pt, tr, de, hi, ur, ko, ar, vi };
 
 /** The text pages (about, affiliate disclosure, imprint, privacy policy) and their sidebar labels in one language. */
 export const pageTexts = (locale: Locale): PageTexts => texts[locale];

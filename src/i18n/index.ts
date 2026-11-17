@@ -9,10 +9,11 @@ import { hi } from "./hi";
 import { ur } from "./ur";
 import { ko } from "./ko";
 import { ar } from "./ar";
+import { vi } from "./vi";
 
 export type { Dictionary, PageLinks } from "./en";
 
-const dictionaries: Record<Locale, Dictionary> = { en, es, pt, tr, de, hi, ur, ko, ar };
+const dictionaries: Record<Locale, Dictionary> = { en, es, pt, tr, de, hi, ur, ko, ar, vi };
 
 /** Interface texts of a language. */
 export const getDictionary = (locale: Locale = "en"): Dictionary => dictionaries[locale];
