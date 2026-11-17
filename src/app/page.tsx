@@ -125,7 +125,7 @@ export default function HomePage() {
                 <CheckIcon /> Official links only
               </li>
               <li>
-                <CheckIcon /> No cookies, no tracking
+                <CheckIcon /> Analytics only with your consent
               </li>
             </ul>
           </div>
@@ -420,8 +420,8 @@ export default function HomePage() {
               <div className="feature-icon">
                 <EyeOffIcon />
               </div>
-              <h3>No cookies, no tracking</h3>
-              <p className="muted">We don&apos;t use analytics, ad pixels or cookies. Your visit stays private.</p>
+              <h3>Privacy first</h3>
+              <p className="muted">No ad pixels and no advertising cookies. Analytics only runs if you allow it.</p>
             </div>
             <div className="card feature">
               <div className="feature-icon green">

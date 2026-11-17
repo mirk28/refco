@@ -79,7 +79,7 @@ export function renderOg({
           <span>·</span>
           <span>Fees and facts</span>
           <span>·</span>
-          <span>No tracking</span>
+          <span>Official sources</span>
         </div>
       </div>
     ),

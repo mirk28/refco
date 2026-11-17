@@ -506,3 +506,13 @@ table.score { min-width: 640px; }
 /* Guides in many languages: two columns on wide screens. */
 .guides-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
 @media (max-width: 640px) { .guides-list { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Analytics consent banner ---------- */
+.consent { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 60; max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 18px; background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 16px 20px; font-size: 0.9rem; color: var(--ink-2); }
+.consent p { margin: 0; }
+.consent strong { color: var(--ink); }
+.consent-actions { display: flex; gap: 10px; flex: none; }
+@media (max-width: 640px) { .consent { flex-direction: column; align-items: stretch; gap: 12px; } .consent-actions .btn { flex: 1; } }
+.link-button { font: inherit; color: #dfe6f1; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.link-button:hover { color: #fff; text-decoration: underline; }
+@media print { .consent { display: none !important; } }

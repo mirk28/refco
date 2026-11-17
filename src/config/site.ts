@@ -16,6 +16,11 @@ export const site = {
   /** Snapshot date of the CoinMarketCap market data shown on the pages. */
   marketDataDate: "2026-10-11",
   contactEmail: "hello@referral-code.org",
+  /**
+   * Google Analytics 4 measurement ID. Analytics is loaded only after the visitor has allowed it in the
+   * consent banner (src/components/Analytics.tsx). Set to "" to switch Analytics and the banner off.
+   */
+  analyticsId: "G-95BQH69LCJ",
   themeColor: "#0B1B33",
   social: {
     // Add profiles when they exist – they are used in Organization schema (sameAs).

@@ -1,7 +1,8 @@
 # RefCo – referral-code.org
 
 Fast, SEO/GEO/AEO-optimised Next.js site for crypto exchange referral codes.
-Static (SSG) pages, no cookies, no tracking, no external requests → no cookie banner needed.
+Static (SSG) pages. Google Analytics is the only third-party request and is loaded only after the
+visitor has allowed it in the consent banner; without consent there are no cookies and no tracking.
 
 ## Quick start
 
@@ -98,8 +99,10 @@ Monthly is a good rhythm.
   AI crawlers explicitly allowed in `robots.txt`.
 - **Performance:** fully static, system font stack, inline SVG, one tiny client component
   (copy button), long-term caching for logos.
-- **Security/privacy:** strict security headers + CSP (`next.config.mjs`), no cookies, no
-  third-party scripts. Besides CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
+- **Security/privacy:** strict security headers + CSP (`next.config.mjs`). No cookies and no
+  third-party scripts unless the visitor allows Google Analytics (`site.analyticsId` in
+  `src/config/site.ts`, banner and loader in `src/components/Analytics.tsx`; set the ID to "" to
+  switch both off). The privacy policy describes it under "Cookies and analytics". Besides CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy` and `Permissions-Policy` the site sends `Cross-Origin-Opener-Policy`,
   `Cross-Origin-Embedder-Policy`, `Cross-Origin-Resource-Policy` (images for link previews are
   exempt), `Origin-Agent-Cluster`, `X-Permitted-Cross-Domain-Policies` and `X-XSS-Protection: 0`.
@@ -118,5 +121,5 @@ Monthly is a good rhythm.
 - [ ] Add affiliate links (and codes) in `src/data/exchanges/<slug>.ts`
 - [ ] Add official logos for Bybit, Bitget, Gate, MEXC
 - [ ] Re-verify fees on each exchange's fee page
-- [ ] If you add analytics later: update the privacy policy and add a consent banner
+- [x] Analytics added with a consent banner; privacy policy updated
 - [ ] Have the legal texts reviewed by a lawyer – they are a solid template, not legal advice

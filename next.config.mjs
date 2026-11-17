@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
-// Strict security headers. No third-party scripts, fonts or trackers are loaded,
-// which keeps the site fast and GDPR/revDSG-friendly (no cookie banner needed).
+// Strict security headers. The only third-party code is Google Analytics, and only after the visitor
+// has allowed it in the consent banner (src/components/Analytics.tsx).
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -46,11 +46,12 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      // Google Analytics (loaded only after consent): https://developers.google.com/tag-platform/security/guides/csp
+      "script-src 'self' 'unsafe-inline' https://*.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data:",
+      "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com",
       "font-src 'self'",
-      "connect-src 'self'",
+      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
       "media-src 'self'",
       "manifest-src 'self'",
       "worker-src 'self'",

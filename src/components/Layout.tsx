@@ -4,6 +4,7 @@ import { nav, site } from "@/config/site";
 import { exchanges, exchangePath } from "@/data/exchanges";
 import { alternativesPath } from "@/data/alternatives";
 import { comparePath } from "@/data/versus";
+import { ConsentSettingsButton } from "./Analytics";
 
 export function Header() {
   return (
@@ -34,7 +35,7 @@ export function Footer() {
           <div>
             <Logo />
             <p style={{ marginTop: 16, maxWidth: 320 }}>
-              Verified referral codes for the largest crypto exchanges – welcome bonuses and fee rebates for spot and futures. Clear facts, no tracking.
+              Verified referral codes for the largest crypto exchanges – welcome bonuses and fee rebates for spot and futures. Clear facts from official sources.
             </p>
           </div>
           <div>
@@ -72,6 +73,7 @@ export function Footer() {
               <li><Link href="/imprint">Imprint (legal notice)</Link></li>
               <li><Link href="/privacy">Privacy policy</Link></li>
               <li><Link href="/affiliate-disclosure">Affiliate disclosure</Link></li>
+              <li><ConsentSettingsButton /></li>
               <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
             </ul>
           </div>

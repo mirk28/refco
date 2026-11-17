@@ -6,14 +6,14 @@ import { prettyDate } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${site.domain} handles personal data under the EU General Data Protection Regulation (GDPR). No cookies, no tracking, no analytics.`,
+  description: `How ${site.domain} handles personal data under the EU General Data Protection Regulation (GDPR). Google Analytics only with your consent, no advertising cookies.`,
   alternates: { canonical: "/privacy" },
 };
 
 const toc: [string, string][] = [
   ["controller", "Controller"],
   ["hosting", "Hosting and log files"],
-  ["cookies", "No cookies, no tracking"],
+  ["cookies", "Cookies and analytics"],
   ["affiliate-links", "Links to exchanges"],
   ["email", "Contact by email"],
   ["recipients", "Recipients of data"],
@@ -30,9 +30,10 @@ export default function PrivacyPage() {
         <p className="muted">Last updated: {prettyDate(site.lastReviewed)}</p>
 
         <div className="info">
-          <strong>In short:</strong> {site.domain} does not use cookies, analytics, advertising pixels, social-media plugins or external fonts. We only process
-          the technical data that is necessary to deliver the website securely. If you click a link to an exchange, you leave our website and the exchange&apos;s
-          own privacy policy applies.
+          <strong>In short:</strong> {site.domain} uses no advertising pixels, social-media plugins or external fonts. Google Analytics runs only if you
+          allow it in the consent banner; without your consent no cookie is set and nothing is sent to Google. Apart from that we only process the
+          technical data that is necessary to deliver the website securely. If you click a link to an exchange, you leave our website and the
+          exchange&apos;s own privacy policy applies.
         </div>
 
         <h2 id="controller">1. Controller</h2>
@@ -67,12 +68,34 @@ export default function PrivacyPage() {
           Standard Contractual Clauses, applies.
         </p>
 
-        <h2 id="cookies">3. No cookies, no tracking, no profiling</h2>
+        <h2 id="cookies">3. Cookies and analytics</h2>
         <p>
-          We do not set cookies and do not store or read any other information on your device. We do not use tracking or analytics tools, advertising
-          networks, fingerprinting or social-media plugins, and all fonts and images are served from our own domain. A cookie consent banner is therefore
-          not required. We do not carry out automated decision-making or profiling (Art. 22 GDPR). If any of this changes, we will update this policy
-          and ask for your consent where the law requires it, before any non-essential processing takes place.
+          Without your consent we set no cookies and use no analytics. We use no advertising networks, fingerprinting or social-media plugins, and all
+          fonts and images are served from our own domain. We do not carry out automated decision-making or profiling (Art. 22 GDPR).
+        </p>
+        <p>
+          Your choice in the consent banner is stored in your browser&apos;s local storage (entry <code>refco-analytics-consent</code>, value
+          &quot;granted&quot; or &quot;denied&quot;), so that we do not have to ask again on every page. This entry is necessary to respect your choice and
+          is not sent to anyone.
+        </p>
+        <h3 id="analytics">Google Analytics – only with your consent</h3>
+        <p>
+          If you choose &quot;Allow analytics&quot;, this website loads Google Analytics 4, a service of Google Ireland Limited, Gordon House, Barrow
+          Street, Dublin 4, Ireland (&quot;Google&quot;). Google Analytics sets the cookies <code>_ga</code> and{" "}
+          <code>_ga_{site.analyticsId.replace(/^G-/, "")}</code> (by default stored for up to two years) to tell visitors apart. It records which pages
+          are viewed, how visitors reached the website, the approximate region derived from the IP address, and browser and device data. According to
+          Google, Analytics 4 does not log or store IP addresses. We use the reports only in aggregated form, to see which pages are read. Advertising
+          features are switched off: no advertising cookies and no ad personalisation.
+        </p>
+        <p>
+          Legal basis: your consent (Art. 6(1)(a) GDPR). Google acts as our processor. Data can be transferred to Google LLC in the United States,
+          which is certified under the EU-U.S. Data Privacy Framework. Google deletes user-level data after the retention period set in Analytics, 14
+          months at most. You can withdraw your consent at any time with effect for the future through &quot;Cookie settings&quot; at the bottom of
+          every page; the Analytics cookies are then removed from your browser and Analytics is no longer loaded. More information from Google:{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener nofollow">
+            policies.google.com/privacy
+          </a>
+          .
         </p>
 
         <h2 id="affiliate-links">4. Links to exchanges (affiliate links)</h2>
@@ -96,7 +119,8 @@ export default function PrivacyPage() {
         <h2 id="recipients">6. Recipients of data</h2>
         <p>
           We do not sell personal data and do not pass it on to third parties for their own purposes. Data is processed only by the service providers
-          named above – the hosting provider and the email provider – and is disclosed to authorities only where the law obliges us to do so.
+          named above – the hosting provider, the email provider and, if you have allowed analytics, Google – and is disclosed to authorities only
+          where the law obliges us to do so.
         </p>
 
         <h2 id="rights">7. Your rights</h2>
@@ -107,6 +131,7 @@ export default function PrivacyPage() {
           <li>erasure (Art. 17 GDPR) and restriction of processing (Art. 18 GDPR),</li>
           <li>data portability (Art. 20 GDPR),</li>
           <li>object, on grounds relating to your particular situation, to processing based on legitimate interests (Art. 21 GDPR),</li>
+          <li>withdraw a consent you have given at any time, with effect for the future (Art. 7(3) GDPR),</li>
           <li>
             lodge a complaint with a supervisory authority (Art. 77 GDPR) – in Poland the President of the Personal Data Protection Office (Prezes Urzędu
             Ochrony Danych Osobowych, UODO, uodo.gov.pl), or the authority of the EU country in which you live or work; in Switzerland the Federal Data
