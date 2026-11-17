@@ -8,7 +8,7 @@ import { comparePathFor, opponentsOf, versusLabel, versusPath } from "@/data/ver
 import type { Pair } from "@/data/versus";
 import { getDictionary } from "@/i18n";
 import { compareText } from "@/i18n/compare";
-import { homePath, languageAlternates, localeInfo, pagePath } from "@/i18n/config";
+import { homePath, languageAlternates, listComma, localeInfo, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { versusText } from "@/i18n/versus";
 import { ExchangeLogo } from "./ExchangeLogo";
@@ -614,8 +614,8 @@ export function VersusPage({ pair, locale }: { pair: Pair; locale: Locale }) {
                     </tr>
                     <tr>
                       <th scope="row">{t.covers}</th>
-                      <td>{a.referralCovers.join(", ")}</td>
-                      <td>{b.referralCovers.join(", ")}</td>
+                      <td>{a.referralCovers.join(listComma(locale))}</td>
+                      <td>{b.referralCovers.join(listComma(locale))}</td>
                     </tr>
                     <tr>
                       <th scope="row">{t.whereCode}</th>

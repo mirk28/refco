@@ -45,6 +45,9 @@ const accepted = {
   "ko/alternatives/gate/chooseIf[1]": "one year is written 1년, as Korean writes counts",
   "ko/alternatives/gate/stayIf[1]": "one year is written 1년, as Korean writes counts",
   "ko/alternatives/gate/reasons[5].text": "three is written with a digit, as Korean writes counts",
+  "ar/gate/referral.inviteeReward": "1 year is written سنة واحدة – Arabic does not put the digit 1 before a noun",
+  "ar/gate/feeDiscount": "1 year is written سنة واحدة – Arabic does not put the digit 1 before a noun",
+  "ar/gate/faqs[1].a": "1 year is written سنة واحدة – Arabic does not put the digit 1 before a noun",
 };
 
 const load = async (file, name) => (await import(pathToFileURL(file).href))[name];

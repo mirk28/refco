@@ -61,8 +61,8 @@ export async function shapeText(text: string, font: CardFont, { size, weight = 4
   const files = font.families.map((family) => fontFile(family, weight));
   await Promise.all(files.slice(0, -1).map(register));
   const fontSize = Math.round(size * (font.scale ?? 1));
-  // Line height in 1024ths of a point; at 72 dpi a point is a pixel.
-  const lineHeight = font.lineHeight ? ` line_height="${Math.round(fontSize * font.lineHeight * 1024)}"` : "";
+  // Line height in 1024ths of a device pixel; the text is drawn at `scale` times its size.
+  const lineHeight = font.lineHeight ? ` line_height="${Math.round(fontSize * font.lineHeight * scale * 1024)}"` : "";
   const { data, info } = await sharp({
     text: {
       // A right-to-left mark makes the paragraph right-to-left even when it starts with a Latin name; Pango then

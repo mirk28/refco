@@ -8,10 +8,11 @@ import { de } from "./de";
 import { hi } from "./hi";
 import { ur } from "./ur";
 import { ko } from "./ko";
+import { ar } from "./ar";
 
 export type { AltFaqGroup, CompareText } from "./en";
 
-const texts: Record<Locale, CompareText> = { en, es, pt, tr, de, hi, ur, ko };
+const texts: Record<Locale, CompareText> = { en, es, pt, tr, de, hi, ur, ko, ar };
 
 /**
  * The sentences of the comparison pages in one language (see `./en.ts`).

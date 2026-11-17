@@ -48,7 +48,7 @@ Requires Node.js 20.9+.
 ### Language versions
 English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`,
 Brazilian Portuguese at `/pt` (hreflang `pt-BR` and `pt`), Turkish at `/tr`, German at `/de`, Hindi at `/hi`, Urdu at
-`/ur` (right to left), Korean at `/ko`. Every
+`/ur` (right to left), Korean at `/ko`, Arabic at `/ar` (right to left). Every
 page exists in every language;
 the last part of the address carries the keyword in that language:
 
@@ -61,8 +61,8 @@ the last part of the address carries the keyword in that language:
 | About | `/about` | `/es/acerca-de` | `/pt/sobre` | `/tr/hakkimizda` | `/de/ueber-uns` |
 | Legal | `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` | `/pt/divulgacao-de-afiliados`, `/pt/aviso-legal`, `/pt/privacidade` | `/tr/satis-ortakligi-aciklamasi`, `/tr/kunye`, `/tr/gizlilik-politikasi` | `/de/affiliate-hinweis`, `/de/impressum`, `/de/datenschutz` |
 
-Hindi, Urdu and Korean keep the English address parts (`/hi/binance-referral-code`, `/ur/compare` …): Indian and
-Pakistani readers search in Latin letters, and Urdu letters or Hangul would be percent-encoded. All of these address parts are defined in `src/i18n/config.ts`.
+Hindi, Urdu, Korean and Arabic keep the English address parts (`/hi/binance-referral-code`, `/ur/compare` …): Indian and
+Pakistani readers search in Latin letters, and Urdu or Arabic letters or Hangul would be percent-encoded. All of these address parts are defined in `src/i18n/config.ts`.
 
 - **Written natively, not translated.** Portuguese, Turkish and German were written in the language from the English source:
   same facts, sections and list items, about the same length, with the search terms of that market. (The Spanish
@@ -72,14 +72,19 @@ Pakistani readers search in Latin letters, and Urdu letters or Hangul would be p
   texts shaped by sharp (Pango with HarfBuzz, `src/lib/og-shape.ts`) and placed as images in the same layout
   (`renderCard` in `src/lib/og.tsx`). The font files – Regular, Bold, ExtraBold, with their OFL licence – are in
   `src/fonts/<family without spaces>/`. A `cardFont` can list several families (Urdu: Noto Sans for Latin, then Noto
-  Nastaliq Urdu) and set a size factor and line height, because Nastaliq runs tall.
-- **Right to left** (Urdu): `dir: "rtl"` in `localeInfo` sets `<html dir="rtl">` and mirrors the share card.
+  Nastaliq Urdu; Arabic: Noto Sans, then Noto Sans Arabic) and set a size factor and line height (a factor of the
+  font size), because Nastaliq runs tall.
+- **Right to left** (Urdu, Arabic): `dir: "rtl"` in `localeInfo` sets `<html dir="rtl">` and mirrors the share card.
   `globals.css` uses logical properties (`padding-inline-start`, `inset-inline-end` …), so the layout mirrors by
   itself; `.rtl-flip` turns the arrow icon, and letter-spacing and upper-casing are off for Arabic script.
 - **Korean**: the exchange names stay in Latin letters; titles, H1 and keywords add the Hangul reading
   (`withHangul` in `src/i18n/ko-josa.ts`: "Binance(바이낸스)"). Particles after a name or a data text depend on its
   last sound, so the Korean files attach them with `josa(word, "은/는")` from the same file. Large numbers use
   Korean units ("341억" for 34.1 billion); `npm run check:i18n` multiplies them out before it compares.
+- **Arabic**: Modern Standard Arabic for the whole Arab world, Latin digits. The exchange names stay in Latin letters;
+  titles, H1 and keywords add the Arabic spelling (`withArabic` in `src/i18n/ar-names.ts`: "Binance (بينانس)").
+  Nouns counted with a variable number take the Arabic plural forms through `arabicCount` from the same file
+  ("منصة واحدة", "منصتان", "3 منصات", "11 منصة").
 - **Number notation**: `localeInfo` in `src/i18n/config.ts` sets the decimal sign of a language. Fee rates from the
   English data are shown in that notation by `localRate` (`0,02%` in Portuguese, `%0,02` in Turkish, `0,02 %` in
   German); texts are

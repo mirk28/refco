@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko"] as const;
+export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko", "ar"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -40,6 +40,8 @@ export type LocaleInfo = {
   cardFont?: CardFont;
   /** Mark at the end of a sentence that a template closes itself; default ".". Hindi uses the danda "।". */
   fullStop?: string;
+  /** Comma between list items that the layout joins itself; default ", ". Urdu and Arabic use "،". */
+  comma?: string;
 };
 
 export type CardFont = {
@@ -67,10 +69,24 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
     dateLocale: "ur-PK-u-nu-latn",
     decimal: ".",
     dir: "rtl",
-    cardFont: { families: ["Noto Sans", "Noto Nastaliq Urdu"], scale: 0.82, lineHeight: 1.7 },
+    cardFont: { families: ["Noto Sans", "Noto Nastaliq Urdu"], scale: 0.82, lineHeight: 0.85 },
     fullStop: "۔",
+    comma: "، ",
   },
   ko: { name: "한국어", short: "KO", htmlLang: "ko", ogLocale: "ko_KR", dateLocale: "ko-KR", decimal: "." },
+  // Arabic runs right to left; Latin digits as on Arabic crypto sites (and in the number check). The cards take Latin
+  // from Noto Sans and Arabic from Noto Sans Arabic.
+  ar: {
+    name: "العربية",
+    short: "AR",
+    htmlLang: "ar",
+    ogLocale: "ar_AR",
+    dateLocale: "ar-u-ca-gregory-nu-latn",
+    decimal: ".",
+    dir: "rtl",
+    cardFont: { families: ["Noto Sans", "Noto Sans Arabic"], lineHeight: 1.35 },
+    comma: "، ",
+  },
 };
 
 /**
@@ -85,6 +101,9 @@ export function localRate(rate: string, locale: Locale): string {
   if (info.percentBefore) return `${m[1]}%${digits}`;
   return info.percentSpace ? `${m[1]}${digits} %` : `${m[1]}${digits}%`;
 }
+
+/** The comma a language puts between list items (`", "`, Urdu and Arabic `"، "`). */
+export const listComma = (locale: Locale) => localeInfo[locale].comma ?? ", ";
 
 /** The number in a fee rate of any language (`0,02%`, `%0,02`, `0.02%`) – for comparisons. */
 export const rateValue = (rate: string) => Number.parseFloat(rate.replace("%", "").replace(/\s/g, "").replace(",", "."));
@@ -159,6 +178,14 @@ const segments: Record<Locale, Segments> = {
   },
   // Hangul in an address would be percent-encoded, so the Korean addresses keep the English words too.
   ko: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  // Arabic letters in an address would be percent-encoded as well.
+  ar: {
     referral: (slug) => `${slug}-referral-code`,
     referralPattern: /^([a-z0-9]+)-referral-code$/,
     alternatives: (slug) => `${slug}-alternatives`,

@@ -539,7 +539,7 @@ table.score { min-width: 640px; }
 .link-button:hover { color: #fff; text-decoration: underline; }
 @media print { .consent { display: none !important; } }
 
-/* ---------- Right-to-left languages (Urdu): <html dir="rtl"> from localeInfo.dir ---------- */
+/* ---------- Right-to-left languages (Urdu, Arabic): <html dir="rtl"> from localeInfo.dir ---------- */
 /* Arabic script joins its letters: letter-spacing would pull them apart, and it has no capitals. */
 [dir="rtl"] * { letter-spacing: normal !important; text-transform: none !important; }
 /*

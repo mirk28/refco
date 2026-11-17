@@ -9,7 +9,7 @@ import type { CountryStatus, FeatureKey } from "@/data/alternatives";
 import { getDictionary } from "@/i18n";
 import { alternativesTexts } from "@/i18n/alternatives";
 import { compareText } from "@/i18n/compare";
-import { homeAnchor, homePath, languageAlternates, localeInfo, pagePath } from "@/i18n/config";
+import { homeAnchor, homePath, languageAlternates, listComma, localeInfo, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { ExchangeLogo } from "./ExchangeLogo";
 import { Breadcrumbs, CtaLink, FaqList } from "./Blocks";
@@ -118,7 +118,7 @@ const AnchorList = ({ list, locale }: { list: Exchange[]; locale: Locale }) =>
     <>
       {list.map((a, i) => (
         <span key={a.slug}>
-          {i > 0 ? (i === list.length - 1 ? alternativesTexts(locale).and(a.name) : ", ") : null}
+          {i > 0 ? (i === list.length - 1 ? alternativesTexts(locale).and(a.name) : listComma(locale)) : null}
           <a href={`#${a.slug}`}>{a.name}</a>
         </span>
       ))}

@@ -8,10 +8,11 @@ import { de } from "./de";
 import { hi } from "./hi";
 import { ur } from "./ur";
 import { ko } from "./ko";
+import { ar } from "./ar";
 
 export type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
-const texts: Record<Locale, VersusText> = { en, es, pt, tr, de, hi, ur, ko };
+const texts: Record<Locale, VersusText> = { en, es, pt, tr, de, hi, ur, ko, ar };
 
 /**
  * The head-to-head pages and the comparison hub in one language (see `./en.tsx`).
