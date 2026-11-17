@@ -552,3 +552,5 @@ table.score { min-width: 640px; }
 [dir="rtl"] body { line-height: 1.85; }
 [dir="rtl"] :is(h1, h2, h3, h4) { line-height: 1.5; }
 [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+/* Korean breaks lines between words, not inside them; a single overlong word may still wrap. */
+:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }

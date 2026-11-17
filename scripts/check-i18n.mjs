@@ -30,6 +30,21 @@ const accepted = {
   "es/bybit/sourceLabels[4]": "name of a Bybit page, kept in English",
   "es/alternatives/binance/fund": "US$1 billion is written as 1,000 millones de dólares",
   "es/alternatives/binance/stayIf[2]": "US$1 billion is written as 1,000 millones de dólares",
+  "ko/bitget/welcomeTasks[0].task": "three days is written 3일, as Korean writes counts",
+  "ko/bitget/signupTip": "three days is written 3일, as Korean writes counts",
+  "ko/bitget/benefits[0]": "three days is written 3일, as Korean writes counts",
+  "ko/bitget/faqs[8].a": "three days is written 3일, as Korean writes counts",
+  "ko/bitget/faqs[10].a": "three days is written 3일, as Korean writes counts",
+  "ko/kucoin/about[0]": "the third quarter is written 3분기, as Korean writes it",
+  "ko/gate/referral.guide[0]": "one year is written 1년, as Korean writes counts",
+  "ko/gate/quickAnswer": "one year is written 1년, as Korean writes counts",
+  "ko/gate/benefits[1]": "one year is written 1년, as Korean writes counts",
+  "ko/gate/about[1]": "three is written with a digit, as Korean writes counts",
+  "ko/gate/faqs[12].a": "three is written with a digit, as Korean writes counts",
+  "ko/alternatives/gate/pitch": "one year is written 1년, as Korean writes counts",
+  "ko/alternatives/gate/chooseIf[1]": "one year is written 1년, as Korean writes counts",
+  "ko/alternatives/gate/stayIf[1]": "one year is written 1년, as Korean writes counts",
+  "ko/alternatives/gate/reasons[5].text": "three is written with a digit, as Korean writes counts",
 };
 
 const load = async (file, name) => (await import(pathToFileURL(file).href))[name];
@@ -97,11 +112,49 @@ function alternativesFields(x, english) {
 // "10,000" and "10000" count as the same number; a trailing dot or comma is punctuation.
 // Languages with a decimal comma (`decimal: ","` in src/i18n/config.ts) write "10.000" and "0,02": they count as 10000 and 0.02.
 const { localeInfo } = await import(pathToFileURL(path.join(root, "src/i18n/config.ts")).href);
-const numbers = (text, decimal = ".") =>
-  (text.match(/\d+(?:[.,]\d+)*/g) ?? [])
-    // With a decimal point every comma between digits groups thousands – also the Indian "1,00,000" (= 100,000).
-    .map((n) => (decimal === "," ? n.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : n.replace(/,(?=\d)/g, "")))
-    .sort();
+// With a decimal point every comma between digits groups thousands – also the Indian "1,00,000" (= 100,000).
+const plain = (n, decimal) => (decimal === "," ? n.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : n.replace(/,(?=\d)/g, ""));
+
+/**
+ * Languages that write large numbers with unit words of their own: Korean has 만 (10,000) and 억 (100,000,000), so
+ * "34.1 billion" is "341억" and "45M+" is "4,500만". For these languages both texts are compared by value: a number
+ * followed by a unit word is multiplied out ("1억 2,000만" counts as one number, 120,000,000).
+ */
+const englishUnits = { trillion: 1e12, billion: 1e9, million: 1e6, thousand: 1e3, B: 1e9, M: 1e6, K: 1e3 };
+const unitWords = {
+  ko: { 조: 1e12, 천억: 1e11, 백억: 1e10, 십억: 1e9, 억: 1e8, 천만: 1e7, 백만: 1e6, 십만: 1e5, 만: 1e4, 천: 1e3 },
+};
+
+/** Numbers a language writes where English writes a word: Korean dates give the month as a number ("2026년 11월 16일"). */
+const wordNumbers = { ko: /(?<![\d.,])\d{1,2}(?=월)/g };
+
+function numbers(text, decimal = ".", units, skip) {
+  if (skip) text = text.replace(skip, " ");
+  if (!units) return (text.match(/\d+(?:[.,]\d+)*/g) ?? []).map((n) => plain(n, decimal)).sort();
+  const names = Object.keys(units)
+    .sort((a, b) => b.length - a.length)
+    .join("|");
+  // A Latin unit letter must not start a word ("100 BTC", "5 Margin").
+  const unit = `(\\d+(?:[.,]\\d+)*)(?:\\s?(${names})(?![A-Za-z]))?`;
+  const first = new RegExp(unit, "g");
+  const next = new RegExp(`^\\s${unit}`);
+  const out = [];
+  for (let m; (m = first.exec(text)); ) {
+    if (!m[2]) {
+      out.push(plain(m[1], decimal));
+      continue;
+    }
+    let value = Number(plain(m[1], decimal)) * units[m[2]];
+    // "1억 2,000만": a smaller unit right after belongs to the same number.
+    const rest = next.exec(text.slice(first.lastIndex));
+    if (rest && rest[2] && units[rest[2]] < units[m[2]]) {
+      value += Number(plain(rest[1], decimal)) * units[rest[2]];
+      first.lastIndex += rest[0].length;
+    }
+    out.push(String(Number(value.toPrecision(12))));
+  }
+  return out.sort();
+}
 const quoted = (text) => text.match(/“[^”]*”/g) ?? [];
 const count = (text, needle) => (needle ? text.split(needle).length - 1 : 0);
 
@@ -135,8 +188,9 @@ function compare(id, locale, a, translated, referralCode) {
     for (const q of quoted(source)) if (!target.includes(q) && field !== "referral.codeName") error(field, `interface label ${q} is missing`);
     if (count(source, referralCode) !== count(target, referralCode)) error(field, `referral code ${referralCode} appears a different number of times`);
     if (accepted[`${id}/${field}`]) continue;
-    const na = numbers(source);
-    const nb = numbers(target, localeInfo[locale]?.decimal);
+    const units = unitWords[locale];
+    const na = numbers(source, ".", units && englishUnits);
+    const nb = numbers(target, localeInfo[locale]?.decimal, units && { ...englishUnits, ...units }, wordNumbers[locale]);
     const missing = na.filter((n) => !nb.includes(n));
     const extra = nb.filter((n) => !na.includes(n));
     if (missing.length || extra.length) {

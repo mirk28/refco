@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur"] as const;
+export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -70,6 +70,7 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
     cardFont: { families: ["Noto Sans", "Noto Nastaliq Urdu"], scale: 0.82, lineHeight: 1.7 },
     fullStop: "۔",
   },
+  ko: { name: "한국어", short: "KO", htmlLang: "ko", ogLocale: "ko_KR", dateLocale: "ko-KR", decimal: "." },
 };
 
 /**
@@ -150,6 +151,14 @@ const segments: Record<Locale, Segments> = {
   },
   // Pakistani readers also search in Latin letters, and Urdu letters in an address would be percent-encoded.
   ur: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  // Hangul in an address would be percent-encoded, so the Korean addresses keep the English words too.
+  ko: {
     referral: (slug) => `${slug}-referral-code`,
     referralPattern: /^([a-z0-9]+)-referral-code$/,
     alternatives: (slug) => `${slug}-alternatives`,
