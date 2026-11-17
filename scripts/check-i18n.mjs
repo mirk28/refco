@@ -95,7 +95,12 @@ function alternativesFields(x, english) {
 }
 
 // "10,000" and "10000" count as the same number; a trailing dot or comma is punctuation.
-const numbers = (text) => (text.match(/\d+(?:[.,]\d+)*/g) ?? []).map((n) => n.replace(/,(?=\d{3}\b)/g, "")).sort();
+// Languages with a decimal comma (`decimal: ","` in src/i18n/config.ts) write "10.000" and "0,02": they count as 10000 and 0.02.
+const { localeInfo } = await import(pathToFileURL(path.join(root, "src/i18n/config.ts")).href);
+const numbers = (text, decimal = ".") =>
+  (text.match(/\d+(?:[.,]\d+)*/g) ?? [])
+    .map((n) => (decimal === "," ? n.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : n.replace(/,(?=\d{3}\b)/g, "")))
+    .sort();
 const quoted = (text) => text.match(/“[^”]*”/g) ?? [];
 const count = (text, needle) => (needle ? text.split(needle).length - 1 : 0);
 
@@ -130,7 +135,7 @@ function compare(id, locale, a, translated, referralCode) {
     if (count(source, referralCode) !== count(target, referralCode)) error(field, `referral code ${referralCode} appears a different number of times`);
     if (accepted[`${id}/${field}`]) continue;
     const na = numbers(source);
-    const nb = numbers(target);
+    const nb = numbers(target, localeInfo[locale]?.decimal);
     const missing = na.filter((n) => !nb.includes(n));
     const extra = nb.filter((n) => !na.includes(n));
     if (missing.length || extra.length) {

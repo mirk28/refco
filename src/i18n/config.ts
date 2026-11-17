@@ -7,14 +7,52 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es"] as const;
+export const locales = ["en", "es", "pt", "tr"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
-export const localeInfo: Record<Locale, { name: string; short: string; htmlLang: string; ogLocale: string; dateLocale: string }> = {
-  en: { name: "English", short: "EN", htmlLang: "en", ogLocale: "en_US", dateLocale: "en-US" },
-  es: { name: "Español", short: "ES", htmlLang: "es", ogLocale: "es_ES", dateLocale: "es" },
+export type LocaleInfo = {
+  /** Name of the language in that language, for the language menu. */
+  name: string;
+  short: string;
+  /** `<html lang>`, JSON-LD `inLanguage` and the main hreflang code. */
+  htmlLang: string;
+  /** Further hreflang codes that lead to the same pages, e.g. "pt" next to "pt-BR" for readers in Portugal. */
+  alsoHreflang?: string[];
+  ogLocale: string;
+  /** Locale for dates; add `-u-ca-gregory-nu-latn` where the language would otherwise use another calendar or other digits. */
+  dateLocale: string;
+  /**
+   * How fee rates from the English data are shown: "." keeps `0.02%`, "," shows `0,02%`.
+   * `percentBefore` puts the sign in front (`%0,02`). The texts of the language use the same notation.
+   */
+  decimal: "." | ",";
+  percentBefore?: boolean;
+  /** Writing direction; only set for right-to-left languages. */
+  dir?: "rtl";
 };
+
+export const localeInfo: Record<Locale, LocaleInfo> = {
+  en: { name: "English", short: "EN", htmlLang: "en", ogLocale: "en_US", dateLocale: "en-US", decimal: "." },
+  es: { name: "Español", short: "ES", htmlLang: "es", ogLocale: "es_ES", dateLocale: "es", decimal: "." },
+  pt: { name: "Português (Brasil)", short: "PT", htmlLang: "pt-BR", alsoHreflang: ["pt"], ogLocale: "pt_BR", dateLocale: "pt-BR", decimal: "," },
+  tr: { name: "Türkçe", short: "TR", htmlLang: "tr", ogLocale: "tr_TR", dateLocale: "tr", decimal: ",", percentBefore: true },
+};
+
+/**
+ * A fee rate from the English data (`0.02%`, `-0.015%`) in the notation of a language: `0,02%` in Portuguese,
+ * `%0,02` in Turkish. Only pure rates go through here; texts are written in the notation of their language.
+ */
+export function localRate(rate: string, locale: Locale): string {
+  const info = localeInfo[locale];
+  const m = /^(-?)(\d+(?:\.\d+)?)%$/.exec(rate.trim());
+  if (!m) return rate;
+  const digits = info.decimal === "," ? m[2].replace(".", ",") : m[2];
+  return info.percentBefore ? `${m[1]}%${digits}` : `${m[1]}${digits}%`;
+}
+
+/** The number in a fee rate of any language (`0,02%`, `%0,02`, `0.02%`) – for comparisons. */
+export const rateValue = (rate: string) => Number.parseFloat(rate.replace("%", "").replace(",", "."));
 
 /* ------------------------------ path segments ------------------------------ */
 
@@ -46,6 +84,20 @@ const segments: Record<Locale, Segments> = {
     alternatives: (slug) => `alternativas-a-${slug}`,
     alternativesPattern: /^alternativas-a-([a-z0-9]+)$/,
     static: { compare: "comparar", about: "acerca-de", affiliateDisclosure: "divulgacion-de-afiliacion", imprint: "aviso-legal", privacy: "privacidad" },
+  },
+  pt: {
+    referral: (slug) => `codigo-de-indicacao-${slug}`,
+    referralPattern: /^codigo-de-indicacao-([a-z0-9]+)$/,
+    alternatives: (slug) => `alternativas-a-${slug}`,
+    alternativesPattern: /^alternativas-a-([a-z0-9]+)$/,
+    static: { compare: "comparar", about: "sobre", affiliateDisclosure: "divulgacao-de-afiliados", imprint: "aviso-legal", privacy: "privacidade" },
+  },
+  tr: {
+    referral: (slug) => `${slug}-referans-kodu`,
+    referralPattern: /^([a-z0-9]+)-referans-kodu$/,
+    alternatives: (slug) => `${slug}-alternatifleri`,
+    alternativesPattern: /^([a-z0-9]+)-alternatifleri$/,
+    static: { compare: "borsa-karsilastirma", about: "hakkimizda", affiliateDisclosure: "satis-ortakligi-aciklamasi", imprint: "kunye", privacy: "gizlilik-politikasi" },
   },
 };
 /** Head-to-head pages are spelled the same way in every language: `binance-vs-okx`. */
@@ -109,7 +161,8 @@ export function pageRefPath(ref: PageRef, locale: Locale): string {
 
 /** hreflang map for the `alternates.languages` field of a page. */
 export function languageAlternates(pathFor: (locale: Locale) => string): Record<string, string> {
-  return { ...Object.fromEntries(locales.map((l) => [localeInfo[l].htmlLang, pathFor(l)])), "x-default": pathFor(defaultLocale) };
+  const codes = (l: Locale) => [localeInfo[l].htmlLang, ...(localeInfo[l].alsoHreflang ?? [])];
+  return { ...Object.fromEntries(locales.flatMap((l) => codes(l).map((code) => [code, pathFor(l)]))), "x-default": pathFor(defaultLocale) };
 }
 
 /**

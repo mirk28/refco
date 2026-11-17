@@ -17,6 +17,7 @@ import { bitget as enAltBitget } from "../alternatives/bitget";
 import { gate as enAltGate } from "../alternatives/gate";
 import { kucoin as enAltKucoin } from "../alternatives/kucoin";
 import { mexc as enAltMexc } from "../alternatives/mexc";
+import { localRate } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { binance as esBinance } from "./es/binance";
 import { okx as esOkx } from "./es/okx";
@@ -32,9 +33,39 @@ import { bitget as esAltBitget } from "./es/alternatives/bitget";
 import { gate as esAltGate } from "./es/alternatives/gate";
 import { kucoin as esAltKucoin } from "./es/alternatives/kucoin";
 import { mexc as esAltMexc } from "./es/alternatives/mexc";
+import { binance as ptBinance } from "./pt/binance";
+import { okx as ptOkx } from "./pt/okx";
+import { bybit as ptBybit } from "./pt/bybit";
+import { bitget as ptBitget } from "./pt/bitget";
+import { gate as ptGate } from "./pt/gate";
+import { kucoin as ptKucoin } from "./pt/kucoin";
+import { mexc as ptMexc } from "./pt/mexc";
+import { binance as ptAltBinance } from "./pt/alternatives/binance";
+import { okx as ptAltOkx } from "./pt/alternatives/okx";
+import { bybit as ptAltBybit } from "./pt/alternatives/bybit";
+import { bitget as ptAltBitget } from "./pt/alternatives/bitget";
+import { gate as ptAltGate } from "./pt/alternatives/gate";
+import { kucoin as ptAltKucoin } from "./pt/alternatives/kucoin";
+import { mexc as ptAltMexc } from "./pt/alternatives/mexc";
+import { binance as trBinance } from "./tr/binance";
+import { okx as trOkx } from "./tr/okx";
+import { bybit as trBybit } from "./tr/bybit";
+import { bitget as trBitget } from "./tr/bitget";
+import { gate as trGate } from "./tr/gate";
+import { kucoin as trKucoin } from "./tr/kucoin";
+import { mexc as trMexc } from "./tr/mexc";
+import { binance as trAltBinance } from "./tr/alternatives/binance";
+import { okx as trAltOkx } from "./tr/alternatives/okx";
+import { bybit as trAltBybit } from "./tr/alternatives/bybit";
+import { bitget as trAltBitget } from "./tr/alternatives/bitget";
+import { gate as trAltGate } from "./tr/alternatives/gate";
+import { kucoin as trAltKucoin } from "./tr/alternatives/kucoin";
+import { mexc as trAltMexc } from "./tr/alternatives/mexc";
 
 const texts: Partial<Record<Locale, Record<string, ExchangeText>>> = {
   es: { binance: esBinance, okx: esOkx, bybit: esBybit, bitget: esBitget, gate: esGate, kucoin: esKucoin, mexc: esMexc },
+  pt: { binance: ptBinance, okx: ptOkx, bybit: ptBybit, bitget: ptBitget, gate: ptGate, kucoin: ptKucoin, mexc: ptMexc },
+  tr: { binance: trBinance, okx: trOkx, bybit: trBybit, bitget: trBitget, gate: trGate, kucoin: trKucoin, mexc: trMexc },
 };
 
 /** Lists that must have the same length in the translation as in the English entry. */
@@ -66,14 +97,18 @@ function lengthProblems(e: Exchange, t: ExchangeText): string[] {
   return problems;
 }
 
-export function localizeExchange(e: Exchange, t: ExchangeText, locale: string): Exchange {
+export function localizeExchange(e: Exchange, t: ExchangeText, locale: Locale): Exchange {
   const problems = lengthProblems(e, t);
   if (problems.length) throw new Error(`Translation "${locale}" of ${e.slug} does not match the English entry – ${problems.join("; ")}`);
   const { extraFeeMarkets, sourceLabels, guides, ...text } = t;
+  // Fee rates are facts from the English entry, shown in the notation of the language (0,02% / %0,02).
+  const rate = (r: string) => localRate(r, locale);
   return {
     ...e,
     ...text,
-    extraFees: e.extraFees.map((f, i) => ({ ...f, market: extraFeeMarkets[i] })),
+    spotFees: { maker: rate(e.spotFees.maker), taker: rate(e.spotFees.taker) },
+    futuresFees: { maker: rate(e.futuresFees.maker), taker: rate(e.futuresFees.taker) },
+    extraFees: e.extraFees.map((f, i) => ({ ...f, market: extraFeeMarkets[i], maker: rate(f.maker), taker: rate(f.taker) })),
     sources: e.sources.map((s, i) => ({ ...s, label: sourceLabels[i] })),
     guides: e.guides && guides ? { ...e.guides, ...guides } : e.guides,
   };
@@ -114,6 +149,8 @@ const englishAlternatives: Record<string, AlternativesInfo> = {
 
 const alternativesTexts: Partial<Record<Locale, Record<string, AlternativesText>>> = {
   es: { binance: esAltBinance, okx: esAltOkx, bybit: esAltBybit, bitget: esAltBitget, gate: esAltGate, kucoin: esAltKucoin, mexc: esAltMexc },
+  pt: { binance: ptAltBinance, okx: ptAltOkx, bybit: ptAltBybit, bitget: ptAltBitget, gate: ptAltGate, kucoin: ptAltKucoin, mexc: ptAltMexc },
+  tr: { binance: trAltBinance, okx: trAltOkx, bybit: trAltBybit, bitget: trAltBitget, gate: trAltGate, kucoin: trAltKucoin, mexc: trAltMexc },
 };
 
 function alternativesProblems(info: AlternativesInfo, t: AlternativesText): string[] {

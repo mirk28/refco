@@ -13,6 +13,7 @@ import { getExchange } from "@/data/exchanges";
 import { alternativesData } from "@/data/alternatives";
 import type { AlternativesInfo, CountryKey, FeatureKey } from "@/data/alternatives";
 import { alternativesFor, exchangesFor } from "@/data/i18n";
+import { rateValue } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 
 /* --------------------------------- helpers --------------------------------- */
@@ -22,7 +23,8 @@ const english = (e: Exchange) => getExchange(e.slug) ?? e;
 /** The researched facts of an exchange (products, countries, MiCA). They are the same in every language. */
 const facts = (e: Exchange): AlternativesInfo => alternativesData[e.slug];
 
-export const pct = (s: string) => Number.parseFloat(s);
+/** The number in a fee rate, whatever the notation of the language (`0.02%`, `0,02%`, `%0,02`). */
+export const pct = (s: string) => rateValue(s);
 export const leverageOf = (e: Exchange) => Number(english(e).maxLeverage.match(/(\d+)x/)?.[1] ?? 0);
 export const shortLeverage = (e: Exchange) => e.maxLeverage.replace(/\s*\(.*\)/, "");
 export const feePair = (f: Fee) => `${f.maker} / ${f.taker}`;

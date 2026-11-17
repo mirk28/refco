@@ -2,10 +2,12 @@ import type { Locale } from "../config";
 import { en } from "./en";
 import type { CompareText } from "./en";
 import { es } from "./es";
+import { pt } from "./pt";
+import { tr } from "./tr";
 
 export type { AltFaqGroup, CompareText } from "./en";
 
-const texts: Record<Locale, CompareText> = { en, es };
+const texts: Record<Locale, CompareText> = { en, es, pt, tr };
 
 /**
  * The sentences of the comparison pages in one language (see `./en.ts`).

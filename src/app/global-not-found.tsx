@@ -27,10 +27,13 @@ export default function GlobalNotFound() {
       <p className="small muted" style={{ textAlign: "center", margin: "-28px 0 56px" }}>
         {locales
           .filter((l) => l !== "en")
-          .map((l) => (
-            <a key={l} href={homePath(l)} hrefLang={localeInfo[l].htmlLang} lang={localeInfo[l].htmlLang}>
-              {localeInfo[l].name}: {getDictionary(l).notFound.back}
-            </a>
+          .map((l, i) => (
+            <span key={l}>
+              {i > 0 ? " · " : null}
+              <a href={homePath(l)} hrefLang={localeInfo[l].htmlLang} lang={localeInfo[l].htmlLang}>
+                {localeInfo[l].name}: {getDictionary(l).notFound.back}
+              </a>
+            </span>
           ))}
       </p>
     </SiteShell>

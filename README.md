@@ -46,17 +46,27 @@ Requires Node.js 20.9+.
 | Logo mark | `src/components/Logo.tsx`, `src/app/icon.svg`, `src/lib/og.tsx` |
 
 ### Language versions
-English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`.
-Every page exists in both languages; the last part of the address carries the keyword in that language:
+English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`,
+Brazilian Portuguese at `/pt` (hreflang `pt-BR` and `pt`), Turkish at `/tr`. Every page exists in every language;
+the last part of the address carries the keyword in that language:
 
-| Page | English | Spanish |
-|---|---|---|
-| Referral code | `/binance-referral-code` | `/es/codigo-de-referido-binance` |
-| Alternatives | `/binance-alternatives` | `/es/alternativas-a-binance` |
-| Head to head | `/binance-vs-okx` | `/es/binance-vs-okx` |
-| Hub, about, legal | `/compare`, `/about`, `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/comparar`, `/es/acerca-de`, `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` |
+| Page | English | Spanish | Portuguese | Turkish |
+|---|---|---|---|---|
+| Referral code | `/binance-referral-code` | `/es/codigo-de-referido-binance` | `/pt/codigo-de-indicacao-binance` | `/tr/binance-referans-kodu` |
+| Alternatives | `/binance-alternatives` | `/es/alternativas-a-binance` | `/pt/alternativas-a-binance` | `/tr/binance-alternatifleri` |
+| Head to head | `/binance-vs-okx` | `/es/binance-vs-okx` | `/pt/binance-vs-okx` | `/tr/binance-vs-okx` |
+| Hub | `/compare` | `/es/comparar` | `/pt/comparar` | `/tr/borsa-karsilastirma` |
+| About | `/about` | `/es/acerca-de` | `/pt/sobre` | `/tr/hakkimizda` |
+| Legal | `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` | `/pt/divulgacao-de-afiliados`, `/pt/aviso-legal`, `/pt/privacidade` | `/tr/satis-ortakligi-aciklamasi`, `/tr/kunye`, `/tr/gizlilik-politikasi` |
 
 All of these address parts are defined in `src/i18n/config.ts`.
+
+- **Written natively, not translated.** Portuguese and Turkish were written in the language from the English source:
+  same facts, sections and list items, about the same length, with the search terms of that market. (The Spanish
+  version was translated.) New languages follow the same rule.
+- **Number notation**: `localeInfo` in `src/i18n/config.ts` sets the decimal sign of a language. Fee rates from the
+  English data are shown in that notation by `localRate` (`0,02%` in Portuguese, `%0,02` in Turkish); texts are
+  written in it (`10.000 USDT`). `npm run check:i18n` reads both notations.
 
 - **Facts are never translated.** Codes, links, fee numbers, market data, which products an exchange has, the
   status of a country and all source URLs come from the English data files. A translation holds text only,
@@ -82,7 +92,8 @@ All of these address parts are defined in `src/i18n/config.ts`.
   from `locales` in `src/i18n/config.ts`.
 - **Legal pages** in other languages carry a notice that the English version is the binding one.
 - **Adding a language**:
-  1. `src/i18n/config.ts`: add it to `locales`, `localeInfo` and `segments` (the address parts), and add its
+  1. `src/i18n/config.ts`: add it to `locales`, `localeInfo` (hreflang codes, number notation, `dir: "rtl"` for
+     right-to-left languages) and `segments` (the address parts), and add its
      folder to `languageFolders` in `next.config.mjs` (redirects for reversed pair addresses).
   2. Write `src/i18n/<locale>.tsx` and one file in each of `src/i18n/compare/`, `alternatives/`, `versus/`,
      `pages/`; register each in the `index.ts` next to it (and `src/i18n/index.ts`).

@@ -64,7 +64,7 @@ export function SiteShell({ locale, children, unknownPage = false }: { locale: L
   const dict = getDictionary(locale);
   const consent = dict.consent;
   return (
-    <html lang={localeInfo[locale].htmlLang}>
+    <html lang={localeInfo[locale].htmlLang} dir={localeInfo[locale].dir}>
       <body>
         <a href="#main" className="skip-link">
           {dict.layout.skip}
