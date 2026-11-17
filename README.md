@@ -48,8 +48,10 @@ Requires Node.js 20.9+.
 ### Language versions
 English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`,
 Brazilian Portuguese at `/pt` (hreflang `pt-BR` and `pt`), Turkish at `/tr`, German at `/de`, Hindi at `/hi`, Urdu at
-`/ur` (right to left), Korean at `/ko`, Arabic at `/ar` (right to left), Vietnamese at `/vi`. Every
-page exists in every language;
+`/ur` (right to left), Korean at `/ko`, Arabic at `/ar` (right to left), Vietnamese at `/vi`, Bengali at `/bn`,
+Indonesian at `/id`, Ukrainian at `/uk`, Amharic at `/am`, Burmese at `/my`, Swahili at `/sw`, Filipino at `/fil`
+(hreflang `fil` and `tl`), Thai at `/th`, Russian at `/ru`, French at `/fr` and Khmer at `/km` – the 21 languages of
+Binance Square. Every page exists in every language;
 the last part of the address carries the keyword in that language:
 
 | Page | English | Spanish | Portuguese | Turkish | German |
@@ -61,9 +63,18 @@ the last part of the address carries the keyword in that language:
 | About | `/about` | `/es/acerca-de` | `/pt/sobre` | `/tr/hakkimizda` | `/de/ueber-uns` |
 | Legal | `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` | `/pt/divulgacao-de-afiliados`, `/pt/aviso-legal`, `/pt/privacidade` | `/tr/satis-ortakligi-aciklamasi`, `/tr/kunye`, `/tr/gizlilik-politikasi` | `/de/affiliate-hinweis`, `/de/impressum`, `/de/datenschutz` |
 
-Hindi, Urdu, Korean and Arabic keep the English address parts (`/hi/binance-referral-code`, `/ur/compare` …): Indian and
-Pakistani readers search in Latin letters, and Urdu or Arabic letters or Hangul would be percent-encoded. Vietnamese has its own address parts without tone marks (`/vi/ma-gioi-thieu-binance`,
-`/vi/san-thay-the-binance`, `/vi/so-sanh-san-giao-dich`). All of these address parts are defined in `src/i18n/config.ts`.
+Hindi, Urdu, Korean, Arabic, Bengali, Ukrainian, Amharic, Burmese, Filipino, Thai, Russian and Khmer keep the English
+address parts (`/hi/binance-referral-code`, `/ur/compare` …): readers there search in Latin letters, and their own
+letters would be percent-encoded. Vietnamese (without tone marks), Indonesian, Swahili and French have their own:
+
+| Page | Vietnamese | Indonesian | Swahili | French |
+|---|---|---|---|---|
+| Referral code | `/vi/ma-gioi-thieu-binance` | `/id/kode-referral-binance` | `/sw/msimbo-wa-rufaa-binance` | `/fr/code-parrainage-binance` |
+| Alternatives | `/vi/san-thay-the-binance` | `/id/alternatif-binance` | `/sw/mbadala-wa-binance` | `/fr/alternatives-a-binance` |
+| Hub | `/vi/so-sanh-san-giao-dich` | `/id/perbandingan-exchange` | `/sw/linganisha` | `/fr/comparatif` |
+| About | `/vi/gioi-thieu` | `/id/tentang-kami` | `/sw/kuhusu` | `/fr/a-propos` |
+
+All of these address parts are defined in `src/i18n/config.ts`.
 
 - **Written natively, not translated.** Portuguese, Turkish and German were written in the language from the English source:
   same facts, sections and list items, about the same length, with the search terms of that market. (The Spanish
@@ -86,6 +97,12 @@ Pakistani readers search in Latin letters, and Urdu or Arabic letters or Hangul 
   titles, H1 and keywords add the Arabic spelling (`withArabic` in `src/i18n/ar-names.ts`: "Binance (بينانس)").
   Nouns counted with a variable number take the Arabic plural forms through `arabicCount` from the same file
   ("منصة واحدة", "منصتان", "3 منصات", "11 منصة").
+- **Names in other scripts** (Bengali, Ukrainian, Amharic, Thai, Russian, Khmer): the names stay in Latin letters;
+  titles, H1, the first mention and keywords add the local spelling through `withReading` / `readingOf` in
+  `src/i18n/name-readings.ts` ("Binance (বাইন্যান্স)"). Ukrainian and Russian counted nouns use `slavicCount` in
+  `src/i18n/slavic-count.ts`; French "de"/"le" before a name come from `src/i18n/fr-elision.ts` ("d'OKX").
+  Bengali, Amharic, Burmese, Thai and Khmer cards are shaped by sharp with their Noto Sans family; `fullStop`,
+  `comma` and `dash` in `localeInfo` give the punctuation the layout adds itself ("।", "።", "။", "។", " — ").
 - **Number notation**: `localeInfo` in `src/i18n/config.ts` sets the decimal sign of a language. Fee rates from the
   English data are shown in that notation by `localRate` (`0,02%` in Portuguese, `%0,02` in Turkish, `0,02 %` in
   German); texts are

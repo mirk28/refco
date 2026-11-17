@@ -145,6 +145,160 @@ import { bitget as viAltBitget } from "./vi/alternatives/bitget";
 import { gate as viAltGate } from "./vi/alternatives/gate";
 import { kucoin as viAltKucoin } from "./vi/alternatives/kucoin";
 import { mexc as viAltMexc } from "./vi/alternatives/mexc";
+import { binance as bnBinance } from "./bn/binance";
+import { okx as bnOkx } from "./bn/okx";
+import { bybit as bnBybit } from "./bn/bybit";
+import { bitget as bnBitget } from "./bn/bitget";
+import { gate as bnGate } from "./bn/gate";
+import { kucoin as bnKucoin } from "./bn/kucoin";
+import { mexc as bnMexc } from "./bn/mexc";
+import { binance as bnAltBinance } from "./bn/alternatives/binance";
+import { okx as bnAltOkx } from "./bn/alternatives/okx";
+import { bybit as bnAltBybit } from "./bn/alternatives/bybit";
+import { bitget as bnAltBitget } from "./bn/alternatives/bitget";
+import { gate as bnAltGate } from "./bn/alternatives/gate";
+import { kucoin as bnAltKucoin } from "./bn/alternatives/kucoin";
+import { mexc as bnAltMexc } from "./bn/alternatives/mexc";
+import { binance as idBinance } from "./id/binance";
+import { okx as idOkx } from "./id/okx";
+import { bybit as idBybit } from "./id/bybit";
+import { bitget as idBitget } from "./id/bitget";
+import { gate as idGate } from "./id/gate";
+import { kucoin as idKucoin } from "./id/kucoin";
+import { mexc as idMexc } from "./id/mexc";
+import { binance as idAltBinance } from "./id/alternatives/binance";
+import { okx as idAltOkx } from "./id/alternatives/okx";
+import { bybit as idAltBybit } from "./id/alternatives/bybit";
+import { bitget as idAltBitget } from "./id/alternatives/bitget";
+import { gate as idAltGate } from "./id/alternatives/gate";
+import { kucoin as idAltKucoin } from "./id/alternatives/kucoin";
+import { mexc as idAltMexc } from "./id/alternatives/mexc";
+import { binance as ukBinance } from "./uk/binance";
+import { okx as ukOkx } from "./uk/okx";
+import { bybit as ukBybit } from "./uk/bybit";
+import { bitget as ukBitget } from "./uk/bitget";
+import { gate as ukGate } from "./uk/gate";
+import { kucoin as ukKucoin } from "./uk/kucoin";
+import { mexc as ukMexc } from "./uk/mexc";
+import { binance as ukAltBinance } from "./uk/alternatives/binance";
+import { okx as ukAltOkx } from "./uk/alternatives/okx";
+import { bybit as ukAltBybit } from "./uk/alternatives/bybit";
+import { bitget as ukAltBitget } from "./uk/alternatives/bitget";
+import { gate as ukAltGate } from "./uk/alternatives/gate";
+import { kucoin as ukAltKucoin } from "./uk/alternatives/kucoin";
+import { mexc as ukAltMexc } from "./uk/alternatives/mexc";
+import { binance as amBinance } from "./am/binance";
+import { okx as amOkx } from "./am/okx";
+import { bybit as amBybit } from "./am/bybit";
+import { bitget as amBitget } from "./am/bitget";
+import { gate as amGate } from "./am/gate";
+import { kucoin as amKucoin } from "./am/kucoin";
+import { mexc as amMexc } from "./am/mexc";
+import { binance as amAltBinance } from "./am/alternatives/binance";
+import { okx as amAltOkx } from "./am/alternatives/okx";
+import { bybit as amAltBybit } from "./am/alternatives/bybit";
+import { bitget as amAltBitget } from "./am/alternatives/bitget";
+import { gate as amAltGate } from "./am/alternatives/gate";
+import { kucoin as amAltKucoin } from "./am/alternatives/kucoin";
+import { mexc as amAltMexc } from "./am/alternatives/mexc";
+import { binance as myBinance } from "./my/binance";
+import { okx as myOkx } from "./my/okx";
+import { bybit as myBybit } from "./my/bybit";
+import { bitget as myBitget } from "./my/bitget";
+import { gate as myGate } from "./my/gate";
+import { kucoin as myKucoin } from "./my/kucoin";
+import { mexc as myMexc } from "./my/mexc";
+import { binance as myAltBinance } from "./my/alternatives/binance";
+import { okx as myAltOkx } from "./my/alternatives/okx";
+import { bybit as myAltBybit } from "./my/alternatives/bybit";
+import { bitget as myAltBitget } from "./my/alternatives/bitget";
+import { gate as myAltGate } from "./my/alternatives/gate";
+import { kucoin as myAltKucoin } from "./my/alternatives/kucoin";
+import { mexc as myAltMexc } from "./my/alternatives/mexc";
+import { binance as swBinance } from "./sw/binance";
+import { okx as swOkx } from "./sw/okx";
+import { bybit as swBybit } from "./sw/bybit";
+import { bitget as swBitget } from "./sw/bitget";
+import { gate as swGate } from "./sw/gate";
+import { kucoin as swKucoin } from "./sw/kucoin";
+import { mexc as swMexc } from "./sw/mexc";
+import { binance as swAltBinance } from "./sw/alternatives/binance";
+import { okx as swAltOkx } from "./sw/alternatives/okx";
+import { bybit as swAltBybit } from "./sw/alternatives/bybit";
+import { bitget as swAltBitget } from "./sw/alternatives/bitget";
+import { gate as swAltGate } from "./sw/alternatives/gate";
+import { kucoin as swAltKucoin } from "./sw/alternatives/kucoin";
+import { mexc as swAltMexc } from "./sw/alternatives/mexc";
+import { binance as filBinance } from "./fil/binance";
+import { okx as filOkx } from "./fil/okx";
+import { bybit as filBybit } from "./fil/bybit";
+import { bitget as filBitget } from "./fil/bitget";
+import { gate as filGate } from "./fil/gate";
+import { kucoin as filKucoin } from "./fil/kucoin";
+import { mexc as filMexc } from "./fil/mexc";
+import { binance as filAltBinance } from "./fil/alternatives/binance";
+import { okx as filAltOkx } from "./fil/alternatives/okx";
+import { bybit as filAltBybit } from "./fil/alternatives/bybit";
+import { bitget as filAltBitget } from "./fil/alternatives/bitget";
+import { gate as filAltGate } from "./fil/alternatives/gate";
+import { kucoin as filAltKucoin } from "./fil/alternatives/kucoin";
+import { mexc as filAltMexc } from "./fil/alternatives/mexc";
+import { binance as thBinance } from "./th/binance";
+import { okx as thOkx } from "./th/okx";
+import { bybit as thBybit } from "./th/bybit";
+import { bitget as thBitget } from "./th/bitget";
+import { gate as thGate } from "./th/gate";
+import { kucoin as thKucoin } from "./th/kucoin";
+import { mexc as thMexc } from "./th/mexc";
+import { binance as thAltBinance } from "./th/alternatives/binance";
+import { okx as thAltOkx } from "./th/alternatives/okx";
+import { bybit as thAltBybit } from "./th/alternatives/bybit";
+import { bitget as thAltBitget } from "./th/alternatives/bitget";
+import { gate as thAltGate } from "./th/alternatives/gate";
+import { kucoin as thAltKucoin } from "./th/alternatives/kucoin";
+import { mexc as thAltMexc } from "./th/alternatives/mexc";
+import { binance as ruBinance } from "./ru/binance";
+import { okx as ruOkx } from "./ru/okx";
+import { bybit as ruBybit } from "./ru/bybit";
+import { bitget as ruBitget } from "./ru/bitget";
+import { gate as ruGate } from "./ru/gate";
+import { kucoin as ruKucoin } from "./ru/kucoin";
+import { mexc as ruMexc } from "./ru/mexc";
+import { binance as ruAltBinance } from "./ru/alternatives/binance";
+import { okx as ruAltOkx } from "./ru/alternatives/okx";
+import { bybit as ruAltBybit } from "./ru/alternatives/bybit";
+import { bitget as ruAltBitget } from "./ru/alternatives/bitget";
+import { gate as ruAltGate } from "./ru/alternatives/gate";
+import { kucoin as ruAltKucoin } from "./ru/alternatives/kucoin";
+import { mexc as ruAltMexc } from "./ru/alternatives/mexc";
+import { binance as frBinance } from "./fr/binance";
+import { okx as frOkx } from "./fr/okx";
+import { bybit as frBybit } from "./fr/bybit";
+import { bitget as frBitget } from "./fr/bitget";
+import { gate as frGate } from "./fr/gate";
+import { kucoin as frKucoin } from "./fr/kucoin";
+import { mexc as frMexc } from "./fr/mexc";
+import { binance as frAltBinance } from "./fr/alternatives/binance";
+import { okx as frAltOkx } from "./fr/alternatives/okx";
+import { bybit as frAltBybit } from "./fr/alternatives/bybit";
+import { bitget as frAltBitget } from "./fr/alternatives/bitget";
+import { gate as frAltGate } from "./fr/alternatives/gate";
+import { kucoin as frAltKucoin } from "./fr/alternatives/kucoin";
+import { mexc as frAltMexc } from "./fr/alternatives/mexc";
+import { binance as kmBinance } from "./km/binance";
+import { okx as kmOkx } from "./km/okx";
+import { bybit as kmBybit } from "./km/bybit";
+import { bitget as kmBitget } from "./km/bitget";
+import { gate as kmGate } from "./km/gate";
+import { kucoin as kmKucoin } from "./km/kucoin";
+import { mexc as kmMexc } from "./km/mexc";
+import { binance as kmAltBinance } from "./km/alternatives/binance";
+import { okx as kmAltOkx } from "./km/alternatives/okx";
+import { bybit as kmAltBybit } from "./km/alternatives/bybit";
+import { bitget as kmAltBitget } from "./km/alternatives/bitget";
+import { gate as kmAltGate } from "./km/alternatives/gate";
+import { kucoin as kmAltKucoin } from "./km/alternatives/kucoin";
+import { mexc as kmAltMexc } from "./km/alternatives/mexc";
 
 const texts: Partial<Record<Locale, Record<string, ExchangeText>>> = {
   es: { binance: esBinance, okx: esOkx, bybit: esBybit, bitget: esBitget, gate: esGate, kucoin: esKucoin, mexc: esMexc },
@@ -156,6 +310,17 @@ const texts: Partial<Record<Locale, Record<string, ExchangeText>>> = {
   ko: { binance: koBinance, okx: koOkx, bybit: koBybit, bitget: koBitget, gate: koGate, kucoin: koKucoin, mexc: koMexc },
   ar: { binance: arBinance, okx: arOkx, bybit: arBybit, bitget: arBitget, gate: arGate, kucoin: arKucoin, mexc: arMexc },
   vi: { binance: viBinance, okx: viOkx, bybit: viBybit, bitget: viBitget, gate: viGate, kucoin: viKucoin, mexc: viMexc },
+  bn: { binance: bnBinance, okx: bnOkx, bybit: bnBybit, bitget: bnBitget, gate: bnGate, kucoin: bnKucoin, mexc: bnMexc },
+  id: { binance: idBinance, okx: idOkx, bybit: idBybit, bitget: idBitget, gate: idGate, kucoin: idKucoin, mexc: idMexc },
+  uk: { binance: ukBinance, okx: ukOkx, bybit: ukBybit, bitget: ukBitget, gate: ukGate, kucoin: ukKucoin, mexc: ukMexc },
+  am: { binance: amBinance, okx: amOkx, bybit: amBybit, bitget: amBitget, gate: amGate, kucoin: amKucoin, mexc: amMexc },
+  my: { binance: myBinance, okx: myOkx, bybit: myBybit, bitget: myBitget, gate: myGate, kucoin: myKucoin, mexc: myMexc },
+  sw: { binance: swBinance, okx: swOkx, bybit: swBybit, bitget: swBitget, gate: swGate, kucoin: swKucoin, mexc: swMexc },
+  fil: { binance: filBinance, okx: filOkx, bybit: filBybit, bitget: filBitget, gate: filGate, kucoin: filKucoin, mexc: filMexc },
+  th: { binance: thBinance, okx: thOkx, bybit: thBybit, bitget: thBitget, gate: thGate, kucoin: thKucoin, mexc: thMexc },
+  ru: { binance: ruBinance, okx: ruOkx, bybit: ruBybit, bitget: ruBitget, gate: ruGate, kucoin: ruKucoin, mexc: ruMexc },
+  fr: { binance: frBinance, okx: frOkx, bybit: frBybit, bitget: frBitget, gate: frGate, kucoin: frKucoin, mexc: frMexc },
+  km: { binance: kmBinance, okx: kmOkx, bybit: kmBybit, bitget: kmBitget, gate: kmGate, kucoin: kmKucoin, mexc: kmMexc },
 };
 
 /** Lists that must have the same length in the translation as in the English entry. */
@@ -247,6 +412,17 @@ const alternativesTexts: Partial<Record<Locale, Record<string, AlternativesText>
   ko: { binance: koAltBinance, okx: koAltOkx, bybit: koAltBybit, bitget: koAltBitget, gate: koAltGate, kucoin: koAltKucoin, mexc: koAltMexc },
   ar: { binance: arAltBinance, okx: arAltOkx, bybit: arAltBybit, bitget: arAltBitget, gate: arAltGate, kucoin: arAltKucoin, mexc: arAltMexc },
   vi: { binance: viAltBinance, okx: viAltOkx, bybit: viAltBybit, bitget: viAltBitget, gate: viAltGate, kucoin: viAltKucoin, mexc: viAltMexc },
+  bn: { binance: bnAltBinance, okx: bnAltOkx, bybit: bnAltBybit, bitget: bnAltBitget, gate: bnAltGate, kucoin: bnAltKucoin, mexc: bnAltMexc },
+  id: { binance: idAltBinance, okx: idAltOkx, bybit: idAltBybit, bitget: idAltBitget, gate: idAltGate, kucoin: idAltKucoin, mexc: idAltMexc },
+  uk: { binance: ukAltBinance, okx: ukAltOkx, bybit: ukAltBybit, bitget: ukAltBitget, gate: ukAltGate, kucoin: ukAltKucoin, mexc: ukAltMexc },
+  am: { binance: amAltBinance, okx: amAltOkx, bybit: amAltBybit, bitget: amAltBitget, gate: amAltGate, kucoin: amAltKucoin, mexc: amAltMexc },
+  my: { binance: myAltBinance, okx: myAltOkx, bybit: myAltBybit, bitget: myAltBitget, gate: myAltGate, kucoin: myAltKucoin, mexc: myAltMexc },
+  sw: { binance: swAltBinance, okx: swAltOkx, bybit: swAltBybit, bitget: swAltBitget, gate: swAltGate, kucoin: swAltKucoin, mexc: swAltMexc },
+  fil: { binance: filAltBinance, okx: filAltOkx, bybit: filAltBybit, bitget: filAltBitget, gate: filAltGate, kucoin: filAltKucoin, mexc: filAltMexc },
+  th: { binance: thAltBinance, okx: thAltOkx, bybit: thAltBybit, bitget: thAltBitget, gate: thAltGate, kucoin: thAltKucoin, mexc: thAltMexc },
+  ru: { binance: ruAltBinance, okx: ruAltOkx, bybit: ruAltBybit, bitget: ruAltBitget, gate: ruAltGate, kucoin: ruAltKucoin, mexc: ruAltMexc },
+  fr: { binance: frAltBinance, okx: frAltOkx, bybit: frAltBybit, bitget: frAltBitget, gate: frAltGate, kucoin: frAltKucoin, mexc: frAltMexc },
+  km: { binance: kmAltBinance, okx: kmAltOkx, bybit: kmAltBybit, bitget: kmAltBitget, gate: kmAltGate, kucoin: kmAltKucoin, mexc: kmAltMexc },
 };
 
 function alternativesProblems(info: AlternativesInfo, t: AlternativesText): string[] {

@@ -8,7 +8,7 @@ import { alternativesPath } from "@/data/alternatives";
 import { comparePathFor, versusLabel, versusPath } from "@/data/versus";
 import { getDictionary } from "@/i18n";
 import type { PageLinks } from "@/i18n";
-import { homeAnchor, homePath, languageAlternates, localeInfo, pagePath } from "@/i18n/config";
+import { dashFor, homeAnchor, homePath, languageAlternates, localeInfo, pagePath } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
 import { QrCode } from "@/components/QrCode";
 import { ExchangeLogo } from "@/components/ExchangeLogo";
@@ -236,7 +236,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
                     <li>
                       <CheckIcon />{" "}
                       <span>
-                        <strong>{e.feeDiscount}</strong> – {t.appliedWhenRegistering}
+                        <strong>{e.feeDiscount}</strong>{dashFor(locale)}{t.appliedWhenRegistering}
                       </span>
                     </li>
                   ) : null}
@@ -448,7 +448,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
                 <a href={e.feesUrl} target="_blank" rel="noopener nofollow">
                   {t.liveSchedule(e)}
                 </a>
-                .
+                {localeInfo[locale].fullStop ?? "."}
               </p>
               {feesCompare ? <p>{feesCompare}</p> : null}
             </section>
@@ -565,7 +565,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
               <ul className="alt-links">
                 {alts.map((x) => (
                   <li key={x.slug}>
-                    <Link href={`${altPath}#${x.slug}`}>{x.name}</Link> – {altInfo(x, locale).role}
+                    <Link href={`${altPath}#${x.slug}`}>{x.name}</Link>{dashFor(locale)}{altInfo(x, locale).role}
                   </li>
                 ))}
               </ul>

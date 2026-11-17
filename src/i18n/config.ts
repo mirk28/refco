@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko", "ar", "vi"] as const;
+export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur", "ko", "ar", "vi", "bn", "id", "uk", "am", "my", "sw", "fil", "th", "ru", "fr", "km"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -42,6 +42,8 @@ export type LocaleInfo = {
   fullStop?: string;
   /** Comma between list items that the layout joins itself; default ", ". Urdu and Arabic use "،". */
   comma?: string;
+  /** Dash with its spaces between a label and its explanation that the layout sets itself; default " – ". Russian uses " — ". */
+  dash?: string;
 };
 
 export type CardFont = {
@@ -88,6 +90,17 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
     comma: "، ",
   },
   vi: { name: "Tiếng Việt", short: "VI", htmlLang: "vi", ogLocale: "vi_VN", dateLocale: "vi-VN", decimal: ",", cardFont: { families: ["Noto Sans"] } },
+  bn: { name: "বাংলা", short: "BN", htmlLang: "bn", ogLocale: "bn_BD", dateLocale: "bn-BD-u-nu-latn", decimal: ".", cardFont: { families: ["Noto Sans", "Noto Sans Bengali"] }, fullStop: "।" },
+  id: { name: "Bahasa Indonesia", short: "ID", htmlLang: "id", ogLocale: "id_ID", dateLocale: "id-ID", decimal: "," },
+  uk: { name: "Українська", short: "UK", htmlLang: "uk", ogLocale: "uk_UA", dateLocale: "uk-UA", decimal: ",", cardFont: { families: ["Noto Sans"] } },
+  am: { name: "አማርኛ", short: "AM", htmlLang: "am", ogLocale: "am_ET", dateLocale: "am-ET-u-ca-gregory", decimal: ".", cardFont: { families: ["Noto Sans", "Noto Sans Ethiopic"] }, fullStop: "።", comma: "፣ " },
+  my: { name: "မြန်မာ", short: "MY", htmlLang: "my", ogLocale: "my_MM", dateLocale: "my-MM-u-nu-latn", decimal: ".", cardFont: { families: ["Noto Sans", "Noto Sans Myanmar"], lineHeight: 1.6 }, fullStop: "။", comma: "၊ " },
+  sw: { name: "Kiswahili", short: "SW", htmlLang: "sw", ogLocale: "sw_KE", dateLocale: "sw-KE", decimal: "." },
+  fil: { name: "Filipino", short: "FIL", htmlLang: "fil", alsoHreflang: ["tl"], ogLocale: "tl_PH", dateLocale: "fil-PH", decimal: "." },
+  th: { name: "ไทย", short: "TH", htmlLang: "th", ogLocale: "th_TH", dateLocale: "th-TH-u-ca-gregory", decimal: ".", cardFont: { families: ["Noto Sans", "Noto Sans Thai"] }, fullStop: "" },
+  ru: { name: "Русский", short: "RU", htmlLang: "ru", ogLocale: "ru_RU", dateLocale: "ru-RU", decimal: ",", cardFont: { families: ["Noto Sans"] }, dash: " — " },
+  fr: { name: "Français", short: "FR", htmlLang: "fr", ogLocale: "fr_FR", dateLocale: "fr-FR", decimal: ",", percentSpace: true },
+  km: { name: "ខ្មែរ", short: "KM", htmlLang: "km", ogLocale: "km_KH", dateLocale: "km-KH-u-nu-latn", decimal: ".", cardFont: { families: ["Noto Sans", "Noto Sans Khmer"] }, fullStop: "។" },
 };
 
 /**
@@ -105,6 +118,7 @@ export function localRate(rate: string, locale: Locale): string {
 
 /** The comma a language puts between list items (`", "`, Urdu and Arabic `"، "`). */
 export const listComma = (locale: Locale) => localeInfo[locale].comma ?? ", ";
+export const dashFor = (locale: Locale) => localeInfo[locale].dash ?? " – ";
 
 /** The number in a fee rate of any language (`0,02%`, `%0,02`, `0.02%`) – for comparisons. */
 export const rateValue = (rate: string) => Number.parseFloat(rate.replace("%", "").replace(/\s/g, "").replace(",", "."));
@@ -199,6 +213,84 @@ const segments: Record<Locale, Segments> = {
     alternatives: (slug) => `san-thay-the-${slug}`,
     alternativesPattern: /^san-thay-the-([a-z0-9]+)$/,
     static: { compare: "so-sanh-san-giao-dich", about: "gioi-thieu", affiliateDisclosure: "cong-bo-lien-ket-tiep-thi", imprint: "thong-tin-phap-ly", privacy: "chinh-sach-bao-mat" },
+  },
+  // Bengali, Amharic, Burmese, Thai and Khmer letters and Cyrillic would be percent-encoded in an address; Filipino readers search in English.
+  bn: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  id: {
+    referral: (slug) => `kode-referral-${slug}`,
+    referralPattern: /^kode-referral-([a-z0-9]+)$/,
+    alternatives: (slug) => `alternatif-${slug}`,
+    alternativesPattern: /^alternatif-([a-z0-9]+)$/,
+    static: { compare: "perbandingan-exchange", about: "tentang-kami", affiliateDisclosure: "pengungkapan-afiliasi", imprint: "informasi-hukum", privacy: "kebijakan-privasi" },
+  },
+  uk: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  am: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  my: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  sw: {
+    referral: (slug) => `msimbo-wa-rufaa-${slug}`,
+    referralPattern: /^msimbo-wa-rufaa-([a-z0-9]+)$/,
+    alternatives: (slug) => `mbadala-wa-${slug}`,
+    alternativesPattern: /^mbadala-wa-([a-z0-9]+)$/,
+    static: { compare: "linganisha", about: "kuhusu", affiliateDisclosure: "ufichuzi-wa-ushirika", imprint: "taarifa-za-kisheria", privacy: "sera-ya-faragha" },
+  },
+  fil: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  th: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  ru: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  fr: {
+    referral: (slug) => `code-parrainage-${slug}`,
+    referralPattern: /^code-parrainage-([a-z0-9]+)$/,
+    alternatives: (slug) => `alternatives-a-${slug}`,
+    alternativesPattern: /^alternatives-a-([a-z0-9]+)$/,
+    static: { compare: "comparatif", about: "a-propos", affiliateDisclosure: "divulgation-affiliation", imprint: "mentions-legales", privacy: "politique-de-confidentialite" },
+  },
+  km: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
   },
 };
 /** Head-to-head pages are spelled the same way in every language: `binance-vs-okx`. */

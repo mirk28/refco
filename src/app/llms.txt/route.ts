@@ -12,7 +12,7 @@ import type { Locale } from "@/i18n/config";
 export const dynamic = "force-static";
 
 /** English names of the languages, for the section headings of this (English) file. */
-const englishName: Record<Locale, string> = { en: "English", es: "Spanish", pt: "Portuguese (Brazil)", tr: "Turkish", de: "German", hi: "Hindi", ur: "Urdu", ko: "Korean", ar: "Arabic", vi: "Vietnamese" };
+const englishName: Record<Locale, string> = { en: "English", es: "Spanish", pt: "Portuguese (Brazil)", tr: "Turkish", de: "German", hi: "Hindi", ur: "Urdu", ko: "Korean", ar: "Arabic", vi: "Vietnamese", bn: "Bengali", id: "Indonesian", uk: "Ukrainian", am: "Amharic", my: "Burmese", sw: "Swahili", fil: "Filipino", th: "Thai", ru: "Russian", fr: "French", km: "Khmer" };
 
 /** llms.txt – a concise, machine-readable summary for AI answer engines (GEO). */
 export function GET() {
