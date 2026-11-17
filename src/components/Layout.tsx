@@ -13,12 +13,20 @@ import { LangMenu } from "./LangMenu";
 /** `unknownPage`: the address is not a page of the site (404), so the language menu leads to the home pages. */
 export function Header({ locale = "en", unknownPage = false }: { locale?: Locale; unknownPage?: boolean }) {
   const t = getDictionary(locale).layout;
+  // The same links in every language; only the labels come from the dictionary.
+  const nav = [
+    { href: homeAnchor(locale, "exchanges"), label: t.nav.exchanges },
+    { href: homeAnchor(locale, "benefits"), label: t.nav.benefits },
+    { href: comparePathFor(locale), label: t.nav.compare },
+    { href: homeAnchor(locale, "how-it-works"), label: t.nav.howItWorks },
+    { href: pagePath("about", locale), label: t.nav.about },
+  ];
   return (
     <header className="site-header">
       <div className="container header-inner">
         <Logo locale={locale} />
         <nav className="main-nav" aria-label={t.mainNav}>
-          {t.nav.map((n) => (
+          {nav.map((n) => (
             <Link key={n.href} href={n.href} className="nav-link">
               {n.label}
             </Link>

@@ -75,7 +75,6 @@ const tocOrder = [
 export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchange; locale?: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.exchange;
-  const english = locale === "en";
   const list = dict.list;
   const monthYear = monthYearFor(locale);
   const reviewed = prettyDate(site.lastReviewed, locale);

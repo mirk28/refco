@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { nav, site } from "@/config/site";
+import { site } from "@/config/site";
 import type { CountryKey, CountryStatus, Exchange, Faq, FaqTopic } from "@/data/types";
 
 /**
@@ -50,8 +50,8 @@ export const en = {
   layout: {
     skip: "Skip to content",
     mainNav: "Main",
-    /** Links of the main navigation. */
-    nav: nav.map((n) => ({ href: n.href as string, label: n.label as string })),
+    /** Labels of the main navigation; the links are the same in every language (see `Header` in src/components/Layout.tsx). */
+    nav: { exchanges: "Exchanges", benefits: "Benefits", compare: "Compare", howItWorks: "How it works", about: "About" },
     getCodes: "Get codes",
     homeLabel: `${site.name} – ${site.domain} home`,
     language: "Language",

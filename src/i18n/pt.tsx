@@ -44,12 +44,7 @@ export const pt: Dictionary = {
   layout: {
     skip: "Pular para o conteúdo",
     mainNav: "Principal",
-    nav: [
-      { href: "/pt#exchanges", label: "Corretoras" },
-      { href: "/pt#benefits", label: "Vantagens" },
-      { href: "/pt#compare", label: "Comparar" },
-      { href: "/pt#how-it-works", label: "Como funciona" },
-    ],
+    nav: { exchanges: "Corretoras", benefits: "Vantagens", compare: "Comparar", howItWorks: "Como funciona", about: "Sobre" },
     getCodes: "Ver códigos",
     homeLabel: `${site.name} – ${site.domain}, página inicial`,
     language: "Idioma",

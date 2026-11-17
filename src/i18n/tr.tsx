@@ -73,12 +73,7 @@ export const tr: Dictionary = {
   layout: {
     skip: "İçeriğe geç",
     mainNav: "Ana menü",
-    nav: [
-      { href: "/tr#exchanges", label: "Borsalar" },
-      { href: "/tr#benefits", label: "Avantajlar" },
-      { href: "/tr#compare", label: "Karşılaştır" },
-      { href: "/tr#how-it-works", label: "Nasıl çalışır?" },
-    ],
+    nav: { exchanges: "Borsalar", benefits: "Avantajlar", compare: "Karşılaştır", howItWorks: "Nasıl çalışır?", about: "Hakkımızda" },
     getCodes: "Kodları al",
     homeLabel: `${site.name} – ${site.domain} ana sayfası`,
     language: "Dil",

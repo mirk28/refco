@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr"] as const;
+export const locales = ["en", "es", "pt", "tr", "de"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -28,6 +28,8 @@ export type LocaleInfo = {
    */
   decimal: "." | ",";
   percentBefore?: boolean;
+  /** A no-break space between number and sign (`0,02 %`), as German writes it. */
+  percentSpace?: boolean;
   /** Writing direction; only set for right-to-left languages. */
   dir?: "rtl";
 };
@@ -37,6 +39,7 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
   es: { name: "Español", short: "ES", htmlLang: "es", ogLocale: "es_ES", dateLocale: "es", decimal: "." },
   pt: { name: "Português (Brasil)", short: "PT", htmlLang: "pt-BR", alsoHreflang: ["pt"], ogLocale: "pt_BR", dateLocale: "pt-BR", decimal: "," },
   tr: { name: "Türkçe", short: "TR", htmlLang: "tr", ogLocale: "tr_TR", dateLocale: "tr", decimal: ",", percentBefore: true },
+  de: { name: "Deutsch", short: "DE", htmlLang: "de", ogLocale: "de_DE", dateLocale: "de-DE", decimal: ",", percentSpace: true },
 };
 
 /**
@@ -48,11 +51,12 @@ export function localRate(rate: string, locale: Locale): string {
   const m = /^(-?)(\d+(?:\.\d+)?)%$/.exec(rate.trim());
   if (!m) return rate;
   const digits = info.decimal === "," ? m[2].replace(".", ",") : m[2];
-  return info.percentBefore ? `${m[1]}%${digits}` : `${m[1]}${digits}%`;
+  if (info.percentBefore) return `${m[1]}%${digits}`;
+  return info.percentSpace ? `${m[1]}${digits} %` : `${m[1]}${digits}%`;
 }
 
 /** The number in a fee rate of any language (`0,02%`, `%0,02`, `0.02%`) – for comparisons. */
-export const rateValue = (rate: string) => Number.parseFloat(rate.replace("%", "").replace(",", "."));
+export const rateValue = (rate: string) => Number.parseFloat(rate.replace("%", "").replace(/\s/g, "").replace(",", "."));
 
 /* ------------------------------ path segments ------------------------------ */
 
@@ -98,6 +102,13 @@ const segments: Record<Locale, Segments> = {
     alternatives: (slug) => `${slug}-alternatifleri`,
     alternativesPattern: /^([a-z0-9]+)-alternatifleri$/,
     static: { compare: "borsa-karsilastirma", about: "hakkimizda", affiliateDisclosure: "satis-ortakligi-aciklamasi", imprint: "kunye", privacy: "gizlilik-politikasi" },
+  },
+  de: {
+    referral: (slug) => `${slug}-empfehlungscode`,
+    referralPattern: /^([a-z0-9]+)-empfehlungscode$/,
+    alternatives: (slug) => `${slug}-alternativen`,
+    alternativesPattern: /^([a-z0-9]+)-alternativen$/,
+    static: { compare: "boersenvergleich", about: "ueber-uns", affiliateDisclosure: "affiliate-hinweis", imprint: "impressum", privacy: "datenschutz" },
   },
 };
 /** Head-to-head pages are spelled the same way in every language: `binance-vs-okx`. */
