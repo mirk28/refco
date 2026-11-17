@@ -89,6 +89,20 @@ import { bitget as hiAltBitget } from "./hi/alternatives/bitget";
 import { gate as hiAltGate } from "./hi/alternatives/gate";
 import { kucoin as hiAltKucoin } from "./hi/alternatives/kucoin";
 import { mexc as hiAltMexc } from "./hi/alternatives/mexc";
+import { binance as urBinance } from "./ur/binance";
+import { okx as urOkx } from "./ur/okx";
+import { bybit as urBybit } from "./ur/bybit";
+import { bitget as urBitget } from "./ur/bitget";
+import { gate as urGate } from "./ur/gate";
+import { kucoin as urKucoin } from "./ur/kucoin";
+import { mexc as urMexc } from "./ur/mexc";
+import { binance as urAltBinance } from "./ur/alternatives/binance";
+import { okx as urAltOkx } from "./ur/alternatives/okx";
+import { bybit as urAltBybit } from "./ur/alternatives/bybit";
+import { bitget as urAltBitget } from "./ur/alternatives/bitget";
+import { gate as urAltGate } from "./ur/alternatives/gate";
+import { kucoin as urAltKucoin } from "./ur/alternatives/kucoin";
+import { mexc as urAltMexc } from "./ur/alternatives/mexc";
 
 const texts: Partial<Record<Locale, Record<string, ExchangeText>>> = {
   es: { binance: esBinance, okx: esOkx, bybit: esBybit, bitget: esBitget, gate: esGate, kucoin: esKucoin, mexc: esMexc },
@@ -96,6 +110,7 @@ const texts: Partial<Record<Locale, Record<string, ExchangeText>>> = {
   tr: { binance: trBinance, okx: trOkx, bybit: trBybit, bitget: trBitget, gate: trGate, kucoin: trKucoin, mexc: trMexc },
   de: { binance: deBinance, okx: deOkx, bybit: deBybit, bitget: deBitget, gate: deGate, kucoin: deKucoin, mexc: deMexc },
   hi: { binance: hiBinance, okx: hiOkx, bybit: hiBybit, bitget: hiBitget, gate: hiGate, kucoin: hiKucoin, mexc: hiMexc },
+  ur: { binance: urBinance, okx: urOkx, bybit: urBybit, bitget: urBitget, gate: urGate, kucoin: urKucoin, mexc: urMexc },
 };
 
 /** Lists that must have the same length in the translation as in the English entry. */
@@ -183,6 +198,7 @@ const alternativesTexts: Partial<Record<Locale, Record<string, AlternativesText>
   tr: { binance: trAltBinance, okx: trAltOkx, bybit: trAltBybit, bitget: trAltBitget, gate: trAltGate, kucoin: trAltKucoin, mexc: trAltMexc },
   de: { binance: deAltBinance, okx: deAltOkx, bybit: deAltBybit, bitget: deAltBitget, gate: deAltGate, kucoin: deAltKucoin, mexc: deAltMexc },
   hi: { binance: hiAltBinance, okx: hiAltOkx, bybit: hiAltBybit, bitget: hiAltBitget, gate: hiAltGate, kucoin: hiAltKucoin, mexc: hiAltMexc },
+  ur: { binance: urAltBinance, okx: urAltOkx, bybit: urAltBybit, bitget: urAltBitget, gate: urAltGate, kucoin: urAltKucoin, mexc: urAltMexc },
 };
 
 function alternativesProblems(info: AlternativesInfo, t: AlternativesText): string[] {

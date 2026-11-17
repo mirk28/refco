@@ -27,8 +27,9 @@ export const LockIcon = () => base(<><rect x="4" y="11" width="16" height="10" r
 export const RefreshIcon = () => base(<><path d="M21 12a9 9 0 01-15.5 6.2L3 16" /><path d="M3 12a9 9 0 0115.5-6.2L21 8" /><path d="M21 3v5h-5" /><path d="M3 21v-5h5" /></>);
 export const EyeOffIcon = () => base(<><path d="M3 3l18 18" /><path d="M10.6 5.1A10 10 0 0122 12a17 17 0 01-3.3 4.2M6.6 6.6A17 17 0 002 12s3.6 7 10 7a9.7 9.7 0 004.4-1" /><path d="M9.9 9.9a3 3 0 004.2 4.2" /></>);
 
+/** Points forward: right, and left on right-to-left pages (`.rtl-flip` in globals.css). */
 export const ArrowIcon = ({ size = 18 }: P) => (
-  <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg className="rtl-flip" width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M4 10h12M11 5l5 5-5 5" />
   </svg>
 );

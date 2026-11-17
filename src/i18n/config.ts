@@ -7,7 +7,7 @@
  *
  * To add a language see "Language versions" in the README.
  */
-export const locales = ["en", "es", "pt", "tr", "de", "hi"] as const;
+export const locales = ["en", "es", "pt", "tr", "de", "hi", "ur"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -33,13 +33,22 @@ export type LocaleInfo = {
   /** Writing direction; only set for right-to-left languages. */
   dir?: "rtl";
   /**
-   * Font of the share cards for scripts whose letters must be joined (conjuncts, vowel signs), such as Devanagari.
+   * Font of the share cards for scripts whose letters must be joined (conjuncts, vowel signs, Arabic script).
    * `next/og` draws letters one by one, so the texts of these cards are shaped by sharp (Pango with HarfBuzz) with the
    * font files in `src/fonts/<family without spaces>/` – see `src/lib/og-shape.ts`. Without it the card uses Geist.
    */
-  cardFont?: string;
+  cardFont?: CardFont;
   /** Mark at the end of a sentence that a template closes itself; default ".". Hindi uses the danda "।". */
   fullStop?: string;
+};
+
+export type CardFont = {
+  /** Font families in order; each letter comes from the first family that has it (e.g. Latin before Urdu). */
+  families: string[];
+  /** Factor on the text sizes of the card, for scripts that run taller than Latin (Nastaliq). */
+  scale?: number;
+  /** Line height as a factor of the font size; without it the font's own (tall for Nastaliq). */
+  lineHeight?: number;
 };
 
 export const localeInfo: Record<Locale, LocaleInfo> = {
@@ -48,7 +57,19 @@ export const localeInfo: Record<Locale, LocaleInfo> = {
   pt: { name: "Português (Brasil)", short: "PT", htmlLang: "pt-BR", alsoHreflang: ["pt"], ogLocale: "pt_BR", dateLocale: "pt-BR", decimal: "," },
   tr: { name: "Türkçe", short: "TR", htmlLang: "tr", ogLocale: "tr_TR", dateLocale: "tr", decimal: ",", percentBefore: true },
   de: { name: "Deutsch", short: "DE", htmlLang: "de", ogLocale: "de_DE", dateLocale: "de-DE", decimal: ",", percentSpace: true },
-  hi: { name: "हिन्दी", short: "HI", htmlLang: "hi", ogLocale: "hi_IN", dateLocale: "hi-IN", decimal: ".", cardFont: "Noto Sans Devanagari", fullStop: "।" },
+  hi: { name: "हिन्दी", short: "HI", htmlLang: "hi", ogLocale: "hi_IN", dateLocale: "hi-IN", decimal: ".", cardFont: { families: ["Noto Sans Devanagari"] }, fullStop: "।" },
+  // Urdu runs right to left; the cards take Latin from Noto Sans and Urdu from Nastaliq, which runs tall.
+  ur: {
+    name: "اردو",
+    short: "UR",
+    htmlLang: "ur",
+    ogLocale: "ur_PK",
+    dateLocale: "ur-PK-u-nu-latn",
+    decimal: ".",
+    dir: "rtl",
+    cardFont: { families: ["Noto Sans", "Noto Nastaliq Urdu"], scale: 0.82, lineHeight: 1.7 },
+    fullStop: "۔",
+  },
 };
 
 /**
@@ -121,6 +142,14 @@ const segments: Record<Locale, Segments> = {
   },
   // Indian readers search in Latin letters ("binance referral code"), so the Hindi addresses keep the English words.
   hi: {
+    referral: (slug) => `${slug}-referral-code`,
+    referralPattern: /^([a-z0-9]+)-referral-code$/,
+    alternatives: (slug) => `${slug}-alternatives`,
+    alternativesPattern: /^([a-z0-9]+)-alternatives$/,
+    static: { compare: "compare", about: "about", affiliateDisclosure: "affiliate-disclosure", imprint: "imprint", privacy: "privacy" },
+  },
+  // Pakistani readers also search in Latin letters, and Urdu letters in an address would be percent-encoded.
+  ur: {
     referral: (slug) => `${slug}-referral-code`,
     referralPattern: /^([a-z0-9]+)-referral-code$/,
     alternatives: (slug) => `${slug}-alternatives`,

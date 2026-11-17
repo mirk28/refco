@@ -47,7 +47,8 @@ Requires Node.js 20.9+.
 
 ### Language versions
 English is the default and lives at the root (`/`, `/binance-referral-code`). Spanish lives at `/es`,
-Brazilian Portuguese at `/pt` (hreflang `pt-BR` and `pt`), Turkish at `/tr`, German at `/de`, Hindi at `/hi`. Every
+Brazilian Portuguese at `/pt` (hreflang `pt-BR` and `pt`), Turkish at `/tr`, German at `/de`, Hindi at `/hi`, Urdu at
+`/ur` (right to left). Every
 page exists in every language;
 the last part of the address carries the keyword in that language:
 
@@ -60,8 +61,8 @@ the last part of the address carries the keyword in that language:
 | About | `/about` | `/es/acerca-de` | `/pt/sobre` | `/tr/hakkimizda` | `/de/ueber-uns` |
 | Legal | `/affiliate-disclosure`, `/imprint`, `/privacy` | `/es/divulgacion-de-afiliacion`, `/es/aviso-legal`, `/es/privacidad` | `/pt/divulgacao-de-afiliados`, `/pt/aviso-legal`, `/pt/privacidade` | `/tr/satis-ortakligi-aciklamasi`, `/tr/kunye`, `/tr/gizlilik-politikasi` | `/de/affiliate-hinweis`, `/de/impressum`, `/de/datenschutz` |
 
-Hindi keeps the English address parts (`/hi/binance-referral-code`, `/hi/compare` …), because Indian readers search in
-Latin letters. All of these address parts are defined in `src/i18n/config.ts`.
+Hindi and Urdu keep the English address parts (`/hi/binance-referral-code`, `/ur/compare` …), because Indian and
+Pakistani readers search in Latin letters (and Urdu letters would be percent-encoded). All of these address parts are defined in `src/i18n/config.ts`.
 
 - **Written natively, not translated.** Portuguese, Turkish and German were written in the language from the English source:
   same facts, sections and list items, about the same length, with the search terms of that market. (The Spanish
@@ -70,7 +71,11 @@ Latin letters. All of these address parts are defined in `src/i18n/config.ts`.
   (conjuncts, vowel signs). Languages with `cardFont` in `localeInfo` (Hindi: Noto Sans Devanagari) get their card
   texts shaped by sharp (Pango with HarfBuzz, `src/lib/og-shape.ts`) and placed as images in the same layout
   (`renderCard` in `src/lib/og.tsx`). The font files – Regular, Bold, ExtraBold, with their OFL licence – are in
-  `src/fonts/<family without spaces>/`.
+  `src/fonts/<family without spaces>/`. A `cardFont` can list several families (Urdu: Noto Sans for Latin, then Noto
+  Nastaliq Urdu) and set a size factor and line height, because Nastaliq runs tall.
+- **Right to left** (Urdu): `dir: "rtl"` in `localeInfo` sets `<html dir="rtl">` and mirrors the share card.
+  `globals.css` uses logical properties (`padding-inline-start`, `inset-inline-end` …), so the layout mirrors by
+  itself; `.rtl-flip` turns the arrow icon, and letter-spacing and upper-casing are off for Arabic script.
 - **Number notation**: `localeInfo` in `src/i18n/config.ts` sets the decimal sign of a language. Fee rates from the
   English data are shown in that notation by `localRate` (`0,02%` in Portuguese, `%0,02` in Turkish, `0,02 %` in
   German); texts are

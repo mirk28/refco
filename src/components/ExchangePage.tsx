@@ -587,7 +587,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
                 <Link href={altPath} className="btn btn-secondary btn-sm">
                   {t.compareAll(e, alts.length)}
                 </Link>{" "}
-                <Link href={comparePathFor(locale)} style={{ marginLeft: 12 }}>
+                <Link href={comparePathFor(locale)} style={{ marginInlineStart: 12 }}>
                   {t.allComparisons}
                 </Link>
               </p>

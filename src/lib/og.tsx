@@ -24,6 +24,8 @@ type CardTexts<T> = {
   badge?: T;
   badgeColor?: string;
   badgeInk?: string;
+  /** "rtl" mirrors the card: logo, texts and footer start at the right. */
+  dir?: "rtl";
   /** The three words at the bottom of the card (`og.footer` in src/i18n/ for other languages). */
   footer?: T[];
 };
@@ -37,7 +39,11 @@ export function renderOg({
   badgeColor = "#1D4ED8",
   badgeInk = "#FFFFFF",
   footer = ["Verified links", "Fees and facts", "Official sources"],
+  dir,
 }: CardTexts<ReactNode>) {
+  // Right to left: rows run from the right, columns hug the right edge (nothing is added for left to right).
+  const row = dir === "rtl" ? ({ flexDirection: "row-reverse" } as const) : {};
+  const column = dir === "rtl" ? ({ alignItems: "flex-end" } as const) : {};
   return new ImageResponse(
     (
       <div
@@ -53,7 +59,7 @@ export function renderOg({
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 18, ...row }}>
           <svg width="64" height="64" viewBox="0 0 48 48">
             <rect width="48" height="48" rx="13" fill="#1D4ED8" />
             <path
@@ -62,7 +68,7 @@ export function renderOg({
             />
             <path d="M18 24.2l3.6 3.6 7.6-7.6" fill="none" stroke="#059669" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", flexDirection: "column", ...column }}>
             <div style={{ display: "flex", fontSize: 40, fontWeight: 800, letterSpacing: -1 }}>
               Ref<span style={{ color: "#7AA2FF" }}>Co</span>
             </div>
@@ -70,8 +76,8 @@ export function renderOg({
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 18, ...column }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, ...row }}>
             {badge ? (
               <div
                 style={{
@@ -104,7 +110,7 @@ export function renderOg({
           <div style={{ display: "flex", fontSize: text.subtitle.size, color: text.subtitle.color, maxWidth: text.subtitle.maxWidth }}>{subtitle}</div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 28, fontSize: text.footer.size, color: text.footer.color }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 28, fontSize: text.footer.size, color: text.footer.color, ...row }}>
           <span>{footer[0]}</span>
           <span>·</span>
           <span>{footer[1]}</span>
@@ -122,10 +128,10 @@ export function renderOg({
  * shaped by sharp and placed as images in the same layout; all others are drawn by `renderOg` directly.
  */
 export async function renderCard(locale: Locale, card: CardTexts<string>) {
-  const font = localeInfo[locale].cardFont;
+  const { cardFont: font, dir } = localeInfo[locale];
   if (!font) return renderOg(card);
   const shaped = async (value: string, style: TextStyle) => {
-    const s = await shapeText(value, font, style);
+    const s = await shapeText(value, font, style, dir === "rtl");
     return <img src={s.src} width={s.width} height={s.height} alt="" />;
   };
   const [badge, kicker, title, subtitle, ...footer] = await Promise.all([
@@ -135,5 +141,5 @@ export async function renderCard(locale: Locale, card: CardTexts<string>) {
     shaped(card.subtitle, text.subtitle),
     ...(card.footer ?? []).map((f) => shaped(f, text.footer)),
   ]);
-  return renderOg({ ...card, badge, kicker, title, subtitle, footer: footer.length ? footer : undefined });
+  return renderOg({ ...card, badge, kicker, title, subtitle, footer: footer.length ? footer : undefined, dir });
 }
