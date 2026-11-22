@@ -56,7 +56,7 @@ export function GET() {
         const t = getDictionary(l).layout;
         return [
           `## Pages in ${englishName[l]} (${localeInfo[l].name})`,
-          `Every page of this site also exists in ${englishName[l]} – the same facts as the English pages, translated.`,
+          `Every page of this site also exists in ${englishName[l]} – written natively in ${englishName[l]}, with the same facts as the English pages.`,
           `- [${t.referralCodes}](${absoluteUrl(homePath(l))}): the home page in ${englishName[l]}.`,
           ...exchanges.map((e) => `- [${t.referralCodeOf(e.name)}](${absoluteUrl(exchangePath(e.slug, l))}): ${englishName[l]} version of the ${e.name} referral code page (code ${e.referralCode}).`),
           ...exchanges.map((e) => `- [${t.alternativesOf(e.name)}](${absoluteUrl(alternativesPath(e.slug, l))}): ${englishName[l]} version of the ${e.name} alternatives page.`),
@@ -77,6 +77,7 @@ export function GET() {
     `- [About & methodology](${absoluteUrl("/about")})`,
     `- [Affiliate disclosure](${absoluteUrl("/affiliate-disclosure")})`,
     `- [Privacy policy](${absoluteUrl("/privacy")})`,
+    `- [Imprint](${absoluteUrl(pagePath("imprint", "en"))})`,
     "",
   ];
   return new Response(lines.join("\n"), {
