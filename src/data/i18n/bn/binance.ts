@@ -77,12 +77,6 @@ export const binance: ExchangeText = {
     "Binance: SAFU তহবিল",
     "Binance: Binance সম্পর্কে",
   ],
-  guides: {
-    heading: "Binance Square-এর গাইড",
-    intro:
-      "Binance-এর নিজস্ব কনটেন্ট প্ল্যাটফর্ম Binance Square-এ Binance রেফারেল প্রোগ্রাম নিয়ে প্রশ্নোত্তর আকারে আরও বিস্তারিত গাইড আছে – প্রতিটি ভাষায় একটি করে, অনুবাদ নয়, প্রতিটি সেই ভাষার পাঠকদের জন্য আলাদা করে লেখা:",
-    linkLabel: "Binance রেফারেল কোড নিয়ে প্রশ্নোত্তর",
-  },
   feeDiscount: "",
   referralCovers: ["স্পট", "মার্জিন", "ফিউচার্স"],
   bonusHeadline: "100 USD পর্যন্ত ফি রিবেট ভাউচার",

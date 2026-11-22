@@ -77,12 +77,6 @@ export const binance: ExchangeText = {
     "Binance: Quỹ SAFU",
     "Binance: Giới thiệu về Binance",
   ],
-  guides: {
-    heading: "Hướng dẫn trên Binance Square",
-    intro:
-      "Binance Square, nền tảng nội dung của chính Binance, đăng những bài hướng dẫn dài hơn theo dạng hỏi đáp về chương trình giới thiệu của Binance – mỗi ngôn ngữ một bài, viết riêng cho độc giả của ngôn ngữ đó chứ không dịch lại:",
-    linkLabel: "Hỏi đáp về mã giới thiệu Binance",
-  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "Voucher hoàn phí giao dịch lên đến 100 USD",

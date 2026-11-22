@@ -77,12 +77,6 @@ export const binance: ExchangeText = {
     "Binance៖ មូលនិធិ SAFU",
     "Binance៖ អំពី Binance",
   ],
-  guides: {
-    heading: "មគ្គុទ្ទេសក៍លើ Binance Square",
-    intro:
-      "មគ្គុទ្ទេសក៍ជាទម្រង់សំណួរ និងចម្លើយ ដែលលម្អិតជាងនេះ អំពីកម្មវិធីណែនាំ Binance មាននៅលើ Binance Square ដែលជាវេទិកាមាតិកាផ្ទាល់របស់ Binance – មួយសម្រាប់ភាសានីមួយៗ ហើយនីមួយៗសរសេរឡើងសម្រាប់អ្នកអានរបស់ខ្លួន មិនមែនបកប្រែទេ៖",
-    linkLabel: "សំណួរដែលសួរញឹកញាប់អំពីកូដណែនាំ Binance",
-  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "ប័ណ្ណបង្វិលកម្រៃរហូតដល់ 100 USD",

@@ -77,12 +77,6 @@ export const binance: ExchangeText = {
     "Binance: Fondo SAFU",
     "Binance: Acerca de",
   ],
-  guides: {
-    heading: "Guías en Binance Square",
-    intro:
-      "En Binance Square, la plataforma de contenido propia de Binance, hay publicadas guías más extensas de preguntas y respuestas sobre el programa de referidos de Binance – una por idioma, cada una escrita para sus propios lectores y no traducida:",
-    linkLabel: "Preguntas frecuentes sobre el código de referido de Binance",
-  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margen", "Futuros"],
   bonusHeadline: "Hasta 100 USD en cupones de reembolso de comisiones",

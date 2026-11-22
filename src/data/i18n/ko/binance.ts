@@ -76,12 +76,6 @@ export const binance: ExchangeText = {
     "Binance: SAFU 기금",
     "Binance: 회사 소개",
   ],
-  guides: {
-    heading: "Binance Square 가이드",
-    intro:
-      "Binance 레퍼럴 프로그램을 문답 형식으로 더 자세히 다룬 가이드가 Binance의 자체 콘텐츠 플랫폼인 Binance Square에 올라와 있습니다. 언어마다 하나씩 있으며, 번역본이 아니라 각 언어의 독자를 위해 따로 쓴 글입니다.",
-    linkLabel: "Binance 레퍼럴 코드 FAQ",
-  },
   feeDiscount: "",
   referralCovers: ["현물", "마진", "선물"],
   bonusHeadline: "최대 100 USD 수수료 페이백 바우처",

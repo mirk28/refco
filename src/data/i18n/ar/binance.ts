@@ -77,12 +77,6 @@ export const binance: ExchangeText = {
     "Binance: صندوق SAFU",
     "Binance: نبذة عن المنصة",
   ],
-  guides: {
-    heading: "أدلة على Binance Square",
-    intro:
-      "تُنشر على Binance Square، منصة المحتوى التي تديرها Binance نفسها، أدلة مطوّلة بصيغة سؤال وجواب حول برنامج الإحالة في Binance – دليل لكل لغة، كُتب كلٌّ منها لقرّائه ولم يُترجم من لغة أخرى:",
-    linkLabel: "الأسئلة الشائعة عن كود إحالة Binance",
-  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "قسائم استرداد رسوم حتى 100 USD",
