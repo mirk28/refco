@@ -88,7 +88,23 @@ export const binance: Exchange = {
       "A longer checklist-style guide to signing up with a Binance referral code is published on Binance Square, Binance's own content platform. The original is in Spanish; Binance Square can show it translated:",
     linkLabel: "Binance referral code FAQ",
     links: [
-      { language: "English", hreflang: "en", url: "https://www.binance.com/en/square/post/391114726726736" },
+      {
+        language: "English",
+        hreflang: "en",
+        url: "https://www.binance.com/en/square/post/391114726726736",
+        // Binance Square has its own translation in these languages; the other pages link the English view.
+        byLocale: {
+          ar: { language: "العربية", hreflang: "ar", url: "https://www.binance.com/ar/square/post/391114726726736" },
+          de: { language: "Deutsch", hreflang: "de", url: "https://www.binance.com/de/square/post/391114726726736" },
+          es: { language: "Español", hreflang: "es", url: "https://www.binance.com/es/square/post/391114726726736" },
+          fr: { language: "Français", hreflang: "fr", url: "https://www.binance.com/fr/square/post/391114726726736" },
+          id: { language: "Bahasa Indonesia", hreflang: "id", url: "https://www.binance.com/id/square/post/391114726726736" },
+          pt: { language: "Português, Brasil", hreflang: "pt-BR", url: "https://www.binance.com/pt-BR/square/post/391114726726736" },
+          ru: { language: "Русский", hreflang: "ru", url: "https://www.binance.com/ru/square/post/391114726726736" },
+          uk: { language: "Українська", hreflang: "uk", url: "https://www.binance.com/uk-UA/square/post/391114726726736" },
+          vi: { language: "Tiếng Việt", hreflang: "vi", url: "https://www.binance.com/vi/square/post/391114726726736" },
+        },
+      },
     ],
   },
   feeDiscount: "",

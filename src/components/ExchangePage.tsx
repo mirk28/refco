@@ -534,13 +534,17 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
                 <h2 id="h-guides">{guides.heading}</h2>
                 <p>{guides.intro}</p>
                 <ul className="sources guides-list">
-                  {guides.links.map((g) => (
-                    <li key={g.url}>
-                      <a href={g.url} hrefLang={g.hreflang} target="_blank" rel="noopener">
-                        {t.guideLink(guides.linkLabel, g.name, <bdi lang={g.hreflang}>{g.language}</bdi>)}
-                      </a>
-                    </li>
-                  ))}
+                  {guides.links.map((link) => {
+                    const local = link.byLocale?.[locale];
+                    const g = local ? { ...local, name: undefined } : link;
+                    return (
+                      <li key={g.url}>
+                        <a href={g.url} hrefLang={g.hreflang} target="_blank" rel="noopener">
+                          {t.guideLink(guides.linkLabel, g.name, <bdi lang={g.hreflang}>{g.language}</bdi>)}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </section>
             ) : null}

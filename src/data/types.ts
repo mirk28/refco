@@ -20,6 +20,11 @@ export type GuideLink = {
   /** BCP 47 language tag of the linked article, e.g. "pt-BR". */
   hreflang: string;
   url: string;
+  /**
+   * Same article in the language of a page of ours, where the platform has that language (e.g. Binance Square's
+   * own translation under /de/). Pages in a locale that is missing here use `url`.
+   */
+  byLocale?: Partial<Record<string, { language: string; hreflang: string; url: string }>>;
 };
 /** A short block of links to guides on another platform, e.g. Binance Square. */
 export type ExternalGuides = {
