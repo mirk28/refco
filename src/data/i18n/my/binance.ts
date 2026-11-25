@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: SAFU ရန်ပုံငွေ",
     "Binance: Binance အကြောင်း",
   ],
+  guides: {
+    heading: "Binance Square ရှိ လမ်းညွှန်များ",
+    intro:
+      "Binance ရည်ညွှန်းကုဒ်ဖြင့် စာရင်းသွင်းခြင်းအကြောင်း စစ်ဆေးစာရင်းပါ ပိုမိုအသေးစိတ်သော လမ်းညွှန်ကို Binance ၏ ကိုယ်ပိုင် အကြောင်းအရာပလက်ဖောင်း Binance Square တွင် ထုတ်ဝေထားသည်။ မူရင်းမှာ စပိန်ဘာသာဖြစ်ပြီး Binance Square က ဘာသာပြန်ကို ပြသပေးနိုင်သည်-",
+    linkLabel: "Binance Referral Code အမေးအဖြေ",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "အခကြေးငွေ ပြန်အမ်း ဘောက်ချာ 100 USD အထိ",

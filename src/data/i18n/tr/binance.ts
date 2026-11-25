@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: SAFU fonu",
     "Binance: Hakkında",
   ],
+  guides: {
+    heading: "Binance Square rehberleri",
+    intro:
+      "Binance referans koduyla kayıt olmaya dair kontrol listeli daha kapsamlı bir rehber, Binance'in kendi içerik platformu Binance Square'de yayımlandı. Orijinali İspanyolca; Binance Square çevirisini gösterebilir:",
+    linkLabel: "Binance referans kodu SSS",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Marjin", "Vadeli İşlemler"],
   bonusHeadline: "100 USD'ye kadar komisyon iade kuponu",

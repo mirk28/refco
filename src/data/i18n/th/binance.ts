@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: กองทุน SAFU",
     "Binance: เกี่ยวกับ Binance",
   ],
+  guides: {
+    heading: "คู่มือบน Binance Square",
+    intro:
+      "คู่มือฉบับละเอียดแบบเช็กลิสต์เกี่ยวกับการสมัครด้วยรหัสแนะนำ Binance เผยแพร่อยู่บน Binance Square แพลตฟอร์มคอนเทนต์ของ Binance เอง ต้นฉบับเป็นภาษาสเปน และ Binance Square สามารถแสดงฉบับแปลได้:",
+    linkLabel: "คำถามที่พบบ่อยเรื่องรหัสแนะนำ Binance",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "เวาเชอร์คืนค่าธรรมเนียมสูงสุด 100 USD",

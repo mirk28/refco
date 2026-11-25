@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: фонд SAFU",
     "Binance: про компанію",
   ],
+  guides: {
+    heading: "Посібники на Binance Square",
+    intro:
+      "Докладніший посібник із чек-листом про реєстрацію з реферальним кодом Binance опубліковано на Binance Square — власній контент-платформі Binance. Оригінал іспанською; Binance Square може показати його в перекладі:",
+    linkLabel: "Поширені запитання про реферальний код Binance",
+  },
   feeDiscount: "",
   referralCovers: ["Спот", "Маржа", "Ф'ючерси"],
   bonusHeadline: "До 100 USD у ваучерах на повернення комісій",

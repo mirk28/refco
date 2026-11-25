@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance : fonds SAFU",
     "Binance : à propos",
   ],
+  guides: {
+    heading: "Guides sur Binance Square",
+    intro:
+      "Un guide plus complet, sous forme de liste de contrôle, sur l'inscription avec un code de parrainage Binance est publié sur Binance Square, la plateforme de contenu de Binance. L'original est en espagnol ; Binance Square peut l'afficher traduit :",
+    linkLabel: "FAQ du code de parrainage Binance",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Marge", "Futures"],
   bonusHeadline: "Jusqu'à 100 USD de bons de remise sur les frais",

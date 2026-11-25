@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: SAFU fund",
     "Binance: Tungkol sa Binance",
   ],
+  guides: {
+    heading: "Mga gabay sa Binance Square",
+    intro:
+      "May mas mahabang gabay na may checklist tungkol sa pag-sign up gamit ang Binance referral code sa Binance Square, ang sariling content platform ng Binance. Nasa Spanish ang orihinal; kayang ipakita ng Binance Square ang salin nito:",
+    linkLabel: "Binance referral code FAQ",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "Hanggang 100 USD na fee rebate voucher",

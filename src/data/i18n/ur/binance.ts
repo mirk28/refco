@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: SAFU فنڈ",
     "Binance: تعارف",
   ],
+  guides: {
+    heading: "Binance Square پر گائیڈز",
+    intro:
+      "Binance ریفرل کوڈ کے ساتھ سائن اپ کرنے کے بارے میں چیک لسٹ والی ایک مفصل گائیڈ Binance Square پر شائع ہوئی ہے، جو Binance کا اپنا مواد پلیٹ فارم ہے۔ اصل تحریر ہسپانوی میں ہے؛ Binance Square اس کا ترجمہ دکھا سکتا ہے:",
+    linkLabel: "Binance ریفرل کوڈ کے سوال و جواب",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "100 USD تک کے فیس ریبیٹ واؤچرز",

@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance፦ የSAFU ፈንድ",
     "Binance፦ ስለ Binance",
   ],
+  guides: {
+    heading: "በBinance Square ላይ ያሉ መመሪያዎች",
+    intro:
+      "በBinance የሪፈራል ኮድ ስለ መመዝገብ የማረጋገጫ ዝርዝር ያለው ሰፋ ያለ መመሪያ በBinance የራሱ የይዘት መድረክ Binance Square ላይ ታትሟል። ዋናው በስፓኒሽ ነው፤ Binance Square ትርጉሙን ማሳየት ይችላል፦",
+    linkLabel: "Binance ሪፈራል ኮድ ተደጋጋሚ ጥያቄዎች",
+  },
   feeDiscount: "",
   referralCovers: ["ስፖት", "ማርጂን", "ፊውቸርስ"],
   bonusHeadline: "እስከ 100 USD የክፍያ ተመላሽ ቫውቸር",

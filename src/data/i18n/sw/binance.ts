@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: Mfuko wa SAFU",
     "Binance: Kuhusu Binance",
   ],
+  guides: {
+    heading: "Miongozo kwenye Binance Square",
+    intro:
+      "Mwongozo mrefu zaidi wenye orodha ya ukaguzi kuhusu kujisajili kwa msimbo wa rufaa wa Binance umechapishwa kwenye Binance Square, jukwaa la maudhui la Binance yenyewe. Asili yake ni kwa Kihispania; Binance Square inaweza kuuonyesha ukiwa umetafsiriwa:",
+    linkLabel: "Msimbo wa rufaa wa Binance: maswali na majibu",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "Vocha za marejesho ya ada za hadi 100 USD",

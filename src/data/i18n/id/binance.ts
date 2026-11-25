@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: Dana SAFU",
     "Binance: Tentang Binance",
   ],
+  guides: {
+    heading: "Panduan di Binance Square",
+    intro:
+      "Panduan yang lebih lengkap berbentuk daftar periksa tentang mendaftar dengan kode referral Binance diterbitkan di Binance Square, platform konten milik Binance. Aslinya berbahasa Spanyol; Binance Square dapat menampilkan terjemahannya:",
+    linkLabel: "FAQ kode referral Binance",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "Voucher rebate biaya hingga 100 USD",

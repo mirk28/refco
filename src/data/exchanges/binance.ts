@@ -82,6 +82,15 @@ export const binance: Exchange = {
     { label: "Binance: SAFU fund", url: "https://www.binance.com/en/support/faq/detail/028799e730294ae4a9b382d60d350116" },
     { label: "Binance: About", url: "https://www.binance.com/en/about" },
   ],
+  guides: {
+    heading: "Guides on Binance Square",
+    intro:
+      "A longer checklist-style guide to signing up with a Binance referral code is published on Binance Square, Binance's own content platform. The original is in Spanish; Binance Square can show it translated:",
+    linkLabel: "Binance referral code FAQ",
+    links: [
+      { name: "Spanish", language: "Español", hreflang: "es", url: "https://www.binance.com/en/square/post/391114726726736" },
+    ],
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "Up to 100 USD in fee rebate vouchers",

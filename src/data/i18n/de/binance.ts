@@ -77,6 +77,12 @@ export const binance: ExchangeText = {
     "Binance: SAFU-Fonds",
     "Binance: Über Binance",
   ],
+  guides: {
+    heading: "Ratgeber auf Binance Square",
+    intro:
+      "Ein ausführlicher Ratgeber mit Checkliste zur Anmeldung mit einem Binance Empfehlungscode ist auf Binance Square erschienen, der hauseigenen Content-Plattform von Binance. Das Original ist auf Spanisch; Binance Square kann es übersetzt anzeigen:",
+    linkLabel: "FAQ zum Binance Empfehlungscode",
+  },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
   bonusHeadline: "Bis zu 100 USD in Rabattgutscheinen für Gebühren",
