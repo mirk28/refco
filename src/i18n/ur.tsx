@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Urdu. Same keys as `en.tsx`. The pages run right to left; the layout handles that.
@@ -135,9 +136,15 @@ export const ur: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `کرپٹو ایکسچینج ریفرل کوڈز (${monthYear}): Spot اور Futures پر بونس`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `کرپٹو ایکسچینج ریفرل کوڈز اور بونس (${monthYear})`, `کرپٹو ایکسچینج ریفرل کوڈز (${monthYear})`),
     description: (monthYear) =>
-      `Binance، OKX، Bybit، Bitget، Gate، KuCoin اور MEXC کے تصدیق شدہ ریفرل کوڈز۔ ایک ہی لنک سے Spot اور Futures پر نئے یوزرز کے بونس اور فیس ریبیٹ حاصل کریں – ${monthYear} میں اپ ڈیٹ۔`,
+      fit(
+        DESC_MAX,
+        `Binance، OKX، Bybit، Bitget، Gate، KuCoin اور MEXC کے تصدیق شدہ ریفرل کوڈز: ایک ہی لنک سے Spot اور Futures پر نئے یوزرز کے بونس اور فیس ریبیٹ – ${monthYear} میں اپ ڈیٹ۔`,
+        `Binance، OKX، Bybit، Bitget، Gate، KuCoin اور MEXC کے تصدیق شدہ ریفرل کوڈز: ایک لنک سے نئے یوزرز کے بونس اور فیس ریبیٹ – ${monthYear} میں اپ ڈیٹ۔`,
+        `Binance، OKX، Bybit، Bitget، Gate، KuCoin اور MEXC کے تصدیق شدہ ریفرل کوڈز: ایک لنک سے نئے یوزرز کے بونس اور فیس ریبیٹ۔`,
+      ),
     listName: "Spot اور Futures کے لیے کرپٹو ایکسچینج ریفرل کوڈز",
     updated: (monthYear) => `اپ ڈیٹ: ${monthYear}`,
     h1: (
@@ -306,9 +313,23 @@ export const ur: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${e.name} ریفرل کوڈ ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven titles do not all start with "<Exchange> ریفرل کوڈ".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, m = shortMonthYear, y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} ریفرل کوڈ ${c} (${m}): سائن اپ بونس`, `${n} ریفرل کوڈ ${c} (${m})`, `${n} ریفرل کوڈ ${c}`),
+        () => fit(TITLE_MAX, `${c} – ${n} ریفرل کوڈ اور بونس (${m})`, `${c} – ${n} ریفرل کوڈ (${m})`, `${c} – ${n} ریفرل کوڈ`),
+        () => fit(TITLE_MAX, `نئے یوزرز کا بونس: ${n} ریفرل کوڈ ${c} (${y})`, `سائن اپ بونس: ${n} ریفرل کوڈ ${c}`, `${n} ریفرل کوڈ ${c} (${y})`),
+        () => fit(TITLE_MAX, `${n} ریفرل کوڈ ${c} کیسے استعمال کریں (${m})`, `${n} ریفرل کوڈ ${c} کیسے استعمال کریں`, `${n} ریفرل کوڈ ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} ریفرل کوڈ: ${e.referralCode}۔ ${benefit(e)} – کوڈ کہاں درج کریں، سائن اپ کے مراحل، KYC اور فیس؛ ${monthYear} میں چیک کیا گیا۔`,
+      fit(
+        DESC_MAX,
+        `${e.name} ریفرل کوڈ ${e.referralCode}: ${benefit(e)}۔ کوڈ کہاں درج کریں، سائن اپ کے مراحل، KYC اور فیس – ${monthYear} میں چیک کیا گیا۔`,
+        `${e.name} ریفرل کوڈ ${e.referralCode}: ${benefit(e)}۔ کوڈ کہاں درج کریں، سائن اپ کے مراحل، KYC اور فیس۔`,
+        `${e.name} ریفرل کوڈ ${e.referralCode}: کوڈ کہاں درج کریں، سائن اپ کے مراحل، KYC اور فیس – ${monthYear} میں چیک کیا گیا۔`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLowerCase().replace(/[\s-]/g, "");
       return [

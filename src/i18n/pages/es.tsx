@@ -42,7 +42,7 @@ export const es: PageTexts = {
   /* ------------------------------------ About ------------------------------------ */
   about: {
     title: `Acerca de ${site.name} y nuestra metodología`,
-    description: `Quién gestiona ${site.domain}, de dónde proceden nuestros datos y cómo revisamos los exchanges de criptomonedas.`,
+    description: `Quién gestiona ${site.domain}, de dónde proceden nuestros datos, cómo revisamos los exchanges y cada cuánto se comprueban de nuevo comisiones y ofertas.`,
     ldName: `Acerca de ${site.name}`,
     crumb: "Quiénes somos",
     intro: () => (
@@ -405,7 +405,7 @@ export const es: PageTexts = {
   /* --------------------------------- Privacy policy --------------------------------- */
   privacy: {
     title: "Política de privacidad",
-    description: `Cómo trata ${site.domain} los datos personales conforme al Reglamento General de Protección de Datos (RGPD) de la UE. Google Analytics solo con tu consentimiento, sin cookies publicitarias.`,
+    description: `Cómo trata ${site.domain} los datos personales según el RGPD: Google Analytics solo con tu consentimiento, sin cookies publicitarias ni venta de datos.`,
     intro: (c) => (
       <>
         <h1>Política de privacidad</h1>

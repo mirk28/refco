@@ -7,6 +7,7 @@
  * Exchange names take no article ("bei Binance", "von OKX"). Country names with article and preposition come from
  * `countryForms` below; texts from the data keep their capitals – only the starters in `lcFirst` are lower-cased.
  */
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { Exchange, Faq } from "@/data/exchanges";
 import type { CountryKey, FeatureKey } from "@/data/alternatives";
@@ -321,9 +322,24 @@ export const de: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): Gebühren, Hebel, KYC & Bonus`,
+    // Drei Formulierungen, je Paar fest gewählt.
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): Gebühren, Hebel & Bonus`,
+          `${a.name} oder ${b.name}? Gebühren, Hebel & KYC im Vergleich`,
+          `${a.name} vs ${b.name}: Welche Börse ist ${yearOf(shortMonthYear)} besser?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: Futures-Gebühren ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, Hebel ${leverageOf(a)}x vs ${leverageOf(b)}x, dazu Produkte, Länder, KYC und Empfehlungscodes – offizielle Daten, geprüft im ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: Futures-Gebühren ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, Hebel ${leverageOf(a)}x vs ${leverageOf(b)}x, Produkte, Länder, KYC und Empfehlungscodes. Stand: ${monthYear}.`,
+        `${a.name} vs ${b.name}: Futures-Gebühren ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, Hebel ${leverageOf(a)}x vs ${leverageOf(b)}x, Länder, KYC und Empfehlungscodes. Stand: ${monthYear}.`,
+        `${a.name} vs ${b.name}: Futures-Gebühren ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, Hebel ${leverageOf(a)}x vs ${leverageOf(b)}x, Produkte, Länder, KYC und Empfehlungscodes.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -535,9 +551,15 @@ export const de: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Krypto-Börsenvergleich (${shortMonthYear}): ${pairs} Direktvergleiche`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `Krypto-Börsenvergleich (${shortMonthYear}): ${pairs} Direktvergleiche`, `Krypto-Börsenvergleich (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} paarweise: ${pairs} Direktvergleiche zu Gebühren, Hebel, Ländern, KYC und Empfehlungscodes – offizielle Daten, geprüft im ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} paarweise: ${pairs} Direktvergleiche zu Gebühren, Hebel, Ländern, KYC und Empfehlungscodes. Stand: ${monthYear}.`,
+        `${exchangeNames} paarweise: ${pairs} Direktvergleiche – Gebühren, Hebel, Länder, KYC, Empfehlungscodes. Stand: ${monthYear}.`,
+        `${exchangeNames} paarweise: ${pairs} Direktvergleiche zu Gebühren, Hebel, Ländern, KYC und Empfehlungscodes.`,
+      ),
     crumbHome: "Startseite",
     crumbPage: "Börsenvergleich",
     listName: "Direktvergleiche von Kryptobörsen",

@@ -44,7 +44,7 @@ export const fr: PageTexts = {
   /* ------------------------------------ About ------------------------------------ */
   about: {
     title: `À propos de ${site.name} et de notre méthodologie`,
-    description: `Qui gère ${site.domain}, d'où viennent nos données et comment nous évaluons les plateformes crypto.`,
+    description: `Qui gère ${site.domain}, d'où viennent nos données, comment nous évaluons les plateformes crypto et à quelle fréquence nous revérifions frais et offres.`,
     ldName: `À propos de ${site.name}`,
     crumb: "À propos",
     intro: () => (

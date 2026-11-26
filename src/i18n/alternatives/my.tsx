@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Burmese. Same keys as `./en.tsx`.
@@ -29,10 +30,28 @@ const expandMonth = (shortMonthYear: string) =>
 
 export const my: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  /** 64–68 characters: the classifier "ခု" takes up "Exchange" from the keyword in front of it. */
-  title: (x, n, shortMonthYear) => `${x.name} အစားထိုး Exchange များ (${expandMonth(shortMonthYear)}): ${n} ခု နှိုင်းယှဉ်ချက်`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) => {
+    const m = expandMonth(shortMonthYear), y = yearOf(shortMonthYear);
+    return fit(
+      TITLE_MAX,
+      ...[
+        [`${x.name} အစားထိုး Exchange ${n} ခု နှိုင်းယှဉ်ချက် (${m})`, `${x.name} အစားထိုး Exchange ${n} ခု နှိုင်းယှဉ်ချက် (${y})`],
+        [`${x.name} အစားထိုး Exchange ${n} ခု: အခကြေးငွေနှင့် ဘောနပ်စ် (${y})`, `${x.name} အစားထိုး Exchange ${n} ခု: အခကြေးငွေနှင့် ဘောနပ်စ်`],
+        [`${x.name} နှင့် ဆင်တူသော Exchange များ: အစားထိုး ${n} ခု (${y})`, `${x.name} နှင့် ဆင်တူသော Exchange များ: အစားထိုး ${n} ခု`],
+        [`${x.name} မှ ပြောင်းမလား? အစားထိုး Exchange ${n} ခု (${m})`, `${x.name} မှ ပြောင်းမလား? အစားထိုး Exchange ${n} ခု (${y})`],
+      ][variant(4, x.slug)],
+      `${x.name} အစားထိုး Exchange ${n} ခု (${m})`,
+      `${x.name} အစားထိုး Exchange များ`,
+    );
+  },
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${x.name}${former ? ` (${former})` : ""} အစားထိုး Exchange ${n} ခု၏ အခကြေးငွေ၊ Leverage၊ KYC၊ နိုင်ငံနှင့် Referral Code နှိုင်းယှဉ်ချက်။ တရားဝင် အချက်အလက်ဖြစ်ပြီး ${monthYear}လတွင် စစ်ဆေးထားပါသည်။`,
+    fit(
+      DESC_MAX,
+      `${names}: ${x.name}${former ? ` (${former})` : ""} အစားထိုး Exchange ${n} ခု၏ အခကြေးငွေ၊ Leverage၊ KYC နှင့် Referral Code နှိုင်းယှဉ်ချက် (${monthYear}လ စစ်ဆေးပြီး)။`,
+      `${names}: ${x.name} အစားထိုး Exchange ${n} ခု၏ အခကြေးငွေ၊ Leverage၊ KYC နှင့် Referral Code နှိုင်းယှဉ်ချက် (${monthYear}လ စစ်ဆေးပြီး)။`,
+      `${names}: ${x.name} အစားထိုး Exchange ${n} ခု၏ အခကြေးငွေ၊ Leverage၊ KYC နှင့် Referral Code နှိုင်းယှဉ်ချက်။`,
+    ),
   keywords: (x, alts, former) => [
     `${x.name} အစားထိုး Exchange များ`,
     `${x.name} အစားထိုး Exchange`,

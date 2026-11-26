@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Burmese (Unicode, never Zawgyi). Same keys as `en.tsx`.
@@ -156,9 +157,14 @@ export const my: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `ခရစ်တို Exchange Referral Code (${monthYear}): Spot နှင့် Futures ဘောနပ်စ်`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `ခရစ်တို Exchange Referral Code နှင့် ဘောနပ်စ် (${monthYear})`, `ခရစ်တို Exchange Referral Code များ (${monthYear})`, "ခရစ်တို Exchange Referral Code များ"),
     description: (monthYear) =>
-      `Binance၊ OKX၊ Bybit၊ Bitget၊ Gate၊ KuCoin နှင့် MEXC ၏ စစ်ဆေးပြီး Referral Code (${monthYear})။ လင့်ခ် တစ်ခုတည်းဖြင့် Spot နှင့် Futures ကြိုဆိုဘောနပ်စ်၊ အခကြေးငွေ ပြန်အမ်းငွေ ရယူပါ။`,
+      fit(
+        DESC_MAX,
+        `Binance၊ OKX၊ Bybit၊ Bitget၊ Gate၊ KuCoin နှင့် MEXC ၏ စစ်ဆေးပြီး Referral Code (${monthYear})။ လင့်ခ် တစ်ခုတည်းဖြင့် ကြိုဆိုဘောနပ်စ်၊ အခကြေးငွေ ပြန်အမ်းငွေ ရယူပါ။`,
+        `Binance၊ OKX၊ Bybit၊ Bitget၊ Gate၊ KuCoin နှင့် MEXC ၏ စစ်ဆေးပြီး Referral Code။ လင့်ခ် တစ်ခုတည်းဖြင့် ကြိုဆိုဘောနပ်စ်၊ အခကြေးငွေ ပြန်အမ်းငွေ ရယူပါ။`,
+      ),
     listName: "Spot နှင့် Futures အတွက် ခရစ်တို Exchange Referral Code များ",
     updated: (monthYear) => `${monthYear}လတွင် အပ်ဒိတ်လုပ်ထားသည်`,
     h1: (
@@ -355,9 +361,23 @@ export const my: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${e.name} Referral Code ${e.referralCode} (${fullMonth(shortMonthYear)}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "<Exchange> Referral Code".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), m = fullMonth(shortMonthYear), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} Referral Code ${c} (${m}): ${b}`, `${n} Referral Code ${c} (${m})`, `${n} Referral Code ${c}`),
+        () => fit(TITLE_MAX, `${c} – ${n} Referral Code နှင့် ဘောနပ်စ် (${m})`, `${c} – ${n} Referral Code (${m})`, `${c} – ${n} Referral Code`),
+        () => fit(TITLE_MAX, `${b}: ${n} Referral Code ${c}`, `${n} ကြိုဆိုဘောနပ်စ် ${y}: Referral Code ${c}`, `${n} Referral Code ${c} (${y})`),
+        () => fit(TITLE_MAX, `${n} Referral Code ${c} အသုံးပြုနည်း (${m})`, `${n} Referral Code ${c} အသုံးပြုနည်း`, `${n} Referral Code ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} Referral Code: ${e.referralCode}။ ${benefit(e)}။ ကုဒ်ထည့်ရမည့်နေရာ၊ အကောင့်ဖွင့်နည်း၊ KYC နှင့် အခကြေးငွေ (${monthYear}လ စစ်ဆေးပြီး)။`,
+      fit(
+        DESC_MAX,
+        `${e.name} Referral Code: ${e.referralCode}။ ${benefit(e)}။ ကုဒ်ထည့်ရမည့်နေရာ၊ အကောင့်ဖွင့်နည်း၊ KYC နှင့် အခကြေးငွေ (${monthYear}လ စစ်ဆေးပြီး)။`,
+        `${e.name} Referral Code: ${e.referralCode}။ ${benefit(e)}။ ကုဒ်ထည့်ရမည့်နေရာ၊ အကောင့်ဖွင့်နည်း၊ KYC နှင့် အခကြေးငွေ (${monthYear})။`,
+        `${e.name} Referral Code: ${e.referralCode}။ ${benefit(e)}။ ကုဒ်ထည့်ရမည့်နေရာ၊ အကောင့်ဖွင့်နည်း၊ KYC နှင့် အခကြေးငွေ။`,
+      ),
     keywords: (e) => {
       // Comparison only (Burmese has no case): drops "binance invite code" next to "Binance Invite Code".
       const same = (k: string) => k.toLowerCase().replace(/\s/g, "");

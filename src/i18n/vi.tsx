@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Vietnamese. Same keys as `en.tsx`.
@@ -145,9 +146,14 @@ export const vi: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Mã giới thiệu sàn tiền mã hóa (${numericMonth(monthYear)}): Thưởng Spot & Futures`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `Mã giới thiệu sàn tiền mã hóa (${numericMonth(monthYear)}): Thưởng & hoàn phí`, `Mã giới thiệu sàn tiền mã hóa (${numericMonth(monthYear)})`),
     description: (monthYear) =>
-      `Mã giới thiệu đã kiểm chứng: Binance, OKX, Bybit, Bitget, Gate, KuCoin và MEXC. Thưởng người dùng mới, hoàn phí Spot và Futures qua một liên kết – ${numericMonth(monthYear)}.`,
+      fit(
+        DESC_MAX,
+        `Mã giới thiệu đã kiểm chứng: Binance, OKX, Bybit, Bitget, Gate, KuCoin và MEXC. Thưởng người dùng mới, hoàn phí Spot và Futures qua một liên kết – ${numericMonth(monthYear)}.`,
+        `Mã giới thiệu đã kiểm chứng: Binance, OKX, Bybit, Bitget, Gate, KuCoin và MEXC. Thưởng người dùng mới, hoàn phí Spot và Futures qua một liên kết.`,
+      ),
     listName: "Mã giới thiệu sàn giao dịch tiền mã hóa cho Spot và Futures",
     updated: (monthYear) => `Cập nhật ${monthYear}`,
     h1: (
@@ -317,9 +323,23 @@ export const vi: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Mã giới thiệu ${e.name} ${e.referralCode} (${numericMonth(shortMonthYear)}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "Mã giới thiệu <sàn>".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), m = numericMonth(shortMonthYear), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Mã giới thiệu ${n} ${c} (${m}): ${b}`, `Mã giới thiệu ${n} ${c} (${m}) – Thưởng đăng ký`, `Mã giới thiệu ${n} ${c} (${m})`),
+        () => fit(TITLE_MAX, `${c} – Mã giới thiệu ${n}: ${b}`, `${c} – Mã giới thiệu ${n} và ưu đãi (${m})`, `${c} – Mã giới thiệu ${n} (${m})`),
+        () => fit(TITLE_MAX, `${b}: Mã giới thiệu ${n} ${c}`, `Thưởng đăng ký ${y}: Mã giới thiệu ${n} ${c}`, `Mã giới thiệu ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Cách dùng mã giới thiệu ${n} ${c} (${m})`, `Cách dùng mã giới thiệu ${n} ${c}`, `Mã giới thiệu ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Mã giới thiệu ${e.name}: ${e.referralCode}. ${benefit(e)} – nơi nhập mã, các bước đăng ký, KYC và phí, kiểm tra ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Mã giới thiệu ${e.name}: ${e.referralCode}. ${asSentence(benefit(e))} Nơi nhập mã, các bước đăng ký, KYC và phí – kiểm tra ${monthYear}.`,
+        `Mã giới thiệu ${e.name}: ${e.referralCode}. ${asSentence(benefit(e))} Nơi nhập mã, các bước đăng ký, KYC và phí.`,
+        `Mã giới thiệu ${e.name}: ${e.referralCode}. Nơi nhập mã, các bước đăng ký, KYC và phí giao dịch – kiểm tra ${monthYear}.`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("vi-VN").replace(/[\s-]/g, "");
       const cn = e.referral.codeName;

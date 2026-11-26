@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Filipino. Same keys as `en.tsx`.
@@ -135,9 +136,14 @@ export const fil: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Crypto Exchange Referral Code (${monthYear}): Bonus sa Spot & Futures`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `Crypto Exchange Referral Code at Bonus (${monthYear})`, `Crypto Exchange Referral Code (${monthYear})`),
     description: (monthYear) =>
-      `Verified na referral code: Binance, OKX, Bybit, Bitget, Gate, KuCoin at MEXC. Bonus sa bagong user, fee rebate sa spot at futures, iisang link (${monthYear}).`,
+      fit(
+        DESC_MAX,
+        `Verified na referral code ng Binance, OKX, Bybit, Bitget, Gate, KuCoin at MEXC: bonus sa bagong user at fee rebate sa iisang link. Na-update ${monthYear}.`,
+        `Verified na referral code ng Binance, OKX, Bybit, Bitget, Gate, KuCoin at MEXC: bonus sa bagong user at fee rebate sa iisang link.`,
+      ),
     listName: "Mga crypto exchange referral code para sa spot at futures",
     updated: (monthYear) => `Na-update noong ${monthYear}`,
     h1: (
@@ -322,9 +328,23 @@ export const fil: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${e.name} Referral Code ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "<Exchange> Referral Code".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} Referral Code ${c} (${shortMonthYear}): ${b}`, `${n} Referral Code ${c}: Bonus sa Bagong User (${y})`, `${n} Referral Code ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c} – ${n} Referral Code: ${b}`, `${c}: ${n} Referral Code at Bonus (${shortMonthYear})`, `${c}: ${n} Referral Code (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: ${n} Referral Code ${c}`, `Bonus sa Pag-sign Up ${y}: ${n} Referral Code ${c}`, `${n} Referral Code ${c} (${y})`),
+        () => fit(TITLE_MAX, `Paano Gamitin ang ${n} Referral Code ${c} (${shortMonthYear})`, `Paano Gamitin ang ${n} Referral Code ${c}`, `${n} Referral Code ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} referral code: ${e.referralCode}. ${benefit(e)} – saan ito ilalagay, mga hakbang sa pag-sign up, KYC at fees, sinuri noong ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${e.name} referral code: ${e.referralCode}. ${asSentence(benefit(e))} Saan ito ilalagay, pag-sign up, KYC at fees – sinuri noong ${monthYear}.`,
+        `${e.name} referral code: ${e.referralCode}. ${asSentence(benefit(e))} Saan ito ilalagay, pag-sign up, KYC at fees.`,
+        `${e.name} referral code: ${e.referralCode}. Saan ito ilalagay, mga hakbang sa pag-sign up, KYC at fees – sinuri noong ${monthYear}.`,
+      ),
     keywords: (e) => [
       `${e.name} referral code`,
       `${e.name} referral code ${e.referralCode}`,

@@ -21,6 +21,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { readingOf, withReading } from "../name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
 const locale = "km";
@@ -40,8 +41,6 @@ type Country = (typeof countryList)[number];
 const named = (e: Exchange) => withReading(e, locale);
 /** Second spellings people also type besides the fixed one (`readingOf`): keywords only, never in text. */
 const keywordVariants: Record<string, string> = { binance: "ប៊ីណាន់", okx: "អូខេអិច" };
-/** The richest variant that fits into `max` characters (the last one otherwise). */
-const fit = (max: number, ...variants: string[]) => variants.find((v) => v.length <= max) ?? variants[variants.length - 1];
 /** A Khmer word followed by a data text: glued when the text starts with a Khmer letter, one space before Latin, digits and quotes. */
 const after = (word: string, s: string) => (/^[ក-៿]/.test(s) ? `${word}${s}` : `${word} ${s}`);
 /** A data text inside a sentence, without a final mark (the sentence closes it itself). */
@@ -324,19 +323,27 @@ export const km: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    /** Both names with their Khmer spellings and the month, as in English; then the richest tail that keeps the title within 65 characters. */
+    // Three wordings, chosen per pair; the Khmer spellings of the names where they fit.
     title: (a, b, shortMonthYear) => {
-      const head = `${named(a)} vs ${named(b)} (${shortMonthYear})`;
-      return fit(65, `${head}៖ កម្រៃជួញដូរ, Leverage និង KYC`, `${head}៖ កម្រៃជួញដូរ និង Leverage`, `${head}៖ កម្រៃជួញដូរ`, `${head}៖ ប្រៀបធៀប`, head);
-    },
-    /** 140–160 characters for every pair: the longest variant that fits. */
-    description: (a, b, monthYear) => {
-      const body = `កម្រៃ Futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, Leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, ផលិតផល, ប្រទេស, KYC និងកូដណែនាំ`;
+      const y = yearOf(shortMonthYear);
       return fit(
-        160,
-        `${a.name} vs ${b.name}៖ ${body} – ទិន្នន័យផ្លូវការ បានពិនិត្យខែ${monthYear}។`,
-        `${a.name} vs ${b.name}៖ ${body} – ទិន្នន័យផ្លូវការ ពិនិត្យខែ${monthYear}។`,
-        `${a.name} vs ${b.name}៖ ${body} – ទិន្នន័យផ្លូវការខែ${monthYear}។`,
+        TITLE_MAX,
+        ...[
+          [`${named(a)} vs ${named(b)} (${shortMonthYear})៖ កម្រៃជួញដូរ`, `${a.name} vs ${b.name} (${shortMonthYear})៖ កម្រៃជួញដូរ និង Leverage`],
+          [`${named(a)} ឬ ${named(b)}? ប្រៀបធៀបកម្រៃ និង KYC`, `${a.name} ឬ ${b.name}? ប្រៀបធៀបកម្រៃ, Leverage និង KYC`],
+          [`${named(a)} vs ${named(b)}៖ មួយណាល្អជាងក្នុងឆ្នាំ ${y}?`, `${a.name} vs ${b.name}៖ វេទិកាណាល្អជាងក្នុងឆ្នាំ ${y}?`],
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})៖ កម្រៃជួញដូរ`,
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      );
+    },
+    description: (a, b, monthYear) => {
+      const fees = `កម្រៃ Futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, Leverage ${leverageOf(a)}x vs ${leverageOf(b)}x`;
+      return fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}៖ ${fees}, ផលិតផល, ប្រទេស, KYC និងកូដណែនាំ – ពិនិត្យខែ${monthYear}។`,
+        `${a.name} vs ${b.name}៖ ${fees}, ប្រទេស, KYC និងកូដណែនាំ – ពិនិត្យខែ${monthYear}។`,
+        `${a.name} vs ${b.name}៖ ${fees}, ប្រទេស, KYC និងកូដណែនាំ។`,
       );
     },
     keywords: (a, b, former) => {
@@ -563,15 +570,17 @@ export const km: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `ប្រៀបធៀបវេទិកាជួញដូរគ្រីបតូ (${shortMonthYear})៖ ${pairs} គូ មួយទល់មួយ`,
-    /** 140–160 characters: the longest variant that fits. */
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `ប្រៀបធៀបវេទិកាជួញដូរគ្រីបតូ (${shortMonthYear})៖ ${pairs} គូ មួយទល់មួយ`, `ប្រៀបធៀបវេទិកាជួញដូរគ្រីបតូ (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
       fit(
-        160,
+        DESC_MAX,
         `${exchangeNames}៖ ប្រៀបធៀបមួយទល់មួយ ${pairs} គូ លើកម្រៃជួញដូរ, Leverage, ប្រទេស, KYC និងកូដណែនាំ – ទិន្នន័យផ្លូវការ បានពិនិត្យខែ${monthYear}។`,
         `${exchangeNames}៖ ប្រៀបធៀបមួយទល់មួយ ${pairs} គូ លើកម្រៃជួញដូរ, Leverage, ប្រទេស, KYC និងកូដណែនាំ – ទិន្នន័យផ្លូវការ ពិនិត្យខែ${monthYear}។`,
         `${exchangeNames}៖ ប្រៀបធៀបមួយទល់មួយ ${pairs} គូ លើកម្រៃជួញដូរ, Leverage, ប្រទេស, KYC និងកូដណែនាំ – ទិន្នន័យផ្លូវការខែ${monthYear}។`,
         `${exchangeNames}៖ ${pairs} គូ មួយទល់មួយ លើកម្រៃជួញដូរ, Leverage, ប្រទេស, KYC និងកូដណែនាំ – ទិន្នន័យផ្លូវការខែ${monthYear}។`,
+        `${exchangeNames}៖ ${pairs} គូ មួយទល់មួយ លើកម្រៃ, Leverage, ប្រទេស, KYC និងកូដណែនាំ – ខែ${monthYear}។`,
+        `${exchangeNames}៖ ${pairs} គូ មួយទល់មួយ លើកម្រៃ, Leverage, ប្រទេស, KYC និងកូដណែនាំ។`,
       ),
     crumbHome: "ទំព័រដើម",
     crumbPage: "ប្រៀបធៀបវេទិកាជួញដូរ",

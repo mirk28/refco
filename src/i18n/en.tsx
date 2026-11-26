@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { site } from "@/config/site";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import type { CountryKey, CountryStatus, Exchange, Faq, FaqTopic } from "@/data/types";
 
 /**
@@ -141,9 +142,14 @@ export const en = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear: string) => `Crypto Exchange Referral Codes (${monthYear}): Bonuses for Spot & Futures`,
+    title: (monthYear: string) =>
+      fit(TITLE_MAX, `Crypto Exchange Referral Codes & Bonuses (${monthYear})`, `Crypto Exchange Referral Codes (${monthYear})`),
     description: (monthYear: string) =>
-      `Verified referral codes for Binance, OKX, Bybit, Bitget, Gate, KuCoin and MEXC. Unlock new-user bonuses and fee rebates for spot and futures with one link – updated ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Verified referral codes for Binance, OKX, Bybit, Bitget, Gate, KuCoin and MEXC: new-user bonuses and fee rebates with one link. Updated ${monthYear}.`,
+        `Verified referral codes for Binance, OKX, Bybit, Bitget, Gate, KuCoin and MEXC: new-user bonuses and fee rebates with one link.`,
+      ),
     listName: "Crypto exchange referral codes for spot and futures",
     updated: (monthYear: string) => `Updated ${monthYear}`,
     h1: (
@@ -316,9 +322,23 @@ export const en = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e: Exchange, shortMonthYear: string) => `${e.name} Referral Code ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "<Exchange> Referral Code".
+    title: (e: Exchange, shortMonthYear: string) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} Referral Code ${c} (${shortMonthYear}): ${b}`, `${n} Referral Code ${c} (${shortMonthYear}) – Sign-up Bonus`, `${n} Referral Code ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c} – ${n} Referral Code: ${b}`, `${c} – ${n} Referral Code & Bonus (${shortMonthYear})`, `${c} – ${n} Referral Code (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: ${n} Referral Code ${c}`, `${n} Sign-up Bonus ${y}: Referral Code ${c}`, `${n} Referral Code ${c} (${y})`),
+        () => fit(TITLE_MAX, `How to Use the ${n} Referral Code ${c} (${shortMonthYear})`, `${n} Referral Code ${c}: How to Use It`, `${n} Referral Code ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e: Exchange, monthYear: string) =>
-      `${e.name} referral code: ${e.referralCode}. ${benefit(e)} – where to enter it, sign-up steps, KYC and fees, checked ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${e.name} referral code ${e.referralCode}: ${benefit(e)}. Where to enter it, sign-up steps, KYC and fees – checked ${monthYear}.`,
+        `${e.name} referral code ${e.referralCode}: ${benefit(e)}. Where to enter it, sign-up steps, KYC and fees.`,
+        `${e.name} referral code ${e.referralCode}: where to enter it, sign-up steps, KYC and fees – checked ${monthYear}.`,
+      ),
     keywords: (e: Exchange) => [
       `${e.name} referral code`,
       `${e.name} referral code ${e.referralCode}`,

@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 
@@ -7,9 +8,26 @@ import type { AlternativesTexts } from "./en";
  */
 export const es: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `Alternativas a ${x.name} (${shortMonthYear}): ${n} exchanges comparados`,
+  // Cuatro formulaciones, fijas por exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      ...[
+        [`Alternativas a ${x.name} (${shortMonthYear}): ${n} exchanges comparados`],
+        [`Las ${n} mejores alternativas a ${x.name} (${shortMonthYear}): comisiones y bonos`, `Las ${n} mejores alternativas a ${x.name}: comisiones y bonos`],
+        [`¿Buscas alternativas a ${x.name}? ${n} exchanges comparados`],
+        [`Alternativas a ${x.name} ${yearOf(shortMonthYear)}: comisiones, apalancamiento y KYC`, `Alternativas a ${x.name} ${yearOf(shortMonthYear)}: comisiones y KYC comparados`],
+      ][variant(4, x.slug)],
+      `Alternativas a ${x.name}: ${n} exchanges comparados`,
+      `Alternativas a ${x.name} (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${n} alternativas a ${x.name}${former ? ` (${former})` : ""} comparadas por comisiones, apalancamiento, KYC, países y códigos de referido – datos oficiales, comprobados en ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} alternativas a ${x.name}${former ? ` (${former})` : ""} por comisiones, apalancamiento, KYC, países y códigos de referido (${monthYear}).`,
+      `${names}: ${n} alternativas a ${x.name} por comisiones, apalancamiento, KYC, países y códigos de referido (${monthYear}).`,
+      `${names}: ${n} alternativas a ${x.name} comparadas por comisiones, apalancamiento, KYC, países y códigos de referido.`,
+    ),
   keywords: (x, alts, former) => [
     `alternativas a ${x.name}`,
     `alternativa a ${x.name}`,

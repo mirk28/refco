@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import { arabicCount, arabicName, withArabic } from "./ar-names";
 
 /**
@@ -136,9 +137,15 @@ export const ar: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `أكواد إحالة منصات العملات الرقمية (${monthYear}): مكافآت Spot وFutures`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `أكواد إحالة منصات العملات الرقمية ومكافآتها (${monthYear})`, `أكواد إحالة منصات العملات الرقمية (${monthYear})`),
     description: (monthYear) =>
-      `أكواد إحالة موثّقة لمنصات Binance وOKX وBybit وBitget وGate وKuCoin وMEXC. احصل على مكافآت المستخدمين الجدد واسترداد الرسوم في Spot وFutures برابط واحد – تحديث ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `أكواد إحالة موثّقة لمنصات Binance وOKX وBybit وBitget وGate وKuCoin وMEXC: مكافآت المستخدمين الجدد واسترداد الرسوم في Spot وFutures برابط واحد – تحديث ${monthYear}.`,
+        `أكواد إحالة موثّقة لمنصات Binance وOKX وBybit وBitget وGate وKuCoin وMEXC: مكافآت المستخدمين الجدد واسترداد الرسوم برابط واحد – تحديث ${monthYear}.`,
+        `أكواد إحالة موثّقة لمنصات Binance وOKX وBybit وBitget وGate وKuCoin وMEXC: مكافآت المستخدمين الجدد واسترداد الرسوم برابط واحد.`,
+      ),
     listName: "أكواد إحالة منصات العملات الرقمية للتداول الفوري والعقود الآجلة",
     updated: (monthYear) => `تحديث ${monthYear}`,
     h1: (
@@ -314,9 +321,24 @@ export const ar: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `كود إحالة ${withArabic(e)}: ${e.referralCode} (${shortMonthYear}) – ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven titles do not all start with "كود إحالة <Exchange>". The Arabic
+    // spelling in brackets goes first when the title gets too long.
+    title: (e, shortMonthYear) => {
+      const n = e.name, w = withArabic(e), c = e.referralCode, m = shortMonthYear, y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `كود إحالة ${w}: ${c} – مكافأة التسجيل (${m})`, `كود إحالة ${w}: ${c} (${m})`, `كود إحالة ${n}: ${c} (${m})`, `كود إحالة ${n}: ${c}`),
+        () => fit(TITLE_MAX, `${c}: كود إحالة ${w} ومكافأة الترحيب (${m})`, `${c}: كود إحالة ${w} ومكافأة الترحيب`, `${c}: كود إحالة ${w} (${m})`, `${c}: كود إحالة ${n} (${m})`, `${c}: كود إحالة ${n}`),
+        () => fit(TITLE_MAX, `مكافأة المستخدمين الجدد: كود إحالة ${w} ${c}`, `مكافأة التسجيل: كود إحالة ${w} ${c} (${y})`, `مكافأة التسجيل: كود إحالة ${n} ${c}`, `كود إحالة ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `كيف تستخدم كود إحالة ${w} ${c}؟ (${m})`, `كيف تستخدم كود إحالة ${w} ${c}؟`, `كيف تستخدم كود إحالة ${n} ${c}؟`, `كود إحالة ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `كود إحالة ${e.name} (رمز الإحالة): ${e.referralCode}. ${benefit(e)} – مكان إدخاله وخطوات التسجيل وKYC والرسوم، كما تحققنا منها في ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `كود إحالة ${e.name} (رمز الإحالة): ${e.referralCode}. ${benefit(e)} – مكان إدخاله وخطوات التسجيل وKYC والرسوم، كما تحققنا منها في ${monthYear}.`,
+        `كود إحالة ${e.name}: ${e.referralCode}. ${benefit(e)} – مكان إدخاله وخطوات التسجيل وKYC والرسوم، كما تحققنا منها في ${monthYear}.`,
+        `كود إحالة ${e.name}: ${e.referralCode}. ${benefit(e)} – مكان إدخاله وخطوات التسجيل وKYC والرسوم.`,
+      ),
     keywords: (e) => {
       const spelling = arabicName[e.slug];
       const same = (k: string) => k.toLowerCase().replace(/[\s-]/g, "");

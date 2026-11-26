@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 import { arabicCount, arabicName, withArabic } from "../ar-names";
 
 /**
@@ -35,9 +36,25 @@ const officialPages = (n: number) =>
 
 export const ar: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `بدائل ${withArabic(x)}: مقارنة أفضل ${platforms(n, "منصتين")} (${shortMonthYear})`,
+  // Four wordings, chosen per exchange; the Arabic spelling in brackets goes first when the title gets too long.
+  title: (x, n, shortMonthYear) => {
+    const m = shortMonthYear;
+    const worded = (name: string) =>
+      [
+        `بدائل ${name}: مقارنة ${platforms(n, "منصتين")} (${m})`,
+        `أفضل بدائل ${name}: الرسوم والمكافآت (${m})`,
+        `منصات مثل ${name}: مقارنة ${alternatives(n, "بديلين")} (${m})`,
+        `تبحث عن بدائل ${name}؟ قارن ${platforms(n, "منصتين")} (${m})`,
+      ][variant(4, x.slug)];
+    return fit(TITLE_MAX, worded(withArabic(x)), worded(x.name), `بدائل ${withArabic(x)} (${m})`, `بدائل ${x.name} (${m})`);
+  },
   description: (x, names, n, former, monthYear) =>
-    `${names}: مقارنة ${alternatives(n, "بديلين")} لمنصة ${x.name}${former ? ` (${former})` : ""} في الرسوم والرافعة المالية وKYC والدول وأكواد الإحالة – بيانات رسمية تحققنا منها في ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: مقارنة ${alternatives(n, "بديلين")} لمنصة ${x.name}${former ? ` (${former})` : ""} في الرسوم والرافعة المالية وKYC والدول وأكواد الإحالة – تحققنا منها في ${monthYear}.`,
+      `${names}: مقارنة ${alternatives(n, "بديلين")} لمنصة ${x.name} في الرسوم والرافعة المالية وKYC والدول وأكواد الإحالة – تحققنا منها في ${monthYear}.`,
+      `${names}: مقارنة ${alternatives(n, "بديلين")} لمنصة ${x.name} في الرسوم والرافعة المالية وKYC والدول وأكواد الإحالة.`,
+    ),
   keywords: (x, alts, former) => {
     const spelling = arabicName[x.slug];
     return [

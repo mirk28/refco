@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 import { readingOf, withReading } from "../name-readings";
 
 /**
@@ -49,9 +50,26 @@ const inCountry: Record<string, string> = {
 
 export const bn: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${withReading(x, "bn")} বিকল্প (${shortMonthYear}): ${n}টি এক্সচেঞ্জের তুলনা`,
+  // Four wordings, chosen per exchange; the Bengali reading in brackets goes first when the title gets too long.
+  title: (x, n, shortMonthYear) => {
+    const m = shortMonthYear;
+    const worded = (name: string) =>
+      [
+        `${name} বিকল্প (${m}): ${n}টি এক্সচেঞ্জের তুলনা`,
+        `সেরা ${n}টি ${name} বিকল্প: ফি ও বোনাস (${m})`,
+        `${x.name}-এর মতো এক্সচেঞ্জ: ${n}টি বিকল্পের তুলনা (${m})`,
+        `${x.name} ছাড়ছেন? ${n}টি বিকল্পের তুলনা (${m})`,
+      ][variant(4, x.slug)];
+    return fit(TITLE_MAX, worded(withReading(x, "bn")), worded(x.name), `${withReading(x, "bn")} বিকল্প (${m})`, `${x.name} বিকল্প (${m})`);
+  },
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${x.name}-এর${former ? ` (${former})` : ""} ${n}টি বিকল্পের ফি, লিভারেজ, KYC, দেশ ও রেফারেল কোডের তুলনা – অফিসিয়াল ডেটা, যাচাই: ${monthYear}।`,
+    fit(
+      DESC_MAX,
+      `${names}: ${x.name}-এর${former ? ` (${former})` : ""} ${n}টি বিকল্পের ফি, লিভারেজ, KYC, দেশ ও রেফারেল কোডের তুলনা – অফিসিয়াল ডেটা, যাচাই: ${monthYear}।`,
+      `${names}: ${x.name}-এর${former ? ` (${former})` : ""} ${n}টি বিকল্পের ফি, লিভারেজ, KYC, দেশ ও রেফারেল কোডের তুলনা – যাচাই: ${monthYear}।`,
+      `${names}: ${x.name}-এর ${n}টি বিকল্পের ফি, লিভারেজ, KYC, দেশ ও রেফারেল কোডের তুলনা – যাচাই: ${monthYear}।`,
+      `${names}: ${x.name}-এর ${n}টি বিকল্পের ফি, লিভারেজ, KYC, দেশ ও রেফারেল কোডের তুলনা।`,
+    ),
   keywords: (x, alts, former) => {
     const gen = readingGenitive(x.slug);
     return [

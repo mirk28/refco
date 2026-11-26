@@ -8,6 +8,7 @@
  * "Setara". "vs" stays "vs". Names never change and follow their head noun ("kode referral Binance", "di OKX").
  * Generated dates: `prettyDate` gives "16 November 2026", the month of a title "Nov 2026".
  */
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { Exchange, Faq, Fee } from "@/data/exchanges";
 import type { CountryKey, FeatureKey } from "@/data/alternatives";
@@ -349,10 +350,24 @@ export const id: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): Perbandingan Biaya, Leverage, KYC & Bonus`,
-    /** Stays within 160 characters for every pair. */
+    // Tiga variasi, tetap per pasangan.
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): Biaya, Leverage & Bonus`,
+          `${a.name} atau ${b.name}? Perbandingan Biaya, Leverage & KYC`,
+          `${a.name} vs ${b.name}: Mana yang Lebih Baik di ${yearOf(shortMonthYear)}?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: biaya futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, produk, negara, KYC, dan kode referral – data resmi per ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: biaya futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, produk, negara, KYC, dan kode referral. Diperiksa ${monthYear}.`,
+        `${a.name} vs ${b.name}: biaya futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, negara, KYC, dan kode referral. Diperiksa ${monthYear}.`,
+        `${a.name} vs ${b.name}: biaya futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, produk, negara, KYC, dan kode referral.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -565,10 +580,14 @@ export const id: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Perbandingan Exchange Kripto (${shortMonthYear}): ${pairs} Perbandingan Langsung`,
-    /** Stays within 160 characters. */
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `${pairs} Perbandingan Langsung Exchange Kripto (${shortMonthYear})`, `Perbandingan Exchange Kripto (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames}: ${pairs} perbandingan langsung biaya, leverage, negara, KYC, dan kode referral – data resmi per ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames}: ${pairs} perbandingan langsung biaya, leverage, negara, KYC, dan kode referral. Diperiksa ${monthYear}.`,
+        `${exchangeNames}: ${pairs} perbandingan langsung biaya, leverage, negara, KYC, dan kode referral.`,
+      ),
     crumbHome: "Beranda",
     crumbPage: "Perbandingan exchange",
     listName: "Perbandingan langsung exchange kripto",

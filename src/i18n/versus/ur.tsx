@@ -20,6 +20,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "ur";
 const ct = compareText(locale);
@@ -293,9 +294,22 @@ export const ur: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): فیس، لیوریج، KYC اور بونس کا موازنہ`,
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): فیس، لیوریج اور بونس`,
+          `${a.name} یا ${b.name}؟ فیس، لیوریج اور KYC کا موازنہ`,
+          `${a.name} vs ${b.name}: ${yearOf(shortMonthYear)} میں کون سا ایکسچینج بہتر ہے؟`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: Futures فیس ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}، لیوریج ${leverageOf(a)}x vs ${leverageOf(b)}x، نیز پروڈکٹس، ممالک، KYC اور ریفرل کوڈز – آفیشل ڈیٹا، ${monthYear} میں چیک کیا گیا۔`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: Futures فیس ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}، لیوریج ${leverageOf(a)}x vs ${leverageOf(b)}x، پروڈکٹس، ممالک، KYC اور ریفرل کوڈز – ${monthYear} میں چیک کیا گیا۔`,
+        `${a.name} vs ${b.name}: Futures فیس ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}، لیوریج ${leverageOf(a)}x vs ${leverageOf(b)}x، پروڈکٹس، ممالک، KYC اور ریفرل کوڈز۔`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -502,9 +516,14 @@ export const ur: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `کرپٹو ایکسچینج موازنہ (${shortMonthYear}): ${pairs} آمنے سامنے مقابلے`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `کرپٹو ایکسچینج موازنہ (${shortMonthYear}): ${pairs} آمنے سامنے مقابلے`, `کرپٹو ایکسچینج موازنہ (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} جوڑیوں میں: فیس، لیوریج، ممالک، KYC اور ریفرل کوڈز پر ${pairs} آمنے سامنے موازنے – آفیشل ڈیٹا، ${monthYear} میں چیک کیا گیا۔`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} جوڑیوں میں: فیس، لیوریج، ممالک، KYC اور ریفرل کوڈز پر ${pairs} آمنے سامنے موازنے – ${monthYear} میں چیک کیا گیا۔`,
+        `${exchangeNames} جوڑیوں میں: فیس، لیوریج، ممالک، KYC اور ریفرل کوڈز پر ${pairs} آمنے سامنے موازنے۔`,
+      ),
     crumbHome: "ہوم",
     crumbPage: "ایکسچینج موازنہ",
     listName: "کرپٹو ایکسچینجز کے آمنے سامنے موازنے",

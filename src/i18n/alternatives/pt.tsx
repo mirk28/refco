@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 
@@ -42,9 +43,27 @@ const inCountry = (country: string) => {
 
 export const pt: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `Alternativas à ${x.name} (${shortMonthYear}): ${n} corretoras comparadas`,
+  // Quatro formulações, fixas por corretora.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      ...[
+        [`Alternativas à ${x.name} (${shortMonthYear}): ${n} corretoras comparadas`],
+        [`As ${n} melhores alternativas à ${x.name} (${shortMonthYear}): taxas e bônus`, `As ${n} melhores alternativas à ${x.name}: taxas e bônus`],
+        [`Procurando alternativas à ${x.name}? ${n} corretoras comparadas`],
+        [`Alternativas à ${x.name} em ${yearOf(shortMonthYear)}: taxas, alavancagem e KYC`],
+      ][variant(4, x.slug)],
+      `Alternativas à ${x.name}: ${n} corretoras comparadas`,
+      `Alternativas à ${x.name} (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${n} alternativas à ${x.name}${former ? ` (${former})` : ""} comparadas por taxas, alavancagem, KYC, países e códigos de indicação – dados oficiais, verificados em ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} alternativas à ${x.name}${former ? ` (${former})` : ""} comparadas por taxas, alavancagem, KYC, países e códigos de indicação (${monthYear}).`,
+      `${names}: ${n} alternativas à ${x.name} comparadas por taxas, alavancagem, KYC, países e códigos de indicação (${monthYear}).`,
+      `${names}: ${n} alternativas à ${x.name} por taxas, alavancagem, KYC, países e códigos de indicação (${monthYear}).`,
+      `${names}: ${n} alternativas à ${x.name} comparadas por taxas, alavancagem, KYC, países e códigos de indicação.`,
+    ),
   keywords: (x, alts, former) => [
     `alternativas à ${x.name}`,
     `alternativa à ${x.name}`,

@@ -3,6 +3,7 @@ import type { AlternativesTexts } from "./en";
 import { readingOf, withReading } from "../name-readings";
 import { slavicCount, slavicForm } from "../slavic-count";
 import type { SlavicForms } from "../slavic-count";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Ukrainian. Same keys as `./en.tsx`.
@@ -45,13 +46,28 @@ const inCountry: Record<string, string> = {
 
 export const uk: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  /** 50–60 characters: the long form where it fits, else the count without «порівняння» (Binance (Бінанс), KuCoin (Кукоїн) …). */
+  /* Four wordings, chosen per exchange; the Cyrillic spelling (Binance (Бінанс)) is dropped first, then the date. */
   title: (x, n, shortMonthYear) => {
-    const full = `Альтернативи ${withReading(x, "uk")}: порівняння ${n} ${slavicForm(n, exchangesGen)} (${shortMonthYear})`;
-    return full.length <= 60 ? full : `Альтернативи ${withReading(x, "uk")}: ${slavicCount(n, exchangesNom)} (${shortMonthYear})`;
+    const y = yearOf(shortMonthYear), count = slavicCount(n, exchangesNom);
+    const forms = (name: string) =>
+      [
+        `Альтернативи ${name}: порівняння ${n} ${slavicForm(n, exchangesGen)} (${shortMonthYear})`,
+        `Найкращі альтернативи ${name}: ${count} (${shortMonthYear})`,
+        `Альтернативи ${name}: чим замінити біржу у ${y} році`,
+        `Альтернативи ${name} у ${y} році: ${count} у порівнянні`,
+      ][variant(4, x.slug)];
+    return fit(TITLE_MAX, forms(withReading(x, "uk")), forms(x.name), `Альтернативи ${withReading(x, "uk")}: ${count} (${shortMonthYear})`, `Альтернативи ${x.name} (${shortMonthYear})`);
   },
-  description: (x, names, n, former, monthYear) =>
-    `${names}: порівняння ${n} ${slavicForm(n, altsGen)} ${x.name}${former ? ` (${former})` : ""} – комісії, плече, KYC, країни та реферальні коди (дані бірж, ${monthYear}).`,
+  description: (x, names, n, former, monthYear) => {
+    const tail = `комісії, плече, KYC, країни та реферальні коди. Перевірено: ${monthYear}.`;
+    return fit(
+      DESC_MAX,
+      `${names}: порівняння ${n} ${slavicForm(n, altsGen)} ${x.name}${former ? ` (${former})` : ""} – ${tail}`,
+      `${names}: ${slavicCount(n, altsNom)} ${x.name}${former ? ` (${former})` : ""} – ${tail}`,
+      `${names}: ${slavicCount(n, altsNom)} ${x.name} – ${tail}`,
+      `${names}: ${slavicCount(n, altsNom)} ${x.name} – комісії, плече, KYC, країни та реферальні коди.`,
+    );
+  },
   keywords: (x, alts, former) => {
     const reading = readingOf(x.slug, "uk")?.toLowerCase();
     return [

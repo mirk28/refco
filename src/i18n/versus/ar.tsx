@@ -22,6 +22,7 @@ import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { arabicCount, arabicName, withArabic } from "../ar-names";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "ar";
 const ct = compareText(locale);
@@ -325,9 +326,26 @@ export const ar: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${withArabic(a)} أم ${withArabic(b)}: أيهما أفضل؟ (${shortMonthYear})`,
+    // Three wordings, chosen per pair; the Arabic spellings in brackets go first when the title gets too long.
+    title: (a, b, shortMonthYear) => {
+      const m = shortMonthYear, y = yearOf(shortMonthYear), wa = withArabic(a), wb = withArabic(b);
+      return fit(
+        TITLE_MAX,
+        ...[
+          [`${wa} أم ${wb}: أيهما أفضل؟ (${m})`, `${wa} أم ${wb}: أيهما أفضل؟`, `${a.name} أم ${b.name}: أيهما أفضل؟ (${m})`],
+          [`${a.name} vs ${b.name} (${m}): الرسوم والرافعة والمكافآت`, `${a.name} vs ${b.name} (${m}): الرسوم والرافعة`],
+          [`${wa} أم ${wb}: مقارنة الرسوم والرافعة (${y})`, `${wa} أم ${wb}؟ مقارنة ${y}`, `${a.name} أم ${b.name}: مقارنة الرسوم والرافعة (${y})`],
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} أم ${b.name} (${m})`,
+      );
+    },
     description: (a, b, monthYear) =>
-      `مقارنة ${a.name} و${b.name}: رسوم العقود الآجلة ${feePair(a.futuresFees)} مقابل ${feePair(b.futuresFees)}، والرافعة ${leverageOf(a)}x مقابل ${leverageOf(b)}x، والمنتجات والدول وKYC وأكواد الإحالة – بيانات رسمية تحققنا منها في ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `مقارنة ${a.name} و${b.name}: رسوم العقود الآجلة ${feePair(a.futuresFees)} مقابل ${feePair(b.futuresFees)}، والرافعة ${leverageOf(a)}x مقابل ${leverageOf(b)}x، والمنتجات والدول وKYC وأكواد الإحالة – تحققنا منها في ${monthYear}.`,
+        `مقارنة ${a.name} و${b.name}: رسوم العقود الآجلة ${feePair(a.futuresFees)} مقابل ${feePair(b.futuresFees)}، والرافعة ${leverageOf(a)}x مقابل ${leverageOf(b)}x، والمنتجات والدول وKYC وأكواد الإحالة.`,
+        `مقارنة ${a.name} و${b.name}: رسوم العقود الآجلة ${feePair(a.futuresFees)} مقابل ${feePair(b.futuresFees)}، والرافعة ${leverageOf(a)}x مقابل ${leverageOf(b)}x، وKYC وأكواد الإحالة.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -541,9 +559,15 @@ export const ar: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `مقارنة منصات العملات الرقمية (${shortMonthYear}): ${headToHead(pairs)}`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `مقارنة منصات العملات الرقمية (${shortMonthYear}): ${headToHead(pairs)}`, `مقارنة منصات العملات الرقمية (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} في مواجهات ثنائية: ${headToHead(pairs)} تشمل الرسوم والرافعة المالية والدول وKYC وأكواد الإحالة – بيانات رسمية، تم التحقق منها في ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} في مواجهات ثنائية: ${headToHead(pairs)} تشمل الرسوم والرافعة المالية والدول وKYC وأكواد الإحالة – تحققنا منها في ${monthYear}.`,
+        `${exchangeNames} في ${headToHead(pairs)}: الرسوم والرافعة المالية والدول وKYC وأكواد الإحالة – تحققنا منها في ${monthYear}.`,
+        `${exchangeNames} في ${headToHead(pairs)}: الرسوم والرافعة المالية والدول وKYC وأكواد الإحالة.`,
+      ),
     crumbHome: "الرئيسية",
     crumbPage: "مقارنة المنصات",
     listName: "مقارنات مباشرة بين منصات العملات الرقمية",

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Filipino (measured Taglish). Same keys as `./en.tsx`.
@@ -11,9 +12,26 @@ import type { AlternativesTexts } from "./en";
  */
 export const fil: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${x.name} Alternatives (${shortMonthYear}): Paghahambing ng ${n} Exchange`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `${x.name} Alternatives (${shortMonthYear}): Paghahambing ng ${n} Exchange`,
+        `Top ${n} ${x.name} Alternatives (${shortMonthYear}): Fees at Bonus`,
+        `${x.name} Alternatives ${yearOf(shortMonthYear)}: ${n} Exchange na Katulad Nito`,
+        `${x.name} Alternatives: Saan Lilipat? ${n} Exchange (${shortMonthYear})`,
+      ][variant(4, x.slug)],
+      `${x.name} Alternatives (${shortMonthYear}): ${n} Exchange`,
+      `${x.name} Alternatives (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${n} ${x.name}${former ? ` (${former})` : ""} alternatives – pinaghambing ang fees, leverage, KYC, bansa at referral code; opisyal na data, sinuri noong ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} ${x.name}${former ? ` (${former})` : ""} alternatives – pinaghambing ang fees, leverage, KYC, bansa at referral code. Sinuri noong ${monthYear}.`,
+      `${names}: ${n} ${x.name} alternatives – pinaghambing ang fees, leverage, KYC, bansa at referral code. Sinuri noong ${monthYear}.`,
+      `${names}: ${n} ${x.name} alternatives – pinaghambing ang fees, leverage, KYC, bansa at referral code.`,
+    ),
   keywords: (x, alts, former) => [
     `${x.name} alternatives`,
     `${x.name} alternative`,

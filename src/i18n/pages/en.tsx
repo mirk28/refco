@@ -56,7 +56,7 @@ export const en = {
   /* ------------------------------------ About ------------------------------------ */
   about: {
     title: "About RefCo & Our Methodology",
-    description: `Who runs ${site.domain}, where our data comes from and how we review crypto exchanges.`,
+    description: `Who runs ${site.domain}, where our exchange data comes from, how we review crypto exchanges and how often fees and offers are re-checked.`,
     /** Name of the page in its structured data and in the breadcrumb. */
     ldName: "About RefCo",
     crumb: "About",
@@ -402,7 +402,7 @@ export const en = {
   /* --------------------------------- Privacy policy --------------------------------- */
   privacy: {
     title: "Privacy Policy",
-    description: `How ${site.domain} handles personal data under the EU General Data Protection Regulation (GDPR). Google Analytics only with your consent, no advertising cookies.`,
+    description: `How ${site.domain} handles personal data under the EU GDPR: Google Analytics only with your consent, no advertising cookies, no data sold.`,
     intro: (c: TextContext): ReactNode => (
       <>
         <h1>Privacy Policy</h1>

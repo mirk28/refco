@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 import { readingOf, withReading } from "../name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Thai. Same keys as `./en.tsx`.
@@ -10,9 +11,6 @@ import { readingOf, withReading } from "../name-readings";
  * Country names come unchanged from `../compare/th.ts` ("ใน" + name without a space).
  * Generated dates: `prettyDate` gives "16 พฤศจิกายน 2026", the month "พฤศจิกายน 2026", the short month "พ.ย. 2026".
  */
-
-/** Width of a Thai text in columns: the marks above and below a letter take no width. */
-const columns = (s: string) => s.replace(/[ัิ-ฺ็-๎]/g, "").length;
 
 /** "Binance (ไบแนนซ์)" for the texts that receive only the Latin name (H1). */
 const read = (name: string) => withReading({ slug: name.toLowerCase(), name }, "th");
@@ -27,13 +25,28 @@ const keywordVariants: Record<string, string[]> = {
 
 export const th: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  /** 50–60 columns: "กระดานเทรด" gives way to the bare classifier where the name and its Thai spelling are long. */
+  // Four wordings, chosen per exchange; the Thai spelling of the name where it fits.
   title: (x, n, shortMonthYear) => {
-    const full = `ทางเลือกแทน ${withReading(x, "th")} (${shortMonthYear}): เปรียบเทียบ ${n} กระดานเทรด`;
-    return columns(full) <= 60 ? full : `ทางเลือกแทน ${withReading(x, "th")} (${shortMonthYear}): เปรียบเทียบ ${n} แห่ง`;
+    const r = withReading(x, "th");
+    return fit(
+      TITLE_MAX,
+      ...[
+        [`ทางเลือกแทน ${r} (${shortMonthYear}): เปรียบเทียบ ${n} แห่ง`],
+        [`${n} ทางเลือกแทน ${r}: ค่าธรรมเนียมและโบนัส (${shortMonthYear})`, `${n} ทางเลือกแทน ${x.name}: ค่าธรรมเนียมและโบนัส (${shortMonthYear})`],
+        [`กระดานเทรดคล้าย ${r}: ทางเลือกแทน ${n} แห่ง (${shortMonthYear})`, `กระดานเทรดคล้าย ${x.name}: ทางเลือกแทน ${n} แห่ง (${shortMonthYear})`],
+        [`จะย้ายจาก ${r}? เทียบทางเลือกแทน ${n} แห่ง (${shortMonthYear})`, `จะย้ายจาก ${x.name}? เทียบทางเลือกแทน ${n} แห่ง (${shortMonthYear})`],
+      ][variant(4, x.slug)],
+      `ทางเลือกแทน ${x.name} (${shortMonthYear}): เปรียบเทียบ ${n} แห่ง`,
+      `ทางเลือกแทน ${x.name} ${n} แห่ง`,
+    );
   },
   description: (x, names, n, former, monthYear) =>
-    `${names}: ทางเลือกแทน ${x.name}${former ? ` (${former})` : ""} ${n} แห่ง เทียบค่าธรรมเนียม เลเวอเรจ KYC ประเทศ และรหัสแนะนำ ข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
+    fit(
+      DESC_MAX,
+      `${names}: ทางเลือกแทน ${x.name}${former ? ` (${former})` : ""} ${n} แห่ง เทียบค่าธรรมเนียม เลเวอเรจ KYC ประเทศ และรหัสแนะนำ ตรวจสอบเมื่อเดือน${monthYear}`,
+      `${names}: ทางเลือกแทน ${x.name} ${n} แห่ง เทียบค่าธรรมเนียม เลเวอเรจ KYC ประเทศ และรหัสแนะนำ ตรวจสอบเมื่อเดือน${monthYear}`,
+      `${names}: ทางเลือกแทน ${x.name} ${n} แห่ง เทียบค่าธรรมเนียม เลเวอเรจ KYC ประเทศ และรหัสแนะนำ`,
+    ),
   keywords: (x, alts, former) => {
     const reading = readingOf(x.slug, "th");
     return [

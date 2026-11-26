@@ -24,6 +24,7 @@ import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { readingOf, withReading } from "../name-readings";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "bn";
 const ct = compareText(locale);
@@ -294,8 +295,6 @@ function hubFaqs({ all, ranked, lowF, lowS, hi: top, mica, date, marketDate }: H
 
 /* --------------------------------- everything -------------------------------- */
 
-/** Tails of the page title, longest first: the first that keeps the title within 65 characters is used. */
-const titleTails = ["ফি, লিভারেজ, KYC ও বোনাসের তুলনা", "ফি, লিভারেজ, KYC ও বোনাস", "ফি, লিভারেজ ও বোনাস", "ফি ও লিভারেজের তুলনা", "ফি ও লিভারেজ", "ফি তুলনা"];
 
 export const bn: VersusText = {
   /* ---- scorecard: label of each row and, as `topic`, the row in "যেসব বিষয়ে … এগিয়ে: …" ("" = not ranked) ---- */
@@ -331,13 +330,24 @@ export const bn: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
+    // Three wordings, chosen per pair; the Bengali readings in brackets go first when the title gets too long.
     title: (a, b, shortMonthYear) => {
-      const head = `${named(a)} বনাম ${named(b)}`;
-      return titleTails.map((tail) => `${head}: ${tail} (${shortMonthYear})`).find((t) => t.length <= 65) ?? `${head} (${shortMonthYear})`;
+      const m = shortMonthYear, y = yearOf(shortMonthYear);
+      const worded = (A: string, B: string) =>
+        [
+          `${A} বনাম ${B} (${m}): ফি, লিভারেজ ও বোনাস`,
+          `${A} নাকি ${B}? ফি, লিভারেজ ও KYC-র তুলনা`,
+          `${A} বনাম ${B}: ${y} সালে কোন এক্সচেঞ্জ ভালো?`,
+        ][variant(3, a.slug, b.slug)];
+      return fit(TITLE_MAX, worded(named(a), named(b)), worded(a.name, b.name), `${named(a)} বনাম ${named(b)} (${m})`, `${a.name} বনাম ${b.name} (${m})`);
     },
-    /** Stays within 160 characters for every pair. */
     description: (a, b, monthYear) =>
-      `${a.name} বনাম ${b.name}: ফিউচার্স ফি ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, লিভারেজ ${leverageOf(a)}x vs ${leverageOf(b)}x, প্রোডাক্ট, দেশ, KYC ও রেফারেল কোড – অফিসিয়াল ডেটা, যাচাই: ${monthYear}।`,
+      fit(
+        DESC_MAX,
+        `${a.name} বনাম ${b.name}: ফিউচার্স ফি ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, লিভারেজ ${leverageOf(a)}x vs ${leverageOf(b)}x, প্রোডাক্ট, দেশ, KYC ও রেফারেল কোড – অফিসিয়াল ডেটা, যাচাই: ${monthYear}।`,
+        `${a.name} বনাম ${b.name}: ফিউচার্স ফি ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, লিভারেজ ${leverageOf(a)}x vs ${leverageOf(b)}x, প্রোডাক্ট, দেশ, KYC ও রেফারেল কোড – যাচাই: ${monthYear}।`,
+        `${a.name} বনাম ${b.name}: ফিউচার্স ফি ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, লিভারেজ ${leverageOf(a)}x vs ${leverageOf(b)}x, প্রোডাক্ট, দেশ, KYC ও রেফারেল কোড।`,
+      ),
     keywords: (a, b, former) => {
       const ra = readingOf(a.slug, locale);
       const rb = readingOf(b.slug, locale);
@@ -556,9 +566,20 @@ export const bn: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `ক্রিপ্টো এক্সচেঞ্জ তুলনা (${shortMonthYear}): ${pairs}টি জোড়ার মুখোমুখি তুলনা`,
+    title: (shortMonthYear, pairs) =>
+      fit(
+        TITLE_MAX,
+        `ক্রিপ্টো এক্সচেঞ্জ তুলনা (${shortMonthYear}): ${pairs}টি জোড়ার মুখোমুখি তুলনা`,
+        `ক্রিপ্টো এক্সচেঞ্জ তুলনা (${shortMonthYear}): ${pairs}টি মুখোমুখি জোড়া`,
+        `ক্রিপ্টো এক্সচেঞ্জ তুলনা (${shortMonthYear})`,
+      ),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} জোড়ায় জোড়ায়: ফি, লিভারেজ, দেশ, KYC ও রেফারেল কোডের ${pairs}টি মুখোমুখি তুলনা – অফিসিয়াল ডেটা, যাচাই: ${monthYear}।`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} জোড়ায় জোড়ায়: ফি, লিভারেজ, দেশ, KYC ও রেফারেল কোডের ${pairs}টি মুখোমুখি তুলনা – অফিসিয়াল ডেটা, যাচাই: ${monthYear}।`,
+        `${exchangeNames} জোড়ায় জোড়ায়: ফি, লিভারেজ, দেশ, KYC ও রেফারেল কোডের ${pairs}টি মুখোমুখি তুলনা – যাচাই: ${monthYear}।`,
+        `${exchangeNames} জোড়ায় জোড়ায়: ফি, লিভারেজ, দেশ, KYC ও রেফারেল কোডের ${pairs}টি মুখোমুখি তুলনা।`,
+      ),
     crumbHome: "হোম",
     crumbPage: "এক্সচেঞ্জ তুলনা",
     listName: "ক্রিপ্টো এক্সচেঞ্জের মুখোমুখি তুলনা",

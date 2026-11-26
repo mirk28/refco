@@ -4,6 +4,7 @@ import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
 import { readingOf, withReading } from "./name-readings";
 import { slavicCount } from "./slavic-count";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Ukrainian. Same keys as `en.tsx`.
@@ -155,9 +156,14 @@ export const uk: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Реферальні коди криптобірж (${monthYear}): бонуси для споту та ф'ючерсів`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `Реферальні коди криптобірж і бонуси (${monthYear})`, `Реферальні коди криптобірж (${monthYear})`),
     description: (monthYear) =>
-      `Перевірені реферальні коди Binance, OKX, Bybit, Bitget, Gate, KuCoin та MEXC: бонуси й повернення комісій, один код для споту й ф'ючерсів (${monthYear})`,
+      fit(
+        DESC_MAX,
+        `Перевірені реферальні коди Binance, OKX, Bybit, Bitget, Gate, KuCoin та MEXC: бонуси й повернення комісій за одним посиланням. Оновлено: ${monthYear}.`,
+        `Перевірені реферальні коди Binance, OKX, Bybit, Bitget, Gate, KuCoin та MEXC: бонуси й повернення комісій за одним посиланням.`,
+      ),
     listName: "Реферальні коди криптобірж для споту та ф'ючерсів",
     updated: (monthYear) => `Оновлено: ${monthYear}`,
     h1: (
@@ -330,9 +336,24 @@ export const uk: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Реферальний код ${withReading(e, "uk")} ${e.referralCode} (${shortMonthYear}): ${lcCyr(benefit(e))}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with «Реферальний код».
+    // The Cyrillic spelling in brackets stays where it fits and is dropped first.
+    title: (e, shortMonthYear) => {
+      const r = withReading(e, "uk"), n = e.name, c = e.referralCode, b = lcCyr(benefit(e)), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Реферальний код ${r} ${c}: ${b}`, `Реферальний код ${r} ${c} (${shortMonthYear})`, `Реферальний код ${n} ${c} (${shortMonthYear})`, `Реферальний код ${n} ${c}`),
+        () => fit(TITLE_MAX, `${c} – реферальний код ${r}: ${b}`, `${c} – реферальний код ${r} і бонус (${shortMonthYear})`, `${c} – реферальний код ${n} і бонус (${shortMonthYear})`, `${c} – реферальний код ${n}`),
+        () => fit(TITLE_MAX, `${benefit(e)}: реферальний код ${r} ${c}`, `Бонус за реєстрацію ${y}: реферальний код ${r} ${c}`, `Бонус за реєстрацію ${y}: реферальний код ${n} ${c}`, `Реферальний код ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Як ввести реферальний код ${r} ${c} (${y})`, `Як ввести реферальний код ${n} ${c} (${y})`, `Як ввести реферальний код ${n} ${c}`, `Реферальний код ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Реферальний код ${e.name}: ${e.referralCode}. ${benefit(e)} – де ввести код, реєстрація, KYC і комісії (перевірено: ${monthYear}).`,
+      fit(
+        DESC_MAX,
+        `Реферальний код ${e.name}: ${e.referralCode}. ${asSentence(benefit(e))} Де ввести код, реєстрація, KYC і комісії – перевірено: ${monthYear}.`,
+        `Реферальний код ${e.name}: ${e.referralCode}. ${asSentence(benefit(e))} Де ввести код, реєстрація, KYC і комісії.`,
+        `Реферальний код ${e.name}: ${e.referralCode} – де ввести код, кроки реєстрації, KYC і комісії (перевірено: ${monthYear}).`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("uk-UA").replace(/[\s-]/g, "");
       const cn = e.referral.codeName.trim();

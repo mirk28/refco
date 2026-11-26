@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 
@@ -37,9 +38,26 @@ const inCountry = (country: string) => {
 
 export const de: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${x.name} Alternativen (${shortMonthYear}): ${n} Börsen im Vergleich`,
+  // Vier Formulierungen, je Börse fest gewählt.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      ...[
+        [`${x.name} Alternativen (${shortMonthYear}): ${n} Börsen im Vergleich`],
+        [`Die ${n} besten ${x.name} Alternativen (${shortMonthYear}) – Gebühren & Boni`, `Die ${n} besten ${x.name} Alternativen: Gebühren & Boni`],
+        [`Welche ${x.name} Alternativen lohnen sich? ${n} Börsen im Vergleich`],
+        [`${x.name} Alternativen ${yearOf(shortMonthYear)}: Gebühren, Hebel & KYC im Vergleich`, `${x.name} Alternativen ${yearOf(shortMonthYear)}: Gebühren & KYC im Vergleich`],
+      ][variant(4, x.slug)],
+      `${x.name} Alternativen: ${n} Börsen im Vergleich`,
+      `${x.name} Alternativen (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${n} Alternativen zu ${x.name}${former ? ` (${former})` : ""} im Vergleich nach Gebühren, Hebel, KYC, Ländern und Empfehlungscodes – offizielle Daten, geprüft im ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} Alternativen zu ${x.name}${former ? ` (${former})` : ""} im Vergleich – Gebühren, Hebel, KYC, Länder, Empfehlungscodes. Stand: ${monthYear}.`,
+      `${names}: ${n} Alternativen zu ${x.name} im Vergleich – Gebühren, Hebel, KYC, Länder, Empfehlungscodes. Stand: ${monthYear}.`,
+      `${names}: ${n} Alternativen zu ${x.name} im Vergleich nach Gebühren, Hebel, KYC, Ländern und Empfehlungscodes.`,
+    ),
   keywords: (x, alts, former) => [
     `${x.name} Alternativen`,
     `${x.name} Alternative`,

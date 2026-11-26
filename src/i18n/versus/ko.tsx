@@ -19,9 +19,15 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { hangulName, josa, withHangul } from "../ko-josa";
+import { fit, variant, yearOf } from "@/lib/fit";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
 const locale = "ko";
+/** Snippet limits for Korean: Hangul is about twice as wide as Latin letters (`scripts/meta-check.tsx`). */
+const TITLE_KO = 33;
+const DESC_KO = 85;
+/** "0.02%/0.05%" – maker and taker fee without the spaces, for the short meta description. */
+const tightFees = (f: Exchange["futuresFees"]) => feePair(f).replace(" / ", "/");
 const ct = compareText(locale);
 const joinList = getDictionary(locale).list;
 const altInfo = (e: Exchange) => altInfoIn(e, locale);
@@ -303,9 +309,22 @@ export const ko: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} 비교 (${shortMonthYear}): 수수료·레버리지·KYC·보너스`,
-    description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: 선물 수수료 ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, 레버리지 ${leverageOf(a)}배 vs ${leverageOf(b)}배, 상품, 국가, KYC, 레퍼럴 코드까지 – 공식 데이터, ${monthYear} 확인.`,
+    // Three wordings, chosen per pair.
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_KO,
+        [
+          `${a.name} vs ${b.name} 비교: 수수료·레버리지·보너스`,
+          `${josa(a.name, "과/와")} ${b.name} 중 어디가 더 나을까?`,
+          `${a.name} vs ${b.name}: ${yearOf(shortMonthYear)}년 더 나은 거래소는?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} 비교 (${shortMonthYear})`,
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
+    description: (a, b, monthYear) => {
+      const facts = `${a.name} vs ${b.name}: 선물 수수료 ${tightFees(a.futuresFees)} vs ${tightFees(b.futuresFees)}, 레버리지 ${leverageOf(a)}배 vs ${leverageOf(b)}배`;
+      return fit(DESC_KO, `${facts}, KYC·레퍼럴 코드 비교(${monthYear} 확인).`, `${facts} 비교(${monthYear} 확인).`, `${facts}, KYC·국가·레퍼럴 코드 비교.`, `${facts} 비교.`);
+    },
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -515,9 +534,17 @@ export const ko: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `암호화폐 거래소 비교 (${shortMonthYear}): 맞대결 비교 ${pairs}개`,
-    description: (exchangeNames, pairs, monthYear) =>
-      `${josa(exchangeNames, "을/를")} 두 곳씩 묶어 수수료, 레버리지, 국가, KYC, 레퍼럴 코드를 비교한 맞대결 비교 ${pairs}개 – 공식 데이터, ${monthYear} 확인.`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_KO, `암호화폐 거래소 비교: 맞대결 ${pairs}개 (${shortMonthYear})`, `암호화폐 거래소 비교 (${shortMonthYear})`, "암호화폐 거래소 비교"),
+    description: (exchangeNames, pairs, monthYear) => {
+      const count = exchangeNames.split(", ").length;
+      return fit(
+        DESC_KO,
+        `${josa(exchangeNames, "을/를")} 두 곳씩 묶은 맞대결 ${pairs}개: 수수료·레버리지·KYC 비교(${monthYear} 확인).`,
+        `거래소 ${count}곳을 두 곳씩 묶어 수수료·레버리지·국가·KYC·레퍼럴 코드를 비교한 맞대결 ${pairs}개입니다(${monthYear} 확인).`,
+        `거래소 ${count}곳을 두 곳씩 묶어 수수료·레버리지·국가·KYC·레퍼럴 코드를 비교한 맞대결 ${pairs}개입니다.`,
+      );
+    },
     crumbHome: "홈",
     crumbPage: "거래소 비교",
     listName: "암호화폐 거래소 맞대결 비교",

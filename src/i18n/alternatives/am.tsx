@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 import { readingOf, withReading } from "../name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Amharic. Same keys as `./en.tsx`.
@@ -23,9 +24,28 @@ const keywordVariants: Record<string, string[]> = {
 
 export const am: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${withReading(x, "am")} አማራጮች (${shortMonthYear})፦ የ${count(n, "መድረክ", "መድረኮች")} ንጽጽር`,
+  // Four wordings, chosen per exchange; the Ethiopic spelling of the name where it fits.
+  title: (x, n, shortMonthYear) => {
+    const r = withReading(x, "am");
+    return fit(
+      TITLE_MAX,
+      ...[
+        [`${r} አማራጮች (${shortMonthYear})፦ የ${count(n, "መድረክ", "መድረኮች")} ንጽጽር`],
+        [`${n} የ${r} አማራጮች፦ ክፍያ እና ቦነስ (${shortMonthYear})`, `${n} የ${x.name} አማራጮች፦ ክፍያ እና ቦነስ (${shortMonthYear})`],
+        [`እንደ ${r} ያሉ መድረኮች፦ ${n} አማራጮች (${shortMonthYear})`, `እንደ ${x.name} ያሉ መድረኮች፦ ${n} አማራጮች (${shortMonthYear})`],
+        [`ከ${r} መቀየር ይፈልጋሉ? ${n} አማራጮች (${shortMonthYear})`, `ከ${x.name} መቀየር ይፈልጋሉ? ${n} አማራጮች (${shortMonthYear})`],
+      ][variant(4, x.slug)],
+      `${x.name} አማራጮች (${shortMonthYear})፦ የ${count(n, "መድረክ", "መድረኮች")} ንጽጽር`,
+      `${x.name} አማራጮች (${shortMonthYear})`,
+    );
+  },
   description: (x, names, n, former, monthYear) =>
-    `${names}፦ እነዚህን ${n} የ${x.name}${former ? ` (${former})` : ""} አማራጮች በክፍያ፣ በሌቨሬጅ፣ በKYC፣ በአገሮች እና በሪፈራል ኮዶች አነጻጽረናል – ይፋዊ መረጃ፣ በ${monthYear} የተረጋገጠ።`,
+    fit(
+      DESC_MAX,
+      `${names}፦ እነዚህን ${n} የ${x.name}${former ? ` (${former})` : ""} አማራጮች በክፍያ፣ በሌቨሬጅ፣ በKYC፣ በአገሮች እና በሪፈራል ኮዶች አነጻጽረናል – ይፋዊ መረጃ፣ በ${monthYear} የተረጋገጠ።`,
+      `${names}፦ እነዚህን ${n} የ${x.name} አማራጮች በክፍያ፣ በሌቨሬጅ፣ በKYC፣ በአገሮች እና በሪፈራል ኮዶች አነጻጽረናል – በ${monthYear} የተረጋገጠ።`,
+      `${names}፦ እነዚህን ${n} የ${x.name} አማራጮች በክፍያ፣ በሌቨሬጅ፣ በKYC፣ በአገሮች እና በሪፈራል ኮዶች አነጻጽረናል።`,
+    ),
   keywords: (x, alts, former) => {
     const reading = readingOf(x.slug, "am");
     return [

@@ -3,6 +3,7 @@ import type { AlternativesTexts } from "./en";
 import { readingOf, withReading } from "../name-readings";
 import { slavicCount, slavicForm } from "../slavic-count";
 import type { SlavicForms } from "../slavic-count";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Russian. Same keys as `./en.tsx`.
@@ -46,17 +47,27 @@ const inCountry: Record<string, string> = {
 
 export const ru: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  /** 50–60 characters: «сравнение N бирж» where it fits, else the count alone (Binance (Бинанс), Bybit (Байбит) …). */
+  /* Four wordings, chosen per exchange; the Cyrillic spelling (Binance (Бинанс)) is dropped first, then the date. */
   title: (x, n, shortMonthYear) => {
-    const full = `Альтернативы ${withReading(x, "ru")}: сравнение ${n} ${slavicForm(n, exchangesGen)} (${shortMonthYear})`;
-    return full.length <= 60 ? full : `Альтернативы ${withReading(x, "ru")}: ${slavicCount(n, exchangesNom)} (${shortMonthYear})`;
+    const y = yearOf(shortMonthYear), count = slavicCount(n, exchangesNom);
+    const forms = (name: string) =>
+      [
+        `Альтернативы ${name}: сравнение ${n} ${slavicForm(n, exchangesGen)} (${shortMonthYear})`,
+        `Лучшие альтернативы ${name}: ${count} (${shortMonthYear})`,
+        `Альтернативы ${name}: чем заменить биржу в ${y} году`,
+        `Альтернативы ${name} в ${y} году: ${count} в сравнении`,
+      ][variant(4, x.slug)];
+    return fit(TITLE_MAX, forms(withReading(x, "ru")), forms(x.name), `Альтернативы ${withReading(x, "ru")}: ${count} (${shortMonthYear})`, `Альтернативы ${x.name} (${shortMonthYear})`);
   },
-  /** 140–155 characters; with a former name (Gate.io) the shorter form without «сравнение». */
   description: (x, names, n, former, monthYear) => {
-    const who = `${x.name}${former ? ` (${former})` : ""}`;
-    const tail = `— комиссии, плечо, KYC, страны и реферальные коды (данные бирж, ${monthYear}).`;
-    const full = `${names}: сравнение ${n} ${slavicForm(n, altsGen)} ${who} ${tail}`;
-    return full.length <= 155 ? full : `${names}: ${slavicCount(n, altsNom)} ${who} ${tail}`;
+    const tail = `комиссии, плечо, KYC, страны и реферальные коды. Проверено: ${monthYear}.`;
+    return fit(
+      DESC_MAX,
+      `${names}: сравнение ${n} ${slavicForm(n, altsGen)} ${x.name}${former ? ` (${former})` : ""} — ${tail}`,
+      `${names}: ${slavicCount(n, altsNom)} ${x.name}${former ? ` (${former})` : ""} — ${tail}`,
+      `${names}: ${slavicCount(n, altsNom)} ${x.name} — ${tail}`,
+      `${names}: ${slavicCount(n, altsNom)} ${x.name} — комиссии, плечо, KYC, страны и реферальные коды.`,
+    );
   },
   keywords: (x, alts, former) => {
     const reading = readingOf(x.slug, "ru")?.toLowerCase();

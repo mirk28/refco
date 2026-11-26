@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Turkish. Same keys as `./en.tsx`.
@@ -56,9 +57,26 @@ const countryIn: Record<string, string> = {
 
 export const tr: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${x.name} Alternatifleri (${shortMonthYear}): ${n} Borsa Karşılaştırması`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `${x.name} Alternatifleri (${shortMonthYear}): ${n} Borsa Karşılaştırması`,
+        `En İyi ${x.name} Alternatifleri (${shortMonthYear}): Komisyon ve Bonus`,
+        `${x.name} Alternatifleri ${yearOf(shortMonthYear)}: ${n} Benzer Borsa Karşılaştırması`,
+        `${x.name} Alternatifleri: Hangi Borsaya Geçmeli? (${shortMonthYear})`,
+      ][variant(4, x.slug)],
+      `${x.name} Alternatifleri (${shortMonthYear}): ${n} Borsa`,
+      `${x.name} Alternatifleri (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${n} ${x.name}${former ? ` (${former})` : ""} alternatifi komisyon, kaldıraç, KYC, ülke ve referans kodu açısından karşılaştırıldı – resmî veriler, kontrol tarihi ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} ${x.name}${former ? ` (${former})` : ""} alternatifi komisyon, kaldıraç, KYC, ülke ve referans kodu açısından karşılaştırıldı. Kontrol: ${monthYear}.`,
+      `${names}: ${n} ${x.name} alternatifi komisyon, kaldıraç, KYC, ülke ve referans kodu açısından karşılaştırıldı. Kontrol: ${monthYear}.`,
+      `${names}: ${n} ${x.name} alternatifi komisyon, kaldıraç, KYC, ülke ve referans kodu açısından karşılaştırıldı.`,
+    ),
   keywords: (x, alts, former) => [
     `${x.name} alternatifleri`,
     `${x.name} alternatifi`,

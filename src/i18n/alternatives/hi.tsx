@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Hindi. Same keys as `./en.tsx`.
@@ -9,9 +10,25 @@ import type { AlternativesTexts } from "./en";
  */
 export const hi: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${x.name} के विकल्प (${shortMonthYear}): ${n} क्रिप्टो एक्सचेंजों की तुलना`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `${x.name} के विकल्प (${shortMonthYear}): ${n} एक्सचेंजों की तुलना`,
+        `${x.name} के ${n} सबसे अच्छे विकल्प (${shortMonthYear}): फीस और बोनस`,
+        `${x.name} जैसे एक्सचेंज: ${n} विकल्पों की तुलना (${shortMonthYear})`,
+        `${x.name} छोड़ रहे हैं? ${n} विकल्पों की तुलना (${shortMonthYear})`,
+      ][variant(4, x.slug)],
+      `${x.name} के विकल्प (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${x.name}${former ? ` (${former})` : ""} के ${n} विकल्पों की फीस, लीवरेज, KYC, देशों और रेफरल कोड के आधार पर तुलना – आधिकारिक डेटा, ${monthYear} में जाँचा गया।`,
+    fit(
+      DESC_MAX,
+      `${names}: ${x.name}${former ? ` (${former})` : ""} के ${n} विकल्पों की फीस, लीवरेज, KYC, देशों और रेफरल कोड के आधार पर तुलना – ${monthYear} में जाँचा गया।`,
+      `${names}: ${x.name} के ${n} विकल्पों की फीस, लीवरेज, KYC, देशों और रेफरल कोड के आधार पर तुलना – ${monthYear} में जाँचा गया।`,
+      `${names}: ${x.name} के ${n} विकल्पों की फीस, लीवरेज, KYC, देशों और रेफरल कोड के आधार पर तुलना।`,
+    ),
   keywords: (x, alts, former) => [
     `${x.name} के विकल्प`,
     `${x.name} alternatives`,

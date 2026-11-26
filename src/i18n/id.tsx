@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
@@ -145,9 +146,13 @@ export const id: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Kode Referral Exchange (${monthYear}): Bonus Spot & Futures`,
+    title: (monthYear) => fit(TITLE_MAX, `Kode Referral Exchange Kripto & Bonus (${monthYear})`, `Kode Referral Exchange Kripto (${monthYear})`),
     description: (monthYear) =>
-      `Kode referral terverifikasi Binance, OKX, Bybit, Bitget, Gate, KuCoin, dan MEXC: bonus pengguna baru dan rebate biaya spot & futures lewat satu tautan (${monthYear}).`,
+      fit(
+        DESC_MAX,
+        `Kode referral terverifikasi Binance, OKX, Bybit, Bitget, Gate, KuCoin, dan MEXC: bonus pengguna baru dan rebate biaya lewat satu tautan (${monthYear}).`,
+        `Kode referral terverifikasi Binance, OKX, Bybit, Bitget, Gate, KuCoin, dan MEXC: bonus pengguna baru dan rebate biaya spot & futures lewat satu tautan.`,
+      ),
     listName: "Kode referral exchange kripto untuk spot dan futures",
     updated: (monthYear) => `Diperbarui ${monthYear}`,
     h1: (
@@ -313,9 +318,24 @@ export const id: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Kode Referral ${e.name} ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Empat variasi, tetap per exchange, agar judul tidak semuanya diawali "Kode Referral <Exchange>".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Kode Referral ${n} ${c} (${shortMonthYear}): ${b}`, `Kode Referral ${n} ${c} (${shortMonthYear}) – Bonus Pengguna Baru`, `Kode Referral ${n} ${c} (${shortMonthYear}) & Bonus`, `Kode Referral ${n} ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c}: Kode Referral ${n} – ${b}`, `${c}: Kode Referral ${n} & Bonus (${shortMonthYear})`, `${c}: Kode Referral ${n} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: Kode Referral ${n} ${c}`, `Bonus Pengguna Baru ${y}: Kode Referral ${n} ${c}`, `Kode Referral ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Cara Menggunakan Kode Referral ${n} ${c} (${shortMonthYear})`, `Cara Menggunakan Kode Referral ${n} ${c}`, `Kode Referral ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Kode referral ${e.name}: ${e.referralCode}. ${benefit(e)} – tempat memasukkan kode, langkah pendaftaran, KYC, dan biaya, diperiksa ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Kode referral ${e.name}: ${e.referralCode}. ${benefit(e)} – tempat memasukkan kode, langkah pendaftaran, KYC, dan biaya, diperiksa ${monthYear}.`,
+        `Kode referral ${e.name}: ${e.referralCode}. ${benefit(e)} – tempat memasukkan kode, pendaftaran, KYC, dan biaya (${monthYear}).`,
+        `Kode referral ${e.name}: ${e.referralCode}. ${benefit(e)} – tempat memasukkan kode, langkah pendaftaran, KYC, dan biaya.`,
+        `Kode referral ${e.name}: ${e.referralCode}. Tempat memasukkan kode, langkah pendaftaran, verifikasi KYC, dan biaya trading, diperiksa ${monthYear}.`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("id-ID").replace(/[\s-]/g, "");
       const cn = e.referral.codeName;

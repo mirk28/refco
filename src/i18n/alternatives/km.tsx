@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 import { readingOf, withReading } from "../name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Khmer. Same keys as `./en.tsx`.
@@ -22,14 +23,28 @@ const keywordVariants: Record<string, string[]> = {
 
 export const km: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  /** 50–65 characters: "វេទិកាជួញដូរ" gives way to the short "វេទិកា" where the name and its Khmer spelling are long. */
+  // Four wordings, chosen per exchange; the Khmer spelling of the name where it fits.
   title: (x, n, shortMonthYear) => {
-    const head = `ជម្រើសជំនួស ${withReading(x, "km")} (${shortMonthYear})៖ `;
-    const full = `${head}ប្រៀបធៀបវេទិកាជួញដូរ ${n}`;
-    return full.length <= 65 ? full : `${head}ប្រៀបធៀបវេទិកា ${n}`;
+    const r = withReading(x, "km");
+    return fit(
+      TITLE_MAX,
+      ...[
+        [`ជម្រើសជំនួស ${r} (${shortMonthYear})៖ ប្រៀបធៀបវេទិកា ${n}`],
+        [`ជម្រើសជំនួស ${r} ទាំង ${n}៖ កម្រៃ និងប្រាក់រង្វាន់`, `ជម្រើសជំនួស ${x.name} ទាំង ${n}៖ កម្រៃ និងប្រាក់រង្វាន់ (${shortMonthYear})`],
+        [`វេទិកាដូច ${r}៖ ជម្រើសជំនួស ${n} (${shortMonthYear})`, `វេទិកាដូច ${x.name}៖ ជម្រើសជំនួស ${n} (${shortMonthYear})`],
+        [`ចង់ប្ដូរពី ${r}? ជម្រើសជំនួស ${n} (${shortMonthYear})`, `ចង់ប្ដូរពី ${x.name}? ជម្រើសជំនួស ${n} (${shortMonthYear})`],
+      ][variant(4, x.slug)],
+      `ជម្រើសជំនួស ${x.name} (${shortMonthYear})៖ ប្រៀបធៀបវេទិកា ${n}`,
+      `ជម្រើសជំនួស ${x.name}៖ ប្រៀបធៀបវេទិកា ${n}`,
+    );
   },
   description: (x, names, n, former, monthYear) =>
-    `${names}៖ ជម្រើសជំនួស ${x.name}${former ? ` (${former})` : ""} ទាំង ${n} ធៀបកម្រៃជួញដូរ, Leverage, KYC, ប្រទេស និងកូដណែនាំ – ប្រភពផ្លូវការ ពិនិត្យខែ${monthYear}។`,
+    fit(
+      DESC_MAX,
+      `${names}៖ ជម្រើសជំនួស ${x.name}${former ? ` (${former})` : ""} ទាំង ${n} ធៀបកម្រៃជួញដូរ, Leverage, KYC, ប្រទេស និងកូដណែនាំ – ពិនិត្យខែ${monthYear}។`,
+      `${names}៖ ជម្រើសជំនួស ${x.name} ទាំង ${n} ធៀបកម្រៃជួញដូរ, Leverage, KYC, ប្រទេស និងកូដណែនាំ – ពិនិត្យខែ${monthYear}។`,
+      `${names}៖ ជម្រើសជំនួស ${x.name} ទាំង ${n} ធៀបកម្រៃ, Leverage, KYC, ប្រទេស និងកូដណែនាំ។`,
+    ),
   keywords: (x, alts, former) => {
     const reading = readingOf(x.slug, "km");
     return [

@@ -1,6 +1,11 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 import { hangulName, josa, withHangul } from "../ko-josa";
+import { fit, variant, yearOf } from "@/lib/fit";
+
+/** Snippet limits for Korean: Hangul is about twice as wide as Latin letters (`scripts/meta-check.tsx`). */
+const TITLE_KO = 33;
+const DESC_KO = 85;
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Korean. Same keys as `./en.tsx`.
@@ -18,9 +23,30 @@ const withReading = (name: string) => {
 
 export const ko: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${withHangul(x)} 대안 거래소 ${n}곳 비교 (${shortMonthYear})`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) => {
+    const y = yearOf(shortMonthYear);
+    return fit(
+      TITLE_KO,
+      [
+        `${withHangul(x)} 대안 거래소 ${n}곳 비교 (${shortMonthYear})`,
+        `${x.name} 대안 거래소 ${n}곳: 수수료·보너스 비교 (${y})`,
+        `${josa(x.name, "과/와")} 비슷한 거래소: 대안 ${n}곳 비교 (${y})`,
+        `${josa(x.name, "을/를")} 떠난다면? 대안 거래소 ${n}곳 (${y})`,
+      ][variant(4, x.slug)],
+      `${x.name} 대안 거래소 ${n}곳 비교 (${shortMonthYear})`,
+      `${x.name} 대안 거래소 ${n}곳 비교 (${y})`,
+      `${x.name} 대안 거래소 ${n}곳 비교`,
+    );
+  },
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${x.name}${former ? ` (${former})` : ""} 대안 거래소 ${n}곳의 수수료·레버리지·KYC·국가·레퍼럴 코드를 비교합니다 – 공식 데이터, ${monthYear} 확인.`,
+    fit(
+      DESC_KO,
+      `${names}: ${x.name}${former ? `(${former})` : ""} 대안 거래소 ${n}곳의 수수료·레버리지·KYC·레퍼럴 코드 비교(${monthYear} 확인).`,
+      `${names}: ${x.name} 대안 거래소 ${n}곳의 수수료·레버리지·KYC·레퍼럴 코드 비교(${monthYear} 확인).`,
+      `${x.name} 대안 거래소 ${n}곳의 수수료·레버리지·KYC·국가·레퍼럴 코드를 공식 데이터로 비교했습니다(${monthYear} 확인).`,
+      `${x.name} 대안 거래소 ${n}곳의 수수료·레버리지·KYC·국가·레퍼럴 코드를 공식 데이터로 비교했습니다.`,
+    ),
   keywords: (x, alts, former) => {
     const reading = hangulName[x.slug];
     return [

@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
 import { readingOf, withReading } from "./name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Amharic (readers in Ethiopia). Same keys as `en.tsx`.
@@ -313,9 +314,23 @@ export const am: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${named(e)} ሪፈራል ኮድ ${e.referralCode} (${shortMonthYear})፦ ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "<Exchange> ሪፈራል ኮድ".
+    title: (e, shortMonthYear) => {
+      const n = e.name, r = named(e), c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${r} ሪፈራል ኮድ ${c} (${shortMonthYear})፦ ${b}`, `${r} ሪፈራል ኮድ ${c} (${shortMonthYear})`, `${n} ሪፈራል ኮድ ${c} (${shortMonthYear})`, `${n} ሪፈራል ኮድ ${c}`),
+        () => fit(TITLE_MAX, `${c} – ${r} ሪፈራል ኮድ እና ቦነስ (${shortMonthYear})`, `${c} – ${n} ሪፈራል ኮድ እና ቦነስ (${shortMonthYear})`, `${c} – ${n} ሪፈራል ኮድ`),
+        () => fit(TITLE_MAX, `${b}፦ ${n} ሪፈራል ኮድ ${c}`, `የ${n} የምዝገባ ቦነስ ${y}፦ ሪፈራል ኮድ ${c}`, `${n} ሪፈራል ኮድ ${c} (${y})`),
+        () => fit(TITLE_MAX, `የአጠቃቀም መመሪያ፦ ${r} ሪፈራል ኮድ ${c} (${shortMonthYear})`, `የአጠቃቀም መመሪያ፦ ${n} ሪፈራል ኮድ ${c} (${shortMonthYear})`, `የአጠቃቀም መመሪያ፦ ${n} ሪፈራል ኮድ ${c}`, `${n} ሪፈራል ኮድ ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} ሪፈራል ኮድ፦ ${e.referralCode}። ${benefit(e)} – ኮዱ የት እንደሚገባ፣ የምዝገባ ደረጃዎች፣ KYC እና ክፍያዎች፤ በ${monthYear} የተረጋገጠ።`,
+      fit(
+        DESC_MAX,
+        `${e.name} ሪፈራል ኮድ፦ ${e.referralCode}። ${benefit(e)} – ኮዱ የት እንደሚገባ፣ የምዝገባ ደረጃዎች፣ KYC እና የስፖት እና የፊውቸርስ ክፍያዎች፤ በ${monthYear} የተረጋገጠ።`,
+        `${e.name} ሪፈራል ኮድ፦ ${e.referralCode}። ${benefit(e)} – ኮዱ የት እንደሚገባ፣ የምዝገባ ደረጃዎች፣ KYC እና ክፍያዎች፤ በ${monthYear} የተረጋገጠ።`,
+        `${e.name} ሪፈራል ኮድ፦ ${e.referralCode}። ${benefit(e)} – ኮዱ የት እንደሚገባ፣ የምዝገባ ደረጃዎች፣ KYC እና ክፍያዎች።`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLowerCase().replace(/[\s-]/g, "");
       const reading = readingOf(e.slug, "am");

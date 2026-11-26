@@ -23,6 +23,7 @@ import { site } from "@/config/site";
 import { readingOf, withReading } from "../name-readings";
 import { slavicCount, slavicForm } from "../slavic-count";
 import type { SlavicForms } from "../slavic-count";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
 const locale = "ru";
@@ -101,8 +102,6 @@ const firstMentions = () => {
   const seen = new Set<string>();
   return (list: Exchange[]) => joinList(list.map((e) => (seen.has(e.slug) ? e.name : (seen.add(e.slug), withReading(e, locale)))));
 };
-/** The first variant that fits `max` characters (titles and descriptions of different pairs differ in length). */
-const fit = (max: number, ...variants: string[]) => variants.find((v) => v.length <= max) ?? variants[variants.length - 1];
 const offer = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
 const has = (e: Exchange, key: FeatureKey) => altInfo(e).features[key].has === true;
 const leverageRisk = "Высокое кредитное плечо резко повышает риск ликвидации.";
@@ -377,17 +376,21 @@ export const ru: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    /** 50–60 characters: the richest variant that fits; the two names with their Cyrillic spelling stay in front. */
+    /* Three wordings, chosen per pair; the Cyrillic spellings (Binance (Бинанс)) stay where they fit. */
     title: (a, b, shortMonthYear) => {
-      const head = `${withReading(a, locale)} vs ${withReading(b, locale)} (${shortMonthYear})`;
+      const y = yearOf(shortMonthYear);
+      const forms = (an: string, bn: string) =>
+        [
+          [`${an} vs ${bn} (${shortMonthYear}): комиссии, плечо и бонусы`, `${an} vs ${bn} (${shortMonthYear}): комиссии и плечо`],
+          [`${an} или ${bn}? Сравнение комиссий, плеча и KYC`, `${an} или ${bn}? Комиссии, плечо и KYC`],
+          [`${an} vs ${bn}: какая биржа лучше в ${y} году?`, `${an} vs ${bn}: какая биржа лучше?`],
+        ][variant(3, a.slug, b.slug)];
       return fit(
-        60,
-        `${head}: сравнение комиссий, плеча, KYC и бонусов`,
-        `${head}: комиссии, плечо, KYC и бонус`,
-        `${head}: комиссии, плечо и KYC`,
-        `${head}: комиссии и плечо`,
-        `${head}: комиссии`,
-        head,
+        TITLE_MAX,
+        ...forms(withReading(a, locale), withReading(b, locale)),
+        ...forms(a.name, b.name),
+        `${withReading(a, locale)} vs ${withReading(b, locale)} (${shortMonthYear})`,
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
       );
     },
     /** 140–155 characters for every pair: the longest variant that fits. */
@@ -395,7 +398,7 @@ export const ru: VersusText = {
       const fees = `${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}`;
       const lev = `${leverageOf(a)}x vs ${leverageOf(b)}x`;
       return fit(
-        155,
+        DESC_MAX,
         `${a.name} vs ${b.name}: комиссии на фьючерсах ${fees}, кредитное плечо ${lev}, а также продукты, страны, KYC и реферальные коды — официальные данные (${monthYear})`,
         `${a.name} vs ${b.name}: фьючерсы ${fees}, кредитное плечо ${lev}, а также продукты, страны, KYC и реферальные коды — официальные данные (${monthYear})`,
         `${a.name} vs ${b.name}: фьючерсы ${fees}, плечо ${lev}, а также продукты, страны, KYC и реферальные коды — официальные данные (${monthYear})`,
@@ -628,11 +631,12 @@ export const ru: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Сравнение криптобирж (${shortMonthYear}): ${slavicCount(pairs, pairForms)}`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `Сравнение криптобирж (${shortMonthYear}): ${slavicCount(pairs, pairForms)}`, `Сравнение криптобирж (${shortMonthYear})`),
     /** 140–155 characters: the longest variant that fits. */
     description: (exchangeNames, pairs, monthYear) =>
       fit(
-        155,
+        DESC_MAX,
         `${exchangeNames} попарно: ${slavicCount(pairs, pairForms)} комиссий, плеча, стран, KYC и реферальных кодов — официальные данные (${monthYear})`,
         `${exchangeNames}: ${slavicCount(pairs, pairForms)} комиссий, плеча, стран, KYC и реферальных кодов — официальные данные (${monthYear})`,
         `${exchangeNames}: ${slavicCount(pairs, pairForms)} комиссий, плеча, стран, KYC и реферальных кодов (${monthYear})`,

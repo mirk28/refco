@@ -44,7 +44,7 @@ export const de: PageTexts = {
   /* ------------------------------------ About ------------------------------------ */
   about: {
     title: `Über uns & Methodik von ${site.name}`,
-    description: `Wer ${site.domain} betreibt, woher unsere Daten stammen und nach welcher Methodik wir Kryptobörsen prüfen.`,
+    description: `Wer ${site.domain} betreibt, woher unsere Börsendaten stammen, wie wir Kryptobörsen prüfen und wie oft Gebühren und Angebote neu geprüft werden.`,
     ldName: `Über ${site.name}`,
     crumb: "Über uns",
     intro: () => (
@@ -407,7 +407,7 @@ export const de: PageTexts = {
   /* --------------------------------- Privacy policy --------------------------------- */
   privacy: {
     title: "Datenschutzerklärung",
-    description: `Wie ${site.domain} personenbezogene Daten nach der DSGVO (Datenschutz-Grundverordnung) verarbeitet. Google Analytics nur mit deiner Einwilligung, keine Werbe-Cookies.`,
+    description: `Wie ${site.domain} personenbezogene Daten nach der DSGVO verarbeitet: Google Analytics nur mit deiner Einwilligung, keine Werbe-Cookies.`,
     intro: (c) => (
       <>
         <h1>Datenschutzerklärung</h1>

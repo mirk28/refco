@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Swahili. Same keys as `./en.tsx`.
@@ -14,9 +15,25 @@ const inCountry = (country: string) => (country.trim() === "Hong Kong" ? `huko $
 
 export const sw: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `Mbadala wa ${x.name} (${shortMonthYear}): majukwaa ${n} yamelinganishwa`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `Mbadala wa ${x.name} (${shortMonthYear}): majukwaa ${n} yamelinganishwa`,
+        `Mbadala ${n} bora wa ${x.name} (${shortMonthYear}): ada na bonasi`,
+        `Majukwaa ${n} kama ${x.name} yamelinganishwa (${shortMonthYear})`,
+        `Unahama kutoka ${x.name}? Linganisha mbadala ${n} (${shortMonthYear})`,
+      ][variant(4, x.slug)],
+      `Mbadala wa ${x.name} (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `Mbadala wa ${x.name}${former ? ` (${former})` : ""}: ${names}. Linganisha majukwaa ${n} kwa ada, leverage, KYC, nchi na misimbo ya rufaa – data rasmi, ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `Mbadala wa ${x.name}${former ? ` (${former})` : ""}: ${names}. Linganisha majukwaa ${n} kwa ada, leverage, KYC, nchi na misimbo ya rufaa – ${monthYear}.`,
+      `Mbadala wa ${x.name}: ${names}. Linganisha majukwaa ${n} kwa ada, leverage, KYC, nchi na misimbo ya rufaa – ${monthYear}.`,
+      `Mbadala wa ${x.name}: ${names}. Linganisha majukwaa ${n} kwa ada, leverage, KYC, nchi na misimbo ya rufaa.`,
+    ),
   keywords: (x, alts, former) => [
     `mbadala wa ${x.name}`,
     `${x.name} alternatives`,

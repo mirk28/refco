@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
@@ -151,9 +152,13 @@ export const fr: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Codes de parrainage crypto (${monthYear}) : bonus spot et futures`,
+    title: (monthYear) => fit(TITLE_MAX, `Codes de parrainage crypto et bonus (${monthYear})`, `Codes de parrainage crypto (${monthYear})`),
     description: (monthYear) =>
-      `Codes de parrainage vérifiés pour Binance, OKX, Bybit, Bitget, Gate, KuCoin et MEXC : bonus et remises de frais spot et futures, un seul lien (${monthYear}).`,
+      fit(
+        DESC_MAX,
+        `Codes de parrainage vérifiés pour Binance, OKX, Bybit, Bitget, Gate, KuCoin et MEXC : bonus et remises de frais avec un seul lien (${monthYear}).`,
+        `Codes de parrainage vérifiés pour Binance, OKX, Bybit, Bitget, Gate, KuCoin et MEXC : bonus et remises de frais spot et futures avec un seul lien.`,
+      ),
     listName: "Codes de parrainage des plateformes crypto pour le spot et les futures",
     updated: (monthYear) => `Mis à jour en ${monthYear}`,
     h1: (
@@ -350,9 +355,24 @@ export const fr: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Code de parrainage ${e.name} ${e.referralCode} (${shortMonthYear}) : ${lcStart(benefit(e))}`,
+    // Quatre formulations, fixes par plateforme, pour que les titres ne commencent pas tous de la même façon.
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Code de parrainage ${n} ${c} (${shortMonthYear}) : ${lcStart(b)}`, `Code de parrainage ${n} ${c} (${shortMonthYear}) avec bonus`, `Code de parrainage ${n} ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c} : code de parrainage ${n}, ${lcStart(b)}`, `${c} : code de parrainage ${n} et bonus (${shortMonthYear})`, `${c} : code de parrainage ${n} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b} : code de parrainage ${n} ${c}`, `Bonus de bienvenue ${y} : code de parrainage ${n} ${c}`, `Code de parrainage ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Comment utiliser le code de parrainage ${n} ${c} (${shortMonthYear})`, `Comment utiliser le code de parrainage ${n} ${c}`, `Code de parrainage ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Code de parrainage ${e.name} : ${e.referralCode}. ${benefit(e)}. Où le saisir, inscription, KYC et frais, vérifiés en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Code de parrainage ${e.name} : ${e.referralCode}. ${benefit(e)}. Où le saisir, inscription, KYC et frais, vérifiés en ${monthYear}.`,
+        `Code de parrainage ${e.name} : ${e.referralCode}. ${benefit(e)}. Où le saisir, KYC et frais (${monthYear}).`,
+        `Code de parrainage ${e.name} : ${e.referralCode}. ${benefit(e)}. Où le saisir, étapes d'inscription, KYC et frais.`,
+        `Code de parrainage ${e.name} : ${e.referralCode}. Où le saisir, étapes d'inscription, KYC et frais, vérifiés en ${monthYear}.`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("fr-FR").replace(/[\s'-]/g, "");
       return [

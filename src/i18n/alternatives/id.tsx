@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 
@@ -9,9 +10,27 @@ import type { AlternativesTexts } from "./en";
  */
 export const id: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `Alternatif ${x.name} (${shortMonthYear}): Perbandingan ${n} Exchange`,
+  // Empat variasi, tetap per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `Alternatif ${x.name} (${shortMonthYear}): Perbandingan ${n} Exchange`,
+        `${n} Alternatif ${x.name} Terbaik (${shortMonthYear}): Biaya & Bonus`,
+        `Mencari Alternatif ${x.name}? ${n} Exchange Dibandingkan`,
+        `Alternatif ${x.name} ${yearOf(shortMonthYear)}: Bandingkan Biaya, Leverage & KYC`,
+      ][variant(4, x.slug)],
+      `Alternatif ${x.name}: Perbandingan ${n} Exchange`,
+      `Alternatif ${x.name} (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${n} alternatif ${x.name}${former ? ` (${former})` : ""} dibandingkan – biaya, leverage, KYC, negara, dan kode referral; data resmi, diperiksa ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} alternatif ${x.name}${former ? ` (${former})` : ""} dibandingkan dari biaya, leverage, KYC, negara, dan kode referral. Diperiksa ${monthYear}.`,
+      `${names}: ${n} alternatif ${x.name} dibandingkan dari biaya, leverage, KYC, negara, dan kode referral. Diperiksa ${monthYear}.`,
+      `${names}: ${n} alternatif ${x.name} dibandingkan dari biaya, leverage, KYC, negara, dan kode referral (${monthYear}).`,
+      `${names}: ${n} alternatif ${x.name} dibandingkan dari biaya, leverage, KYC, negara, dan kode referral.`,
+    ),
   keywords: (x, alts, former) => [
     `alternatif ${x.name}`,
     `alternatif ${x.name} terbaik`,

@@ -18,6 +18,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "tr";
 const ct = compareText(locale);
@@ -333,9 +334,36 @@ export const tr: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): Komisyon, Kaldıraç, KYC ve Bonus`,
+    // Three wordings, chosen per pair. The question particle follows the last vowel as the name is spoken;
+    // an abbreviation is read letter by letter (OKX "o-ke-iks", MEXC "...-ce"), so its last letter decides.
+    title: (a, b, shortMonthYear) => {
+      const mi = (name: string) => {
+        const letter = ({ A: "a", I: "ı", O: "o", U: "u", Ö: "ö", Ü: "ü", Q: "ü" } as Record<string, string>)[name.slice(-1)] ?? "e";
+        const v = /^[A-ZÇĞİÖŞÜ]+$/.test(name) ? letter : name.toLocaleLowerCase("tr-TR").match(/[aeıioöuü]/g)?.pop() ?? "i";
+        return `m${({ a: "ı", ı: "ı", o: "u", u: "u", e: "i", i: "i", ö: "ü", ü: "ü" } as Record<string, string>)[v]}`;
+      };
+      return fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): Komisyon, Kaldıraç ve Bonus`,
+          `${a.name} ${mi(a.name)}, ${b.name} ${mi(b.name)}? Komisyon, Kaldıraç ve KYC Karşılaştırması`,
+          `${a.name} vs ${b.name}: ${yearOf(shortMonthYear)} Yılında Hangi Borsa Daha İyi?`,
+        ][variant(3, a.slug, b.slug)],
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): Komisyon ve Kaldıraç`,
+          `${a.name} ${mi(a.name)}, ${b.name} ${mi(b.name)}? Komisyon, Kaldıraç ve KYC`,
+          `${a.name} vs ${b.name}: Hangi Borsa Daha İyi? (${yearOf(shortMonthYear)})`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      );
+    },
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: vadeli işlem komisyonu ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, kaldıraç ${leverageOf(a)}x vs ${leverageOf(b)}x, ayrıca ürünler, ülkeler, KYC ve referans kodları – resmî veriler, son kontrol: ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: vadeli işlem komisyonu ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, kaldıraç ${leverageOf(a)}x vs ${leverageOf(b)}x, ürünler, ülkeler, KYC ve referans kodları. Kontrol: ${monthYear}.`,
+        `${a.name} vs ${b.name}: vadeli komisyon ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, kaldıraç ${leverageOf(a)}x vs ${leverageOf(b)}x, ürünler, ülkeler, KYC ve referans kodları. Kontrol: ${monthYear}.`,
+        `${a.name} vs ${b.name}: vadeli işlem komisyonu ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, kaldıraç ${leverageOf(a)}x vs ${leverageOf(b)}x, ürünler, ülkeler, KYC ve referans kodları.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -549,9 +577,14 @@ export const tr: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Kripto Borsaları Karşılaştırması (${shortMonthYear}): ${pairs} Birebir Kıyaslama`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `Kripto Borsaları: ${pairs} Birebir Karşılaştırma (${shortMonthYear})`, `Kripto Borsaları Karşılaştırması (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} ikişerli: komisyon, kaldıraç, ülkeler, KYC ve referans kodlarında ${pairs} birebir karşılaştırma – resmî veriler, son kontrol: ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} ikişerli: komisyon, kaldıraç, ülkeler, KYC ve referans kodlarında ${pairs} birebir karşılaştırma. Kontrol: ${monthYear}.`,
+        `${exchangeNames} ikişerli: komisyon, kaldıraç, ülkeler, KYC ve referans kodlarında ${pairs} birebir karşılaştırma.`,
+      ),
     crumbHome: "Ana sayfa",
     crumbPage: "Borsa karşılaştırmaları",
     listName: "Kripto para borsalarının birebir karşılaştırmaları",

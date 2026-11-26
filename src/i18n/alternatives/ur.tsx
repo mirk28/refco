@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Urdu (Pakistan, right to left). Same keys as `./en.tsx`.
@@ -10,9 +11,25 @@ import type { AlternativesTexts } from "./en";
  */
 export const ur: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `${x.name} کے متبادل (${shortMonthYear}): ${n} کرپٹو ایکسچینجز کا موازنہ`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `${x.name} کے متبادل (${shortMonthYear}): ${n} ایکسچینجز کا موازنہ`,
+        `${x.name} کے ${n} بہترین متبادل (${shortMonthYear}): فیس اور بونس`,
+        `${x.name} جیسے ایکسچینجز: ${n} متبادل کا موازنہ (${shortMonthYear})`,
+        `${x.name} چھوڑ رہے ہیں؟ ${n} متبادل ایکسچینجز (${shortMonthYear})`,
+      ][variant(4, x.slug)],
+      `${x.name} کے متبادل (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: ${x.name}${former ? ` (${former})` : ""} کے ${n} متبادل ایکسچینجز کا فیس، لیوریج، KYC، ممالک اور ریفرل کوڈز کے لحاظ سے موازنہ – آفیشل ڈیٹا، ${monthYear} میں چیک کیا گیا۔`,
+    fit(
+      DESC_MAX,
+      `${names}: ${x.name}${former ? ` (${former})` : ""} کے ${n} متبادل ایکسچینجز کا فیس، لیوریج، KYC، ممالک اور ریفرل کوڈز پر موازنہ – ${monthYear} میں چیک کیا گیا۔`,
+      `${names}: ${x.name} کے ${n} متبادل ایکسچینجز کا فیس، لیوریج، KYC، ممالک اور ریفرل کوڈز پر موازنہ – ${monthYear} میں چیک کیا گیا۔`,
+      `${names}: ${x.name} کے ${n} متبادل ایکسچینجز کا فیس، لیوریج، KYC، ممالک اور ریفرل کوڈز پر موازنہ۔`,
+    ),
   keywords: (x, alts, former) => [
     `${x.name} کے متبادل`,
     `${x.name} alternatives`,

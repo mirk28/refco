@@ -5,6 +5,7 @@
  * Wording as in `../es.tsx` and `../compare/es.ts`: "exchange" (masculine), "comisiones", "código de referido",
  * informal "tú". Numbers keep the notation of the exchanges' own pages (0.02%, 150x). "vs" stays "vs".
  */
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { Exchange, Faq } from "@/data/exchanges";
 import { exchanges } from "@/data/exchanges";
@@ -289,9 +290,25 @@ export const es: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): comisiones, apalancamiento, KYC y bono comparados`,
+    // Tres formulaciones, fijas por pareja.
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        ...[
+          [`${a.name} vs ${b.name} (${shortMonthYear}): comisiones, apalancamiento y bono`, `${a.name} vs ${b.name} (${shortMonthYear}): comisiones y apalancamiento`],
+          [`¿${a.name} o ${b.name}? Comisiones, apalancamiento y KYC`, `¿${a.name} o ${b.name}? Comisiones y KYC comparados`],
+          [`${a.name} vs ${b.name}: ¿qué exchange es mejor en ${yearOf(shortMonthYear)}?`],
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: comisiones de futuros ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, apalancamiento ${leverageOf(a)}x vs ${leverageOf(b)}x, además de productos, países, KYC y códigos de referido – datos oficiales, comprobados en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: comisiones de futuros ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, apalancamiento ${leverageOf(a)}x vs ${leverageOf(b)}x, productos, países, KYC y códigos de referido (${monthYear}).`,
+        `${a.name} vs ${b.name}: comisiones de futuros ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, apalancamiento ${leverageOf(a)}x vs ${leverageOf(b)}x, países, KYC y códigos de referido (${monthYear}).`,
+        `${a.name} vs ${b.name}: comisiones de futuros ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, apalancamiento ${leverageOf(a)}x vs ${leverageOf(b)}x, KYC y códigos de referido (${monthYear}).`,
+        `${a.name} vs ${b.name}: comisiones de futuros ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, apalancamiento ${leverageOf(a)}x vs ${leverageOf(b)}x, productos, países, KYC y códigos de referido.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -505,9 +522,16 @@ export const es: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Comparar exchanges de criptomonedas (${shortMonthYear}): ${pairs} comparaciones directas`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `Comparar exchanges cripto (${shortMonthYear}): ${pairs} comparaciones`, `Comparar exchanges de criptomonedas (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} por parejas: ${pairs} comparaciones directas de comisiones, apalancamiento, países, KYC y códigos de referido – datos oficiales, comprobados en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} por parejas: ${pairs} comparaciones directas de comisiones, apalancamiento, países, KYC y códigos de referido (${monthYear}).`,
+        `${exchangeNames}: ${pairs} comparaciones directas de comisiones, apalancamiento, KYC y códigos de referido (${monthYear}).`,
+        `${exchangeNames}: ${pairs} comparaciones de comisiones, apalancamiento, KYC y códigos de referido (${monthYear}).`,
+        `${exchangeNames} por parejas: ${pairs} comparaciones directas de comisiones, apalancamiento, países, KYC y códigos de referido.`,
+      ),
     crumbHome: "Inicio",
     crumbPage: "Comparaciones de exchanges",
     listName: "Comparaciones directas de exchanges de criptomonedas",

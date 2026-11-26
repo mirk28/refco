@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import type { Exchange } from "@/data/types";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in English (template: `src/components/AlternativesPage.tsx`).
@@ -9,9 +10,25 @@ import type { Exchange } from "@/data/types";
  */
 export const en = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x: Exchange, n: number, shortMonthYear: string) => `${x.name} Alternatives (${shortMonthYear}): ${n} Exchanges Compared`,
+  // Four wordings, chosen per exchange.
+  title: (x: Exchange, n: number, shortMonthYear: string) =>
+    fit(
+      TITLE_MAX,
+      [
+        `${x.name} Alternatives (${shortMonthYear}): ${n} Exchanges Compared`,
+        `${n} Best ${x.name} Alternatives (${shortMonthYear}): Fees & Bonuses`,
+        `Exchanges Like ${x.name}: ${n} Alternatives Compared (${shortMonthYear})`,
+        `Leaving ${x.name}? ${n} Alternatives Compared (${shortMonthYear})`,
+      ][variant(4, x.slug)],
+      `${x.name} Alternatives (${shortMonthYear})`,
+    ),
   description: (x: Exchange, names: string, n: number, former: string | undefined, monthYear: string) =>
-    `${names}: ${n} ${x.name}${former ? ` (${former})` : ""} alternatives compared by fees, leverage, KYC, countries and referral codes – official data, checked ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names}: ${n} ${x.name}${former ? ` (${former})` : ""} alternatives compared by fees, leverage, KYC, countries and referral codes. Checked ${monthYear}.`,
+      `${names}: ${n} ${x.name} alternatives compared by fees, leverage, KYC, countries and referral codes. Checked ${monthYear}.`,
+      `${names}: ${n} ${x.name} alternatives compared by fees, leverage, KYC, countries and referral codes.`,
+    ),
   keywords: (x: Exchange, alts: Exchange[], former: string | undefined) => [
     `${x.name} alternatives`,
     `${x.name} alternative`,

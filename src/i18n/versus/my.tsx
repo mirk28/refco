@@ -24,6 +24,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "my";
 const ct = compareText(locale);
@@ -59,8 +60,6 @@ const fullMonth: Record<string, string> = {
   ဒီ: "ဒီဇင်ဘာ",
 };
 const longMonth = (shortMonthYear: string) => shortMonthYear.replace(/(\S+)$/, (m) => fullMonth[m] ?? m);
-/** The richest variant within `max` characters (`"…".length`), else the last one. */
-const fit = (max: number, ...variants: string[]) => variants.find((v) => v.length <= max) ?? variants[variants.length - 1];
 const offer = (e: Exchange) => bare(e.feeDiscount || e.bonusHeadline);
 const has = (e: Exchange, key: FeatureKey) => altInfo(e).features[key].has === true;
 
@@ -327,30 +326,33 @@ export const my: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    /** Names and month always; then the richest list of compared points that keeps the title within 65 characters. */
+    // Three wordings, chosen per pair.
     title: (a, b, shortMonthYear) => {
       const head = `${a.name} vs ${b.name} (${longMonth(shortMonthYear)})`;
       return fit(
-        65,
-        `${head}: အခကြေးငွေ၊ Leverage၊ KYC နှင့် ဘောနပ်စ် နှိုင်းယှဉ်ချက်`,
-        `${head}: အခကြေးငွေ၊ Leverage၊ KYC နှင့် ဘောနပ်စ်`,
-        `${head}: အခကြေးငွေ၊ Leverage နှင့် KYC`,
+        TITLE_MAX,
+        [
+          `${head}: အခကြေးငွေ၊ Leverage နှင့် ဘောနပ်စ်`,
+          `${a.name} နဲ့ ${b.name} ဘယ်ဟာ ပိုကောင်းလဲ? အခကြေးငွေနှင့် KYC`,
+          `${a.name} vs ${b.name}: ${yearOf(shortMonthYear)} တွင် ဘယ် Exchange ပိုကောင်းလဲ`,
+        ][variant(3, a.slug, b.slug)],
         `${head}: အခကြေးငွေနှင့် Leverage`,
         head,
       );
     },
-    /** 140–160 characters for every pair: the richest variant that fits. */
     description: (a, b, monthYear) => {
       const head = `${a.name} vs ${b.name}:`;
       const fees = `${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}`;
       const lev = `Leverage ${leverageOf(a)}x vs ${leverageOf(b)}x`;
       const rest = "ထုတ်ကုန်၊ နိုင်ငံ၊ KYC နှင့် Referral Code။";
       return fit(
-        160,
+        DESC_MAX,
         `${head} Futures အခကြေးငွေ ${fees}၊ ${lev}၊ ${rest} တရားဝင် ဒေတာ၊ ${monthYear}လတွင် စစ်ဆေးထားသည်။`,
         `${head} Futures ${fees}၊ ${lev}၊ ${rest} တရားဝင် ဒေတာ၊ ${monthYear}လတွင် စစ်ဆေးထားသည်။`,
         `${head} Futures ${fees}၊ ${lev}၊ ${rest} ${monthYear}လ စစ်ဆေးပြီး တရားဝင် ဒေတာ။`,
         `${head} Futures ${fees}၊ ${lev}၊ ${rest} တရားဝင် ဒေတာ (${monthYear})။`,
+        `${head} Futures ${fees}၊ ${lev}၊ ${rest} (${monthYear})`,
+        `${head} Futures ${fees}၊ ${lev}၊ ${rest}`,
       );
     },
     keywords: (a, b, former) => [
@@ -570,20 +572,20 @@ export const my: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    /** Keyword and month always; the pairs part as long as the title stays within 65 characters. */
     title: (shortMonthYear, pairs) => {
       const head = `ခရစ်တို Exchange နှိုင်းယှဉ်ချက် (${longMonth(shortMonthYear)})`;
-      return fit(65, `${head}: ထိပ်တိုက် နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ`, `${head}: ထိပ်တိုက် အတွဲ ${pairs} တွဲ`, `${head}: အတွဲ ${pairs} တွဲ`);
+      return fit(TITLE_MAX, `${head}: ထိပ်တိုက် အတွဲ ${pairs} တွဲ`, `ခရစ်တို Exchange ${pairs} တွဲ နှိုင်းယှဉ်ချက် (${longMonth(shortMonthYear)})`, head);
     },
-    /** The list of all names makes this longer than 160 in English too: the richest variant that fits, else the shortest. */
     description: (exchangeNames, pairs, monthYear) => {
       const points = "အခကြေးငွေ၊ Leverage၊ နိုင်ငံ၊ KYC နှင့် Referral Code";
       return fit(
-        160,
+        DESC_MAX,
         `${exchangeNames} ကို အတွဲလိုက် ယှဉ်ထားသည်: ${points} ထိပ်တိုက် နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ။ တရားဝင် ဒေတာ၊ ${monthYear}လတွင် စစ်ဆေးထားသည်။`,
         `${exchangeNames} အတွဲလိုက်: ${points} ထိပ်တိုက် နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ။ တရားဝင် ဒေတာ၊ ${monthYear}လတွင် စစ်ဆေးထားသည်။`,
         `${exchangeNames}: ${points} ထိပ်တိုက် နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ။ တရားဝင် ဒေတာ (${monthYear})။`,
         `${exchangeNames}: ${points} နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ။ တရားဝင် ဒေတာ (${monthYear})။`,
+        `${exchangeNames}: ${points} နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ (${monthYear})။`,
+        `${exchangeNames}: အခကြေးငွေ၊ Leverage၊ KYC နှင့် Referral Code နှိုင်းယှဉ်ချက် အတွဲ ${pairs} တွဲ။`,
       );
     },
     crumbHome: "ပင်မစာမျက်နှာ",

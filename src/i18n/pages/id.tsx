@@ -46,7 +46,7 @@ export const id: PageTexts = {
   /* ------------------------------------ About ------------------------------------ */
   about: {
     title: `Tentang Kami & Metodologi ${site.name}`,
-    description: `Siapa yang mengelola ${site.domain}, dari mana data kami berasal, dan cara kami meninjau exchange kripto: biaya, kode referral, lisensi, dan ketersediaan.`,
+    description: `Siapa pengelola ${site.domain}, dari mana data kami berasal, dan cara kami meninjau exchange kripto: biaya, kode referral, lisensi, dan ketersediaan.`,
     ldName: `Tentang ${site.name}`,
     crumb: "Tentang kami",
     intro: () => (
@@ -145,7 +145,7 @@ export const id: PageTexts = {
   /* ------------------------------ Affiliate disclosure ------------------------------ */
   affiliateDisclosure: {
     title: "Pengungkapan Afiliasi",
-    description: `Pengungkapan afiliasi ${site.name}: sumber penghasilan kami, tautan mana yang berupa iklan, dan mengapa fakta seputar exchange kripto di situs ini tidak terpengaruh.`,
+    description: `Pengungkapan afiliasi ${site.name}: sumber penghasilan kami, tautan mana yang berupa iklan, dan mengapa fakta tentang exchange kripto tidak terpengaruh.`,
     intro: (c) => (
       <>
         <h1>Pengungkapan Afiliasi</h1>

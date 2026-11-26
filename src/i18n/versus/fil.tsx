@@ -19,6 +19,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "fil";
 const ct = compareText(locale);
@@ -345,10 +346,26 @@ export const fil: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    /** Within 50–60 characters for most pairs, as the sheet asks; "vs" already says that the two are compared. */
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): Fees, Leverage, KYC & Bonus`,
+    // Three wordings, chosen per pair; "vs" already says that the two are compared.
+    title: (a, b, shortMonthYear) => {
+      const y = yearOf(shortMonthYear), v = variant(3, a.slug, b.slug);
+      return fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): Fees, Leverage at Bonus`,
+          `${a.name} o ${b.name}? Paghahambing ng Fees, Leverage at KYC`,
+          `${a.name} vs ${b.name}: Alin ang Mas Magandang Exchange sa ${y}?`,
+        ][v],
+        [`${a.name} vs ${b.name} (${shortMonthYear}): Fees at Leverage`, `${a.name} o ${b.name}? Fees, Leverage at KYC`, `${a.name} vs ${b.name}: Alin ang Mas Maganda sa ${y}?`][v],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      );
+    },
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: futures fees ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, produkto, bansa, KYC at referral code – opisyal na datos, sinuri noong ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: futures fees ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, produkto, bansa, KYC at referral code. Sinuri noong ${monthYear}.`,
+        `${a.name} vs ${b.name}: futures fees ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, produkto, bansa, KYC at referral code.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -566,9 +583,19 @@ export const fil: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Paghahambing ng mga Crypto Exchange (${shortMonthYear}): ${pairs} Head-to-Head`,
+    title: (shortMonthYear, pairs) =>
+      fit(
+        TITLE_MAX,
+        `Paghahambing ng mga Crypto Exchange (${shortMonthYear}): ${pairs} Head-to-Head`,
+        `Paghahambing ng mga Crypto Exchange: ${pairs} Head-to-Head`,
+        `Paghahambing ng mga Crypto Exchange (${shortMonthYear})`,
+      ),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames}: ${pairs} head-to-head na paghahambing ng fees, leverage, bansa, KYC at referral code – opisyal na datos, sinuri noong ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames}: ${pairs} head-to-head na paghahambing ng fees, leverage, bansa, KYC at referral code. Sinuri noong ${monthYear}.`,
+        `${exchangeNames}: ${pairs} head-to-head na paghahambing ng fees, leverage, bansa, KYC at referral code.`,
+      ),
     crumbHome: "Home",
     crumbPage: "Paghahambing ng mga exchange",
     listName: "Mga head-to-head na paghahambing ng crypto exchange",

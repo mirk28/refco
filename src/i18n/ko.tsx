@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
 import { hangulName, josa, withHangul } from "./ko-josa";
+import { fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Korean. Same keys as `en.tsx`, written natively from the English text.
@@ -17,6 +18,9 @@ import { hangulName, josa, withHangul } from "./ko-josa";
  */
 
 const benefit = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
+/** Snippet limits for Korean: Hangul is about twice as wide as Latin letters (`scripts/meta-check.tsx`). */
+const TITLE_KO = 33;
+const DESC_KO = 85;
 /** "A, B, C" – Korean lists with commas throughout; a particle after the list follows its last item. */
 const list = (items: string[]) => items.join(", ");
 const shortLeverage = (e: Exchange) => e.maxLeverage.replace(/\s*\(.*\)/, "");
@@ -148,9 +152,14 @@ export const ko: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `암호화폐 거래소 레퍼럴 코드 (${monthYear}): 현물·선물 가입 보너스`,
+    title: (monthYear) =>
+      fit(TITLE_KO, `암호화폐 거래소 레퍼럴 코드·보너스 (${monthYear})`, `암호화폐 거래소 레퍼럴 코드 (${monthYear})`, "암호화폐 거래소 레퍼럴 코드"),
     description: (monthYear) =>
-      `Binance, OKX, Bybit, Bitget, Gate, KuCoin, MEXC의 검증된 레퍼럴 코드(추천인 코드). 링크 하나로 현물·선물 신규 가입 보너스와 수수료 페이백을 받으세요 – ${monthYear} 업데이트.`,
+      fit(
+        DESC_KO,
+        `Binance, OKX, Bybit 등 거래소 7곳의 검증된 레퍼럴 코드. 링크 하나로 가입 보너스와 수수료 페이백까지(${monthYear} 업데이트).`,
+        `Binance, OKX, Bybit 등 거래소 7곳의 검증된 레퍼럴 코드. 링크 하나로 가입 보너스와 수수료 페이백까지.`,
+      ),
     listName: "현물·선물 거래를 위한 암호화폐 거래소 레퍼럴 코드",
     updated: (monthYear) => `${monthYear} 업데이트`,
     h1: (
@@ -313,9 +322,25 @@ export const ko: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${withHangul(e)} 레퍼럴 코드 ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "<거래소> 레퍼럴 코드".
+    title: (e, shortMonthYear) => {
+      const n = e.name, h = withHangul(e), c = e.referralCode, y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_KO, `${h} 레퍼럴 코드 ${c} (${shortMonthYear})`, `${h} 레퍼럴 코드 ${c} (${y})`, `${h} 레퍼럴 코드 ${c}`, `${n} 레퍼럴 코드 ${c}`),
+        () => fit(TITLE_KO, `${c} – ${n} 레퍼럴 코드 (${shortMonthYear})`, `${c} – ${n} 레퍼럴 코드·추천인 코드`, `${c} – ${h} 레퍼럴 코드`, `${c} – ${n} 레퍼럴 코드`),
+        () => fit(TITLE_KO, `${benefit(e)}: ${n} 레퍼럴 코드 ${c}`, `${y} 가입 보너스: ${n} 레퍼럴 코드 ${c}`, `가입 보너스: ${n} 레퍼럴 코드 ${c}`, `${n} 레퍼럴 코드 ${c}`),
+        () => fit(TITLE_KO, `${n} 레퍼럴 코드 ${c} 사용법 (${shortMonthYear})`, `${n} 레퍼럴 코드 ${c} 사용법 (${y})`, `${n} 레퍼럴 코드 ${c} 사용법`, `${n} 레퍼럴 코드 ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} 레퍼럴 코드(추천인 코드)는 ${e.referralCode}입니다. ${benefit(e)}, 코드 입력 위치, 가입 절차, KYC, 수수료를 정리했습니다(${monthYear} 확인).`,
+      fit(
+        DESC_KO,
+        `${e.name} 레퍼럴 코드 ${e.referralCode}: ${benefit(e)}. 입력 위치·가입 절차·KYC·수수료 정리(${monthYear} 확인).`,
+        `${e.name} 레퍼럴 코드 ${e.referralCode}: ${benefit(e)}. 가입·KYC·수수료 정리(${monthYear} 확인).`,
+        `${e.name} 레퍼럴 코드 ${e.referralCode}: ${benefit(e)}. 입력 위치·가입 절차·KYC·수수료 정리.`,
+        `${e.name} 레퍼럴 코드 ${e.referralCode}: 코드 입력 위치, 가입 절차, KYC, 수수료를 정리했습니다(${monthYear} 확인).`,
+        `${e.name} 레퍼럴 코드 ${e.referralCode}: 입력 위치·가입 절차·KYC·수수료 정리.`,
+      ),
     keywords: (e) => {
       const reading = hangulName[e.slug];
       const same = (k: string) => k.toLowerCase().replace(/[\s-]/g, "");

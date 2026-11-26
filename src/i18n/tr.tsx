@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Turkish. Same keys as `en.tsx`.
@@ -165,9 +166,14 @@ export const tr: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Kripto Borsası Referans Kodları (${monthYear}): Spot ve Vadeli İşlem Bonusları`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `Kripto Borsası Referans Kodları ve Bonusları (${monthYear})`, `Kripto Borsası Referans Kodları (${monthYear})`),
     description: (monthYear) =>
-      `Binance, OKX, Bybit, Bitget, Gate, KuCoin ve MEXC için doğrulanmış referans kodları. Tek bağlantıyla Spot ve vadeli işlemlerde yeni kullanıcı bonusu ve komisyon iadesi al – ${monthYear} itibarıyla güncel.`,
+      fit(
+        DESC_MAX,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin ve MEXC için doğrulanmış referans kodları: tek bağlantıyla yeni kullanıcı bonusu ve komisyon iadesi. ${monthYear} itibarıyla güncel.`,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin ve MEXC için doğrulanmış referans kodları: tek bağlantıyla yeni kullanıcı bonusu ve komisyon iadesi.`,
+      ),
     listName: "Spot ve vadeli işlemler için kripto borsası referans kodları",
     updated: (monthYear) => `Güncelleme: ${monthYear}`,
     h1: (
@@ -333,9 +339,23 @@ export const tr: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${e.name} Referans Kodu ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "<Borsa> Referans Kodu".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} Referans Kodu ${c} (${shortMonthYear}): ${b}`, `${n} Referans Kodu ${c} (${shortMonthYear}) – Kayıt Bonusu`, `${n} Referans Kodu ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c} – ${n} Referans Kodu: ${b}`, `${c}: ${n} Referans Kodu ve Bonusu (${shortMonthYear})`, `${c}: ${n} Referans Kodu (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: ${n} Referans Kodu ${c}`, `${y} Kayıt Bonusu: ${n} Referans Kodu ${c}`, `${n} Referans Kodu ${c} (${y})`),
+        () => fit(TITLE_MAX, `${n} Referans Kodu ${c} Nasıl Kullanılır? (${shortMonthYear})`, `${n} Referans Kodu ${c} Nasıl Kullanılır?`, `${n} Referans Kodu ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} referans kodu: ${e.referralCode}. ${benefit(e)} – kod nereye girilir, kayıt adımları, KYC ve komisyonlar. Kontrol: ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${e.name} referans kodu: ${e.referralCode}. ${benefit(e)}. Kod nereye girilir, kayıt adımları, KYC ve komisyonlar – kontrol: ${monthYear}.`,
+        `${e.name} referans kodu: ${e.referralCode}. ${benefit(e)}. Kod nereye girilir, kayıt adımları, KYC ve komisyonlar.`,
+        `${e.name} referans kodu: ${e.referralCode}. Kod nereye girilir, kayıt adımları, KYC ve komisyonlar – kontrol: ${monthYear}.`,
+      ),
     keywords: (e) =>
       [
         `${e.name} referans kodu`,

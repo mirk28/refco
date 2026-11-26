@@ -394,7 +394,7 @@ export const ko: PageTexts = {
   /* --------------------------------- Privacy policy --------------------------------- */
   privacy: {
     title: "개인정보 처리방침",
-    description: `${josa(site.domain, "이/가")} GDPR(EU 일반 개인정보 보호법)에 따라 개인정보를 처리하는 방식을 안내합니다. Google Analytics는 동의한 경우에만 사용하며, 광고 쿠키는 없습니다.`,
+    description: `${josa(site.domain, "이/가")} GDPR에 따라 개인정보를 다루는 방식: Google Analytics는 동의한 경우에만 쓰며 광고 쿠키는 없습니다.`,
     intro: (c) => (
       <>
         <h1>개인정보 처리방침</h1>

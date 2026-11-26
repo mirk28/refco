@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
 import { readingOf, withReading } from "./name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Thai. Same keys as `en.tsx`.
@@ -140,9 +141,14 @@ export const th: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `รหัสแนะนำกระดานเทรดคริปโต (${monthYear}): โบนัส Spot และ Futures`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `รหัสแนะนำกระดานเทรดคริปโต (${monthYear}): โบนัส Spot และ Futures`, `รหัสแนะนำกระดานเทรดคริปโตและโบนัส (${monthYear})`, `รหัสแนะนำกระดานเทรดคริปโต (${monthYear})`),
     description: (monthYear) =>
-      `รหัสแนะนำที่ตรวจสอบแล้วของ Binance, OKX, Bybit, Bitget, Gate, KuCoin และ MEXC รับโบนัสผู้ใช้ใหม่และเงินคืนค่าธรรมเนียม Spot และ Futures ด้วยลิงก์เดียว อัปเดตเดือน${monthYear}`,
+      fit(
+        DESC_MAX,
+        `รหัสแนะนำที่ตรวจสอบแล้วของ Binance, OKX, Bybit, Bitget, Gate, KuCoin และ MEXC รับโบนัสผู้ใช้ใหม่และเงินคืนค่าธรรมเนียมด้วยลิงก์เดียว อัปเดตเดือน${monthYear}`,
+        `รหัสแนะนำที่ตรวจสอบแล้วของ Binance, OKX, Bybit, Bitget, Gate, KuCoin และ MEXC รับโบนัสผู้ใช้ใหม่และเงินคืนค่าธรรมเนียมด้วยลิงก์เดียว`,
+      ),
     listName: "รหัสแนะนำกระดานเทรดคริปโตสำหรับ Spot และ Futures",
     updated: (monthYear) => `อัปเดตเดือน${monthYear}`,
     h1: (
@@ -311,9 +317,24 @@ export const th: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `รหัสแนะนำ ${withReading(e, "th")} ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "รหัสแนะนำ <กระดานเทรด>".
+    title: (e, shortMonthYear) => {
+      const n = e.name, r = withReading(e, "th"), c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `รหัสแนะนำ ${r} ${c} (${shortMonthYear}): ${b}`, `รหัสแนะนำ ${r} ${c} (${shortMonthYear})`, `รหัสแนะนำ ${n} ${c} (${shortMonthYear})`, `รหัสแนะนำ ${n} ${c}`),
+        () => fit(TITLE_MAX, `${c} – รหัสแนะนำ ${r} และโบนัส (${shortMonthYear})`, `${c} – รหัสแนะนำ ${r} (${shortMonthYear})`, `${c} – รหัสแนะนำ ${n} (${shortMonthYear})`, `${c} – รหัสแนะนำ ${n}`),
+        () => fit(TITLE_MAX, `${b}: รหัสแนะนำ ${n} ${c}`, `โบนัสสมัคร ${r} ปี ${y}: รหัสแนะนำ ${c}`, `โบนัสสมัคร ${n} ปี ${y}: รหัสแนะนำ ${c}`, `รหัสแนะนำ ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `วิธีใช้รหัสแนะนำ ${r} ${c} (${shortMonthYear})`, `วิธีใช้รหัสแนะนำ ${n} ${c} (${shortMonthYear})`, `วิธีใช้รหัสแนะนำ ${n} ${c}`, `รหัสแนะนำ ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `รหัสแนะนำ ${e.name}: ${e.referralCode} ${benefit(e)} พร้อมจุดที่ต้องกรอกรหัส ขั้นตอนสมัคร KYC และค่าธรรมเนียม ตรวจสอบเมื่อเดือน${monthYear}`,
+      fit(
+        DESC_MAX,
+        `รหัสแนะนำ ${e.name}: ${e.referralCode} ${benefit(e)} พร้อมจุดที่ต้องกรอกรหัส ขั้นตอนสมัคร KYC และค่าธรรมเนียม ตรวจสอบเมื่อเดือน${monthYear}`,
+        `รหัสแนะนำ ${e.name}: ${e.referralCode} ${benefit(e)} พร้อมจุดกรอกรหัส ขั้นตอนสมัคร KYC และค่าธรรมเนียม ตรวจสอบเดือน${monthYear}`,
+        `รหัสแนะนำ ${e.name}: ${e.referralCode} ${benefit(e)} พร้อมจุดกรอกรหัส ขั้นตอนสมัคร KYC และค่าธรรมเนียม`,
+        `รหัสแนะนำ ${e.name}: ${e.referralCode} จุดที่ต้องกรอกรหัส ขั้นตอนสมัคร การยืนยันตัวตน (KYC) และค่าธรรมเนียม Spot และ Futures ตรวจสอบเมื่อเดือน${monthYear}`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLowerCase().replace(/\s/g, "");
       const reading = readingOf(e.slug, "th");

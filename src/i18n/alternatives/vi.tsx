@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Texts of the "[Exchange] alternatives" pages in Vietnamese. Same keys as `./en.tsx`.
@@ -19,9 +20,25 @@ const monthSlash = (shortMonthYear: string) => {
 
 export const vi: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `Sàn thay thế ${x.name} (${monthSlash(shortMonthYear)}): So sánh ${n} sàn giao dịch`,
+  // Four wordings, chosen per exchange.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      [
+        `Sàn thay thế ${x.name} (${monthSlash(shortMonthYear)}): So sánh ${n} sàn giao dịch`,
+        `${n} sàn thay thế ${x.name} tốt nhất (${monthSlash(shortMonthYear)}): Phí & thưởng`,
+        `Sàn thay thế ${x.name} năm ${yearOf(shortMonthYear)}: So sánh ${n} sàn tương tự`,
+        `Sàn thay thế ${x.name}: Nên chuyển sang sàn nào? (${monthSlash(shortMonthYear)})`,
+      ][variant(4, x.slug)],
+      `Sàn thay thế ${x.name} (${monthSlash(shortMonthYear)})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names}: so sánh ${n} sàn thay thế ${x.name}${former ? ` (${former})` : ""} về phí, đòn bẩy, KYC, quốc gia và mã giới thiệu – dữ liệu chính thức, kiểm tra ${monthSlash(monthYear)}.`,
+    fit(
+      DESC_MAX,
+      `${names}: so sánh ${n} sàn thay thế ${x.name}${former ? ` (${former})` : ""} về phí, đòn bẩy, KYC, quốc gia và mã giới thiệu – kiểm tra ${monthSlash(monthYear)}.`,
+      `${names}: so sánh ${n} sàn thay thế ${x.name} về phí, đòn bẩy, KYC, quốc gia và mã giới thiệu – kiểm tra ${monthSlash(monthYear)}.`,
+      `${names}: so sánh ${n} sàn thay thế ${x.name} về phí, đòn bẩy, KYC, quốc gia và mã giới thiệu.`,
+    ),
   keywords: (x, alts, former) => [
     `sàn thay thế ${x.name}`,
     `${x.name} alternatives`,

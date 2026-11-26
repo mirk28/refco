@@ -18,6 +18,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "hi";
 const ct = compareText(locale);
@@ -286,9 +287,22 @@ export const hi: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): फीस, लीवरेज, KYC और बोनस की तुलना`,
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): फीस, लीवरेज और बोनस`,
+          `${a.name} या ${b.name}? फीस, लीवरेज और KYC की तुलना`,
+          `${a.name} vs ${b.name}: ${yearOf(shortMonthYear)} में कौन-सा एक्सचेंज बेहतर?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: Futures फीस ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, लीवरेज ${leverageOf(a)}x vs ${leverageOf(b)}x, साथ में प्रोडक्ट्स, देश, KYC और रेफरल कोड – आधिकारिक डेटा, ${monthYear} में जाँचा गया।`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: Futures फीस ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, लीवरेज ${leverageOf(a)}x vs ${leverageOf(b)}x, प्रोडक्ट्स, देश, KYC और रेफरल कोड – ${monthYear} में जाँचा गया।`,
+        `${a.name} vs ${b.name}: Futures फीस ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, लीवरेज ${leverageOf(a)}x vs ${leverageOf(b)}x, प्रोडक्ट्स, देश, KYC और रेफरल कोड।`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -496,9 +510,14 @@ export const hi: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `क्रिप्टो एक्सचेंज तुलना (${shortMonthYear}): ${pairs} आमने-सामने मुकाबले`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `क्रिप्टो एक्सचेंज तुलना (${shortMonthYear}): ${pairs} आमने-सामने मुकाबले`, `क्रिप्टो एक्सचेंज तुलना (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} जोड़ियों में: फीस, लीवरेज, देश, KYC और रेफरल कोड पर ${pairs} आमने-सामने तुलनाएँ – आधिकारिक डेटा, ${monthYear} में जाँचा गया।`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} जोड़ियों में: फीस, लीवरेज, देश, KYC और रेफरल कोड पर ${pairs} आमने-सामने तुलनाएँ – ${monthYear} में जाँचा गया।`,
+        `${exchangeNames} जोड़ियों में: फीस, लीवरेज, देश, KYC और रेफरल कोड पर ${pairs} आमने-सामने तुलनाएँ।`,
+      ),
     crumbHome: "होम",
     crumbPage: "एक्सचेंज तुलना",
     listName: "क्रिप्टो एक्सचेंजों की आमने-सामने तुलनाएँ",

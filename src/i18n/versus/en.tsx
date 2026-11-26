@@ -18,6 +18,7 @@ import { addLater, altInfo as altInfoIn, feePair, lcFirst, leverageOf, verb } fr
 import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "en";
 const ct = compareText(locale);
@@ -300,9 +301,23 @@ export const en = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a: Exchange, b: Exchange, shortMonthYear: string) => `${a.name} vs ${b.name} (${shortMonthYear}): Fees, Leverage, KYC & Bonus Compared`,
+    // Three wordings, chosen per pair.
+    title: (a: Exchange, b: Exchange, shortMonthYear: string) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): Fees, Leverage & Bonus`,
+          `${a.name} or ${b.name}? Fees, Leverage & KYC Compared`,
+          `${a.name} vs ${b.name}: Which Exchange Is Better in ${yearOf(shortMonthYear)}?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a: Exchange, b: Exchange, monthYear: string) =>
-      `${a.name} vs ${b.name}: futures fees ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, plus products, countries, KYC and referral codes – official data, checked ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: futures fees ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, products, countries, KYC and referral codes. Checked ${monthYear}.`,
+        `${a.name} vs ${b.name}: futures fees ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, products, countries, KYC and referral codes.`,
+      ),
     /** `former`: [earlier brand name of one exchange, name of the other exchange]. */
     keywords: (a: Exchange, b: Exchange, former: string[][]) => [
       `${a.name} vs ${b.name}`,
@@ -515,10 +530,15 @@ export const en = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear: string, pairs: number) => `Crypto Exchange Comparisons (${shortMonthYear}): ${pairs} Head-to-Head Matchups`,
+    title: (shortMonthYear: string, pairs: number) =>
+      fit(TITLE_MAX, `Crypto Exchange Comparisons (${shortMonthYear}): ${pairs} Matchups`, `Crypto Exchange Comparisons (${shortMonthYear})`),
     /** `exchangeNames`: all exchanges as one list ("A, B and C"). */
     description: (exchangeNames: string, pairs: number, monthYear: string) =>
-      `${exchangeNames} in pairs: ${pairs} head-to-head comparisons of fees, leverage, countries, KYC and referral codes – official data, checked ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} in pairs: ${pairs} comparisons of fees, leverage, countries, KYC and referral codes. Checked ${monthYear}.`,
+        `${exchangeNames} in pairs: ${pairs} comparisons of fees, leverage, countries, KYC and referral codes.`,
+      ),
     crumbHome: "Home",
     crumbPage: "Exchange comparisons",
     /** Name of the list of all comparisons in the structured data. */

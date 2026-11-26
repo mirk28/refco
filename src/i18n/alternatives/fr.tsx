@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { AlternativesTexts } from "./en";
 import { de, que } from "../fr-elision";
@@ -46,9 +47,27 @@ const inCountry = (country: string): string | undefined => {
 
 export const fr: AlternativesTexts = {
   /* ------------------------------- metadata ------------------------------- */
-  title: (x, n, shortMonthYear) => `Alternatives à ${x.name} (${shortMonthYear}) : ${n} ${pl(n, "plateforme comparée", "plateformes comparées")}`,
+  // Quatre formulations, fixes par plateforme.
+  title: (x, n, shortMonthYear) =>
+    fit(
+      TITLE_MAX,
+      ...[
+        [`Alternatives à ${x.name} (${shortMonthYear}) : ${n} ${pl(n, "plateforme comparée", "plateformes comparées")}`],
+        [`Les ${n} meilleures alternatives à ${x.name} (${shortMonthYear}) : frais et bonus`, `Les ${n} meilleures alternatives à ${x.name} : frais et bonus`],
+        [`Alternatives à ${x.name} en ${yearOf(shortMonthYear)} : frais, levier et KYC comparés`, `Alternatives à ${x.name} en ${yearOf(shortMonthYear)} : frais et KYC comparés`],
+        [`Alternatives à ${x.name} : laquelle choisir en ${yearOf(shortMonthYear)} ?`],
+      ][variant(4, x.slug)],
+      `Alternatives à ${x.name} : ${n} ${pl(n, "plateforme comparée", "plateformes comparées")}`,
+      `Alternatives à ${x.name} (${shortMonthYear})`,
+    ),
   description: (x, names, n, former, monthYear) =>
-    `${names} : ${n} ${pl(n, "alternative", "alternatives")} à ${x.name}${former ? ` (${former})` : ""} ${pl(n, "comparée", "comparées")} (frais, levier, KYC, pays et codes de parrainage) – données officielles, vérifiées en ${monthYear}.`,
+    fit(
+      DESC_MAX,
+      `${names} : ${n} ${pl(n, "alternative", "alternatives")} à ${x.name}${former ? ` (${former})` : ""} ${pl(n, "comparée", "comparées")} (frais, levier, KYC, pays et codes de parrainage). Données vérifiées en ${monthYear}.`,
+      `${names} : ${n} ${pl(n, "alternative", "alternatives")} à ${x.name} ${pl(n, "comparée", "comparées")} (frais, levier, KYC, pays et codes de parrainage). Données vérifiées en ${monthYear}.`,
+      `${names} : ${n} ${pl(n, "alternative", "alternatives")} à ${x.name} ${pl(n, "comparée", "comparées")} (frais, levier, KYC, pays et codes de parrainage). Vérifié en ${monthYear}.`,
+      `${names} : ${n} ${pl(n, "alternative", "alternatives")} à ${x.name} ${pl(n, "comparée", "comparées")} selon les frais, le levier, le KYC, les pays et les codes de parrainage.`,
+    ),
   keywords: (x, alts, former) => [
     `alternatives à ${x.name}`,
     `alternative à ${x.name}`,

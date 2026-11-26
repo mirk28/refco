@@ -148,7 +148,7 @@ export const fil: PageTexts = {
   /* ------------------------------ Affiliate disclosure ------------------------------ */
   affiliateDisclosure: {
     title: "Pagsisiwalat ng Affiliate",
-    description: `Paano kumikita ang ${site.name}, aling mga link ang patalastas at bakit hindi nito naaapektuhan ang mga datos na inilalathala namin tungkol sa mga crypto exchange.`,
+    description: `Paano kumikita ang ${site.name}, aling mga link ang patalastas at bakit hindi nito naaapektuhan ang datos na inilalathala namin tungkol sa mga exchange.`,
     intro: (c) => (
       <>
         <h1>Pagsisiwalat ng Affiliate</h1>
@@ -415,7 +415,7 @@ export const fil: PageTexts = {
   /* --------------------------------- Privacy policy --------------------------------- */
   privacy: {
     title: "Patakaran sa Privacy",
-    description: `Paano pinangangasiwaan ng ${site.domain} ang personal na datos sa ilalim ng GDPR ng EU. Google Analytics lamang kung papayag ka, walang advertising cookie.`,
+    description: `Paano pinangangasiwaan ng ${site.domain} ang personal na datos sa ilalim ng GDPR: Google Analytics lamang kung papayag ka, walang advertising cookie.`,
     intro: (c) => (
       <>
         <h1>Patakaran sa Privacy</h1>

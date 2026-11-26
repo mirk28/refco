@@ -19,6 +19,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "sw";
 const ct = compareText(locale);
@@ -314,9 +315,22 @@ export const sw: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}): Ada, leverage, KYC na bonasi`,
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}): ada, leverage na bonasi`,
+          `${a.name} au ${b.name}? Linganisha ada, leverage na KYC`,
+          `${a.name} vs ${b.name}: lipi ni bora mwaka ${yearOf(shortMonthYear)}?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: ada za futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, bidhaa, nchi, KYC na misimbo ya rufaa – takwimu rasmi, ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: ada za futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, bidhaa, nchi, KYC na misimbo ya rufaa – ${monthYear}.`,
+        `${a.name} vs ${b.name}: ada za futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, leverage ${leverageOf(a)}x vs ${leverageOf(b)}x, bidhaa, nchi, KYC na misimbo ya rufaa.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -528,9 +542,19 @@ export const sw: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Ulinganisho wa majukwaa ya crypto (${shortMonthYear}): jozi ${pairs} ana kwa ana`,
+    title: (shortMonthYear, pairs) =>
+      fit(
+        TITLE_MAX,
+        `Ulinganisho wa majukwaa ya crypto (${shortMonthYear}): jozi ${pairs} ana kwa ana`,
+        `Ulinganisho wa majukwaa ya crypto (${shortMonthYear}): jozi ${pairs}`,
+        `Ulinganisho wa majukwaa ya crypto (${shortMonthYear})`,
+      ),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} kwa jozi: ulinganisho ${pairs} wa ana kwa ana kuhusu ada, leverage, nchi, KYC na misimbo ya rufaa – takwimu rasmi, ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} kwa jozi: ulinganisho ${pairs} wa ana kwa ana kuhusu ada, leverage, nchi, KYC na misimbo ya rufaa – ${monthYear}.`,
+        `${exchangeNames} kwa jozi: ulinganisho ${pairs} wa ana kwa ana kuhusu ada, leverage, nchi, KYC na misimbo ya rufaa.`,
+      ),
     crumbHome: "Mwanzo",
     crumbPage: "Ulinganisho wa majukwaa",
     listName: "Ulinganisho wa ana kwa ana wa majukwaa ya crypto",

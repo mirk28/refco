@@ -18,6 +18,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 const locale = "vi";
 const ct = compareText(locale);
@@ -311,10 +312,27 @@ export const vi: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${monthSlash(shortMonthYear)}): So sánh phí, đòn bẩy, KYC và thưởng`,
-    /** Stays within 160 characters for every pair. */
+    // Three wordings, chosen per pair.
+    title: (a, b, shortMonthYear) => {
+      const m = monthSlash(shortMonthYear), y = yearOf(shortMonthYear), v = variant(3, a.slug, b.slug);
+      return fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${m}): Phí, đòn bẩy và thưởng`,
+          `${a.name} hay ${b.name}? So sánh phí, đòn bẩy và KYC`,
+          `${a.name} vs ${b.name}: Sàn nào tốt hơn năm ${y}?`,
+        ][v],
+        [`${a.name} vs ${b.name} (${m}): Phí và đòn bẩy`, `${a.name} hay ${b.name}? Phí, đòn bẩy và KYC`, `${a.name} vs ${b.name}: Sàn nào tốt hơn?`][v],
+        `${a.name} vs ${b.name} (${m})`,
+      );
+    },
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}: phí Futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, đòn bẩy ${leverageOf(a)}x vs ${leverageOf(b)}x, sản phẩm, quốc gia, KYC và mã giới thiệu – dữ liệu chính thức, ${monthSlash(monthYear)}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}: phí Futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, đòn bẩy ${leverageOf(a)}x vs ${leverageOf(b)}x, sản phẩm, quốc gia, KYC và mã giới thiệu – dữ liệu chính thức, ${monthSlash(monthYear)}.`,
+        `${a.name} vs ${b.name}: phí Futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, đòn bẩy ${leverageOf(a)}x vs ${leverageOf(b)}x, sản phẩm, quốc gia, KYC và mã giới thiệu – kiểm tra ${monthSlash(monthYear)}.`,
+        `${a.name} vs ${b.name}: phí Futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, đòn bẩy ${leverageOf(a)}x vs ${leverageOf(b)}x, sản phẩm, quốc gia, KYC và mã giới thiệu.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -522,9 +540,18 @@ export const vi: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `So sánh sàn giao dịch tiền mã hóa (${monthSlash(shortMonthYear)}): ${pairs} cặp đối đầu`,
+    title: (shortMonthYear, pairs) =>
+      fit(
+        TITLE_MAX,
+        `So sánh sàn giao dịch tiền mã hóa (${monthSlash(shortMonthYear)}): ${pairs} cặp đối đầu`,
+        `So sánh sàn giao dịch tiền mã hóa (${monthSlash(shortMonthYear)})`,
+      ),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames}: ${pairs} cặp so sánh trực tiếp về phí, đòn bẩy, quốc gia, KYC và mã giới thiệu – dữ liệu chính thức, ${monthSlash(monthYear)}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames}: ${pairs} cặp so sánh trực tiếp về phí, đòn bẩy, quốc gia, KYC và mã giới thiệu – dữ liệu chính thức, ${monthSlash(monthYear)}.`,
+        `${exchangeNames}: ${pairs} cặp so sánh trực tiếp về phí, đòn bẩy, quốc gia, KYC và mã giới thiệu – ${monthSlash(monthYear)}.`,
+      ),
     crumbHome: "Trang chủ",
     crumbPage: "So sánh sàn giao dịch",
     listName: "So sánh trực tiếp sàn giao dịch tiền mã hóa",

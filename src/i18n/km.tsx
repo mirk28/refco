@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
 import { readingOf, withReading } from "./name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Khmer. Same keys as `en.tsx`.
@@ -142,9 +143,15 @@ export const km: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `កូដណែនាំវេទិកាគ្រីបតូ (${monthYear})៖ ប្រាក់រង្វាន់ Spot និង Futures`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `កូដណែនាំវេទិកាគ្រីបតូ (${monthYear})៖ ប្រាក់រង្វាន់ Spot និង Futures`, `កូដណែនាំវេទិកាគ្រីបតូ និងប្រាក់រង្វាន់ (${monthYear})`, `កូដណែនាំវេទិកាគ្រីបតូ (${monthYear})`),
     description: (monthYear) =>
-      `កូដណែនាំផ្ទៀងផ្ទាត់រួច៖ Binance, OKX, Bybit, Bitget, Gate, KuCoin និង MEXC។ ប្រាក់រង្វាន់ស្វាគមន៍ និងការបង្វិលកម្រៃ Spot និង Futures ដោយតំណតែមួយ – ខែ${monthYear}។`,
+      fit(
+        DESC_MAX,
+        `កូដណែនាំផ្ទៀងផ្ទាត់រួច៖ Binance, OKX, Bybit, Bitget, Gate, KuCoin និង MEXC។ ប្រាក់រង្វាន់ស្វាគមន៍ និងការបង្វិលកម្រៃ Spot និង Futures ដោយតំណតែមួយ – ខែ${monthYear}។`,
+        `កូដណែនាំផ្ទៀងផ្ទាត់រួច៖ Binance, OKX, Bybit, Bitget, Gate, KuCoin និង MEXC។ ប្រាក់រង្វាន់ស្វាគមន៍ និងការបង្វិលកម្រៃ ដោយតំណតែមួយ – ខែ${monthYear}។`,
+        `កូដណែនាំផ្ទៀងផ្ទាត់រួច៖ Binance, OKX, Bybit, Bitget, Gate, KuCoin និង MEXC។ ប្រាក់រង្វាន់ស្វាគមន៍ និងការបង្វិលកម្រៃ ដោយតំណតែមួយ។`,
+      ),
     listName: "កូដណែនាំវេទិកាជួញដូរគ្រីបតូ សម្រាប់ Spot និង Futures",
     updated: (monthYear) => `ធ្វើបច្ចុប្បន្នភាពខែ${monthYear}`,
     h1: (
@@ -320,9 +327,23 @@ export const km: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `កូដណែនាំ ${withReading(e, "km")} ${e.referralCode} (${shortMonthYear})៖ ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with "កូដណែនាំ <វេទិកា>".
+    title: (e, shortMonthYear) => {
+      const n = e.name, r = withReading(e, "km"), c = e.referralCode, b = noStop(benefit(e)), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `កូដណែនាំ ${r} ${c} (${shortMonthYear})៖ ${b}`, `កូដណែនាំ ${r} ${c} (${shortMonthYear})`, `កូដណែនាំ ${n} ${c} (${shortMonthYear})`, `កូដណែនាំ ${n} ${c}`),
+        () => fit(TITLE_MAX, `${c} – កូដណែនាំ ${r} (${shortMonthYear})`, `${c} – កូដណែនាំ ${n} (${shortMonthYear})`, `${c} – កូដណែនាំ ${n}`),
+        () => fit(TITLE_MAX, `${b}៖ កូដណែនាំ ${n} ${c}`, `ប្រាក់រង្វាន់ស្វាគមន៍ ${n} ${y}៖ កូដណែនាំ ${c}`, `កូដណែនាំ ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `របៀបប្រើកូដណែនាំ ${r} ${c} (${shortMonthYear})`, `របៀបប្រើកូដណែនាំ ${n} ${c} (${shortMonthYear})`, `របៀបប្រើកូដណែនាំ ${n} ${c}`, `កូដណែនាំ ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `កូដណែនាំ ${e.name}៖ ${e.referralCode}។ ${noStop(benefit(e))} – កន្លែងដាក់កូដ, ជំហានចុះឈ្មោះ, KYC និងកម្រៃជួញដូរ បានពិនិត្យខែ${monthYear}។`,
+      fit(
+        DESC_MAX,
+        `កូដណែនាំ ${e.name}៖ ${e.referralCode}។ ${noStop(benefit(e))} – កន្លែងដាក់កូដ, ជំហានចុះឈ្មោះ, KYC និងកម្រៃជួញដូរ បានពិនិត្យខែ${monthYear}។`,
+        `កូដណែនាំ ${e.name}៖ ${e.referralCode}។ ${noStop(benefit(e))} – កន្លែងដាក់កូដ, ការចុះឈ្មោះ, KYC និងកម្រៃ ពិនិត្យខែ${monthYear}។`,
+        `កូដណែនាំ ${e.name}៖ ${e.referralCode}។ ${noStop(benefit(e))} – កន្លែងដាក់កូដ, ជំហានចុះឈ្មោះ, KYC និងកម្រៃជួញដូរ។`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLowerCase().replace(/\s/g, "");
       const reading = readingOf(e.slug, "km");

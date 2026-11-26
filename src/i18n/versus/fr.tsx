@@ -8,6 +8,7 @@
  * feminine; "de" and "que" before a name come from `../fr-elision` (« d'OKX », « qu'OKX »). Country names with their
  * article and preposition come from `countryForms` below – never "de" + country.
  */
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import type { Exchange, Faq } from "@/data/exchanges";
 import { exchanges } from "@/data/exchanges";
@@ -329,9 +330,25 @@ export const fr: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    title: (a, b, shortMonthYear) => `${a.name} vs ${b.name} (${shortMonthYear}) : frais, levier, KYC et bonus comparés`,
+    // Trois formulations, fixes par paire.
+    title: (a, b, shortMonthYear) =>
+      fit(
+        TITLE_MAX,
+        [
+          `${a.name} vs ${b.name} (${shortMonthYear}) : frais, levier et bonus`,
+          `${a.name} ou ${b.name} ? Frais, levier et KYC comparés`,
+          `${a.name} vs ${b.name} : quelle plateforme choisir en ${yearOf(shortMonthYear)} ?`,
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      ),
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name} : frais futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, levier ${leverageOf(a)}x vs ${leverageOf(b)}x, produits, pays, KYC et codes de parrainage. Données officielles vérifiées en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name} : frais futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, levier ${leverageOf(a)}x vs ${leverageOf(b)}x, produits, pays, KYC et codes de parrainage. Données vérifiées en ${monthYear}.`,
+        `${a.name} vs ${b.name} : frais futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, levier ${leverageOf(a)}x vs ${leverageOf(b)}x, produits, pays, KYC et codes de parrainage. Vérifié en ${monthYear}.`,
+        `${a.name} vs ${b.name} : frais futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, levier ${leverageOf(a)}x vs ${leverageOf(b)}x, pays, KYC et codes de parrainage. Vérifié en ${monthYear}.`,
+        `${a.name} vs ${b.name} : frais futures ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}, levier ${leverageOf(a)}x vs ${leverageOf(b)}x, produits, pays, KYC et codes de parrainage.`,
+      ),
     keywords: (a, b, former) => [
       `${a.name} vs ${b.name}`,
       `${b.name} vs ${a.name}`,
@@ -544,9 +561,20 @@ export const fr: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Comparatif des plateformes crypto (${shortMonthYear}) : ${pairs} face-à-face`,
+    title: (shortMonthYear, pairs) =>
+      fit(
+        TITLE_MAX,
+        `Comparatif des plateformes crypto (${shortMonthYear}) : ${pairs} face-à-face`,
+        `Comparatif des plateformes crypto : ${pairs} face-à-face`,
+        `Comparatif des plateformes crypto (${shortMonthYear})`,
+      ),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames} deux à deux : ${pairs} face-à-face (frais, levier, pays, KYC, codes de parrainage). Données officielles vérifiées en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames} deux à deux : ${pairs} face-à-face (frais, levier, pays, KYC, codes de parrainage). Données vérifiées en ${monthYear}.`,
+        `${exchangeNames} deux à deux : ${pairs} face-à-face (frais, levier, pays, KYC, codes de parrainage). Vérifié en ${monthYear}.`,
+        `${exchangeNames} deux à deux : ${pairs} face-à-face (frais, levier, pays, KYC, codes de parrainage).`,
+      ),
     crumbHome: "Accueil",
     crumbPage: "Comparatif des plateformes",
     listName: "Face-à-face entre plateformes crypto",

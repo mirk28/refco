@@ -21,6 +21,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { readingOf, withReading } from "../name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
 const locale = "th";
@@ -40,10 +41,6 @@ type Country = (typeof countryList)[number];
 const named = (e: Exchange) => withReading(e, locale);
 /** Spellings people also type besides the fixed one (`readingOf`): keywords only, never in text. */
 const keywordVariants: Record<string, string> = { bybit: "บายบิท", bitget: "บิทเก็ต", gate: "เกท", mexc: "เม็กซ์ซี" };
-/** Width of a Thai text in columns: the marks above and below a letter take no width. */
-const cols = (s: string) => s.replace(/[ัิ-ฺ็-๎]/g, "").length;
-/** The richest variant that fits into `max` columns (the last one otherwise). */
-const fit = (max: number, ...variants: string[]) => variants.find((v) => cols(v) <= max) ?? variants[variants.length - 1];
 /** A Thai word followed by a text: glued when the text starts with a Thai letter, one space before Latin, digits and quotes. */
 const after = (word: string, s: string) => (/^[฀-๿]/.test(s) ? `${word}${s}` : `${word} ${s}`);
 /** A data text inserted into a sentence, without a stray final full stop (Thai sentences end without a mark). */
@@ -309,31 +306,28 @@ export const th: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    /**
-     * Both names with their Thai spellings and the month in front, as in English; then the richest tail that keeps the
-     * title within 69 columns (fees and leverage for every pair, KYC where there is room).
-     */
+    // Three wordings, chosen per pair; the Thai spellings of the names where they fit.
     title: (a, b, shortMonthYear) => {
-      const head = `${named(a)} vs ${named(b)} (${shortMonthYear})`;
+      const y = yearOf(shortMonthYear);
       return fit(
-        69,
-        `${head}: เปรียบเทียบค่าธรรมเนียม เลเวอเรจ KYC และโบนัส`,
-        `${head}: ค่าธรรมเนียม เลเวอเรจ KYC และโบนัส`,
-        `${head}: ค่าธรรมเนียม เลเวอเรจ และ KYC`,
-        `${head}: ค่าธรรมเนียมและเลเวอเรจ`,
-        `${head}: ค่าธรรมเนียม`,
-        head,
+        TITLE_MAX,
+        ...[
+          [`${named(a)} vs ${named(b)} (${shortMonthYear}): ค่าธรรมเนียมและเลเวอเรจ`, `${a.name} vs ${b.name} (${shortMonthYear}): ค่าธรรมเนียม เลเวอเรจ และโบนัส`],
+          [`${named(a)} หรือ ${named(b)} ดีกว่า? เทียบค่าธรรมเนียมและ KYC`, `${a.name} หรือ ${b.name} ดีกว่า? เทียบค่าธรรมเนียม เลเวอเรจ และ KYC`],
+          [`${named(a)} vs ${named(b)}: กระดานเทรดไหนดีกว่าในปี ${y}`, `${a.name} vs ${b.name}: กระดานเทรดไหนดีกว่าในปี ${y}`],
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear}): ค่าธรรมเนียมและเลเวอเรจ`,
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
       );
     },
-    /** 130–155 columns for every pair: the longest variant that fits. */
     description: (a, b, monthYear) => {
       const fees = `${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}`;
       const lev = `${leverageOf(a)}x vs ${leverageOf(b)}x`;
       return fit(
-        155,
-        `${a.name} vs ${b.name}: ค่าธรรมเนียม Futures ${fees} เลเวอเรจ ${lev} พร้อมเทียบผลิตภัณฑ์ ประเทศ KYC และรหัสแนะนำ จากข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
-        `${a.name} vs ${b.name}: ค่าธรรมเนียม Futures ${fees} เลเวอเรจ ${lev} พร้อมผลิตภัณฑ์ ประเทศ KYC และรหัสแนะนำ ข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
-        `${a.name} vs ${b.name}: Futures ${fees} เลเวอเรจ ${lev} พร้อมผลิตภัณฑ์ ประเทศ KYC และรหัสแนะนำ ข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
+        DESC_MAX,
+        `${a.name} vs ${b.name}: ค่าธรรมเนียม Futures ${fees} เลเวอเรจ ${lev} พร้อมเทียบผลิตภัณฑ์ ประเทศ KYC และรหัสแนะนำ ตรวจสอบเมื่อเดือน${monthYear}`,
+        `${a.name} vs ${b.name}: ค่าธรรมเนียม Futures ${fees} เลเวอเรจ ${lev} พร้อมเทียบ KYC ประเทศ และรหัสแนะนำ ตรวจสอบเดือน${monthYear}`,
+        `${a.name} vs ${b.name}: ค่าธรรมเนียม Futures ${fees} เลเวอเรจ ${lev} พร้อมเทียบ KYC ประเทศ และรหัสแนะนำ`,
       );
     },
     keywords: (a, b, former) => {
@@ -556,15 +550,14 @@ export const th: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `เปรียบเทียบกระดานเทรดคริปโต (${shortMonthYear}): เปรียบเทียบตัวต่อตัว ${pairs} คู่`,
-    /** 130–155 columns: the longest variant that fits. */
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `เปรียบเทียบกระดานเทรดคริปโต (${shortMonthYear}): ตัวต่อตัว ${pairs} คู่`, `เปรียบเทียบกระดานเทรดคริปโต (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
       fit(
-        155,
-        `${exchangeNames} จับคู่เทียบกัน: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ทั้งค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ จากข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
-        `${exchangeNames}: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ทั้งค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ จากข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
-        `${exchangeNames}: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ ข้อมูลทางการ ตรวจสอบเมื่อเดือน${monthYear}`,
-        `${exchangeNames}: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ ข้อมูลทางการ เดือน${monthYear}`,
+        DESC_MAX,
+        `${exchangeNames}: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ทั้งค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ ตรวจสอบเมื่อเดือน${monthYear}`,
+        `${exchangeNames}: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ อัปเดตเดือน${monthYear}`,
+        `${exchangeNames}: เปรียบเทียบตัวต่อตัว ${pairs} คู่ ทั้งค่าธรรมเนียม เลเวอเรจ ประเทศ KYC และรหัสแนะนำ`,
       ),
     crumbHome: "หน้าแรก",
     crumbPage: "เปรียบเทียบกระดานเทรด",

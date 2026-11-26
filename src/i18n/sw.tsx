@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Swahili (Kiswahili sanifu, readers in Kenya, Tanzania and East Africa). Same keys as `en.tsx`.
@@ -138,9 +139,19 @@ export const sw: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Misimbo ya rufaa ya crypto (${shortMonth(monthYear)}): bonasi za spot na futures`,
+    title: (monthYear) =>
+      fit(
+        TITLE_MAX,
+        `Misimbo ya rufaa ya crypto (${shortMonth(monthYear)}): bonasi za spot na futures`,
+        `Misimbo ya rufaa ya crypto na bonasi (${shortMonth(monthYear)})`,
+        `Misimbo ya rufaa ya crypto (${shortMonth(monthYear)})`,
+      ),
     description: (monthYear) =>
-      `Misimbo ya rufaa iliyothibitishwa: Binance, OKX, Bybit, Bitget, Gate, KuCoin na MEXC. Bonasi na marejesho ya ada za spot na futures kwa kiungo kimoja – ${shortMonth(monthYear)}.`,
+      fit(
+        DESC_MAX,
+        `Misimbo ya rufaa iliyothibitishwa ya Binance, OKX, Bybit, Bitget, Gate, KuCoin na MEXC: bonasi na marejesho ya ada kwa kiungo kimoja. Imesasishwa ${monthYear}.`,
+        `Misimbo ya rufaa iliyothibitishwa ya Binance, OKX, Bybit, Bitget, Gate, KuCoin na MEXC: bonasi na marejesho ya ada kwa kiungo kimoja.`,
+      ),
     listName: "Misimbo ya rufaa ya majukwaa ya crypto kwa spot na futures",
     updated: (monthYear) => `Imesasishwa ${monthYear}`,
     h1: (
@@ -317,9 +328,23 @@ export const sw: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Msimbo wa Rufaa ${e.name} ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven titles do not all start with "Msimbo wa Rufaa <Exchange>".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, m = shortMonthYear, y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Msimbo wa Rufaa ${n} ${c} (${m}): bonasi ya kujisajili`, `Msimbo wa Rufaa ${n} ${c} (${m})`, `Msimbo wa Rufaa ${n} ${c}`),
+        () => fit(TITLE_MAX, `${c} – Msimbo wa Rufaa ${n} na bonasi (${m})`, `${c} – Msimbo wa Rufaa ${n} (${m})`, `${c} – Msimbo wa Rufaa ${n}`),
+        () => fit(TITLE_MAX, `Bonasi kwa watumiaji wapya: Msimbo wa Rufaa ${n} ${c}`, `Bonasi ya ${y}: Msimbo wa Rufaa ${n} ${c}`, `Msimbo wa Rufaa ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Jinsi ya kutumia Msimbo wa Rufaa ${n} ${c} (${m})`, `Jinsi ya kutumia Msimbo wa Rufaa ${n} ${c}`, `Msimbo wa Rufaa ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Msimbo wa rufaa wa ${e.name}: ${e.referralCode}. ${benefit(e)} – mahali pa kuuweka, hatua za kujisajili, KYC na ada. Imekaguliwa ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Msimbo wa rufaa wa ${e.name}: ${e.referralCode}. ${benefit(e)} – mahali pa kuuweka, hatua za kujisajili, KYC na ada. Imekaguliwa ${monthYear}.`,
+        `Msimbo wa rufaa wa ${e.name}: ${e.referralCode}. ${benefit(e)} – mahali pa kuuweka, hatua za kujisajili, KYC na ada.`,
+        `Msimbo wa rufaa wa ${e.name}: ${e.referralCode}. Mahali pa kuuweka, hatua za kujisajili, KYC na ada – imekaguliwa ${monthYear}.`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("sw").replace(/[\s-]/g, "");
       const cn = e.referral.codeName;

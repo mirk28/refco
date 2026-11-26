@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
@@ -137,9 +138,13 @@ export const pt: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Códigos de indicação de corretoras cripto (${monthYear}): bônus em Spot e Futuros`,
+    title: (monthYear) => fit(TITLE_MAX, `Códigos de indicação de corretoras cripto (${monthYear})`, `Códigos de indicação cripto (${monthYear})`),
     description: (monthYear) =>
-      `Códigos de indicação verificados para Binance, OKX, Bybit, Bitget, Gate, KuCoin e MEXC. Desbloqueie bônus de cadastro e reembolso de taxas em Spot e Futuros com um só link – atualizado em ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Códigos de indicação verificados para Binance, OKX, Bybit, Bitget, Gate, KuCoin e MEXC: bônus e reembolso de taxas com um só link (${monthYear}).`,
+        `Códigos de indicação verificados para Binance, OKX, Bybit, Bitget, Gate, KuCoin e MEXC: bônus de cadastro e reembolso de taxas com um só link.`,
+      ),
     listName: "Códigos de indicação de corretoras cripto para Spot e Futuros",
     updated: (monthYear) => `Atualizado em ${monthYear}`,
     h1: (
@@ -315,9 +320,24 @@ export const pt: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Código de indicação ${e.name} ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Quatro formulações, fixas por corretora, para que os títulos não comecem todos do mesmo jeito.
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Código de indicação ${n} ${c} (${shortMonthYear}): ${b}`, `Código de indicação ${n} ${c} (${shortMonthYear}) com bônus`, `Código de indicação ${n} ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c}: código de indicação ${n} – ${b}`, `${c}: código de indicação ${n} com bônus (${shortMonthYear})`, `${c}: código de indicação ${n} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: código de indicação ${n} ${c}`, `Bônus de boas-vindas ${y}: código de indicação ${n} ${c}`, `Código de indicação ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Como usar o código de indicação ${n} ${c} (${shortMonthYear})`, `Como usar o código de indicação ${n} ${c}`, `Código de indicação ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Código de indicação ${e.name}: ${e.referralCode}. ${benefit(e)} – onde inserir, passo a passo do cadastro, KYC e taxas, verificado em ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Código de indicação ${e.name}: ${e.referralCode}. ${benefit(e)} – onde inserir, cadastro, KYC e taxas, verificado em ${monthYear}.`,
+        `Código de indicação ${e.name}: ${e.referralCode}. ${benefit(e)} – onde inserir, KYC e taxas (${monthYear}).`,
+        `Código de indicação ${e.name}: ${e.referralCode}. ${benefit(e)} – onde inserir, passo a passo do cadastro, KYC e taxas.`,
+        `Código de indicação ${e.name}: ${e.referralCode}. Onde inserir, passo a passo do cadastro, KYC e taxas, verificado em ${monthYear}.`,
+      ),
     keywords: (e) => [
       `código de indicação ${e.name}`,
       `código de indicação ${e.name} ${e.referralCode}`,

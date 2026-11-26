@@ -22,6 +22,7 @@ import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { readingOf, withReading } from "../name-readings";
 import { slavicCount } from "../slavic-count";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
 const locale = "uk";
@@ -89,8 +90,6 @@ const firstMentions = () => {
   const seen = new Set<string>();
   return (list: Exchange[]) => joinList(list.map((e) => (seen.has(e.slug) ? e.name : (seen.add(e.slug), withReading(e, locale)))));
 };
-/** The first variant that fits `max` characters (titles and descriptions of different pairs differ in length). */
-const fit = (max: number, ...variants: string[]) => variants.find((v) => v.length <= max) ?? variants[variants.length - 1];
 const offer = (e: Exchange) => e.feeDiscount || e.bonusHeadline;
 const has = (e: Exchange, key: FeatureKey) => altInfo(e).features[key].has === true;
 const leverageRisk = "Високе кредитне плече різко підвищує ризик ліквідації.";
@@ -352,17 +351,21 @@ export const uk: VersusText = {
 
   /* ---- head-to-head page ---- */
   page: {
-    /** 50–60 characters: the richest variant that fits; the two names with their Cyrillic spelling stay in front. */
+    /* Three wordings, chosen per pair; the Cyrillic spellings (Binance (Бінанс)) stay where they fit. */
     title: (a, b, shortMonthYear) => {
-      const head = `${withReading(a, locale)} vs ${withReading(b, locale)} (${shortMonthYear})`;
+      const y = yearOf(shortMonthYear);
+      const forms = (an: string, bn: string) =>
+        [
+          [`${an} vs ${bn} (${shortMonthYear}): комісії, плече та бонуси`, `${an} vs ${bn} (${shortMonthYear}): комісії та плече`],
+          [`${an} чи ${bn}? Порівняння комісій, плеча та KYC`, `${an} чи ${bn}? Комісії, плече та KYC`],
+          [`${an} vs ${bn}: яка біржа краща у ${y} році?`, `${an} vs ${bn}: яка біржа краща?`],
+        ][variant(3, a.slug, b.slug)];
       return fit(
-        60,
-        `${head}: порівняння комісій, плеча, KYC і бонусів`,
-        `${head}: комісії, плече, KYC і бонус`,
-        `${head}: комісії, плече та KYC`,
-        `${head}: комісії та плече`,
-        `${head}: комісії`,
-        head,
+        TITLE_MAX,
+        ...forms(withReading(a, locale), withReading(b, locale)),
+        ...forms(a.name, b.name),
+        `${withReading(a, locale)} vs ${withReading(b, locale)} (${shortMonthYear})`,
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
       );
     },
     /** 140–155 characters for every pair: the longest variant that fits. */
@@ -370,7 +373,7 @@ export const uk: VersusText = {
       const fees = `${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}`;
       const lev = `${leverageOf(a)}x vs ${leverageOf(b)}x`;
       return fit(
-        155,
+        DESC_MAX,
         `${a.name} vs ${b.name}: комісії на ф'ючерсах ${fees}, кредитне плече ${lev}, а також продукти, країни, KYC і реферальні коди – офіційні дані бірж (${monthYear})`,
         `${a.name} vs ${b.name}: ф'ючерси ${fees}, кредитне плече ${lev}, а також продукти, країни, KYC і реферальні коди – офіційні дані бірж (${monthYear})`,
         `${a.name} vs ${b.name}: ф'ючерси ${fees}, плече ${lev}, а також продукти, країни, KYC і реферальні коди – офіційні дані бірж (${monthYear})`,
@@ -601,9 +604,15 @@ export const uk: VersusText = {
 
   /* ---- comparison hub ---- */
   hub: {
-    title: (shortMonthYear, pairs) => `Порівняння криптобірж (${shortMonthYear}): ${slavicCount(pairs, pairForms)}`,
+    title: (shortMonthYear, pairs) =>
+      fit(TITLE_MAX, `Порівняння криптобірж (${shortMonthYear}): ${slavicCount(pairs, pairForms)}`, `Порівняння криптобірж (${shortMonthYear})`),
     description: (exchangeNames, pairs, monthYear) =>
-      `${exchangeNames}: ${slavicCount(pairs, pairForms)} комісій, плеча, країн, KYC і реферальних кодів – офіційні дані (${monthYear})`,
+      fit(
+        DESC_MAX,
+        `${exchangeNames}: ${slavicCount(pairs, pairForms)} комісій, плеча, країн, KYC і реферальних кодів – офіційні дані (${monthYear}).`,
+        `${exchangeNames}: ${slavicCount(pairs, pairForms)} комісій, плеча, країн, KYC і реферальних кодів (${monthYear}).`,
+        `${exchangeNames}: ${slavicCount(pairs, pairForms)} комісій, плеча, країн, KYC і реферальних кодів.`,
+      ),
     crumbHome: "Головна",
     crumbPage: "Порівняння бірж",
     listName: "Прямі порівняння криптобірж",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Hindi. Same keys as `en.tsx`.
@@ -135,9 +136,15 @@ export const hi: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `क्रिप्टो एक्सचेंज रेफरल कोड (${monthYear}): Spot और Futures पर बोनस`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `क्रिप्टो एक्सचेंज रेफरल कोड और बोनस (${monthYear})`, `क्रिप्टो एक्सचेंज रेफरल कोड (${monthYear})`),
     description: (monthYear) =>
-      `Binance, OKX, Bybit, Bitget, Gate, KuCoin और MEXC के वेरिफाइड रेफरल कोड। एक ही लिंक से Spot और Futures पर नए यूज़र्स के बोनस और फीस रिबेट पाएँ – ${monthYear} में अपडेट।`,
+      fit(
+        DESC_MAX,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin और MEXC के वेरिफाइड रेफरल कोड: एक ही लिंक से Spot और Futures पर नए यूज़र्स के बोनस और फीस रिबेट। ${monthYear} में अपडेट।`,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin और MEXC के वेरिफाइड रेफरल कोड: एक लिंक से नए यूज़र्स के बोनस और फीस रिबेट। ${monthYear} में अपडेट।`,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin और MEXC के वेरिफाइड रेफरल कोड: एक लिंक से नए यूज़र्स के बोनस और फीस रिबेट।`,
+      ),
     listName: "Spot और Futures के लिए क्रिप्टो एक्सचेंज रेफरल कोड",
     updated: (monthYear) => `${monthYear} में अपडेट`,
     h1: (
@@ -315,9 +322,23 @@ export const hi: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${e.name} रेफरल कोड ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven titles do not all start with "<Exchange> रेफरल कोड".
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, m = shortMonthYear, y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} रेफरल कोड ${c} (${m}): साइन-अप बोनस`, `${n} रेफरल कोड ${c} (${m})`, `${n} रेफरल कोड ${c}`),
+        () => fit(TITLE_MAX, `${c} – ${n} रेफरल कोड और बोनस (${m})`, `${c} – ${n} रेफरल कोड (${m})`, `${c} – ${n} रेफरल कोड`),
+        () => fit(TITLE_MAX, `नए यूज़र्स का बोनस: ${n} रेफरल कोड ${c} (${y})`, `साइन-अप बोनस: ${n} रेफरल कोड ${c}`, `${n} रेफरल कोड ${c} (${y})`),
+        () => fit(TITLE_MAX, `${n} रेफरल कोड ${c} कैसे इस्तेमाल करें (${m})`, `${n} रेफरल कोड ${c} कैसे इस्तेमाल करें`, `${n} रेफरल कोड ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} रेफरल कोड: ${e.referralCode}। ${benefit(e)} – कोड कहाँ डालें, साइन-अप के स्टेप, KYC और फीस; ${monthYear} में जाँचा गया।`,
+      fit(
+        DESC_MAX,
+        `${e.name} रेफरल कोड ${e.referralCode}: ${benefit(e)}। कोड कहाँ डालें, साइन-अप के स्टेप, KYC और फीस – ${monthYear} में जाँचा गया।`,
+        `${e.name} रेफरल कोड ${e.referralCode}: ${benefit(e)}। कोड कहाँ डालें, साइन-अप के स्टेप, KYC और फीस।`,
+        `${e.name} रेफरल कोड ${e.referralCode}: कोड कहाँ डालें, साइन-अप के स्टेप, KYC और फीस – ${monthYear} में जाँचा गया।`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLowerCase().replace(/[\s-]/g, "");
       return [

@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
@@ -135,9 +136,13 @@ export const es: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Códigos de referido para exchanges de criptomonedas (${monthYear}): bonos en spot y futuros`,
+    title: (monthYear) => fit(TITLE_MAX, `Códigos de referido de exchanges cripto (${monthYear})`, `Códigos de referido de exchanges (${monthYear})`),
     description: (monthYear) =>
-      `Códigos de referido verificados para Binance, OKX, Bybit, Bitget, Gate, KuCoin y MEXC. Desbloquea bonos para nuevos usuarios y reembolsos de comisiones en spot y futuros con un solo enlace – actualizado en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Códigos de referido verificados de Binance, OKX, Bybit, Bitget, Gate, KuCoin y MEXC: bonos y reembolsos de comisiones con un enlace (${monthYear}).`,
+        `Códigos de referido verificados de Binance, OKX, Bybit, Bitget, Gate, KuCoin y MEXC: bonos para nuevos usuarios y reembolsos de comisiones con un enlace.`,
+      ),
     listName: "Códigos de referido de exchanges de criptomonedas para spot y futuros",
     updated: (monthYear) => `Actualizado en ${monthYear}`,
     h1: (
@@ -328,9 +333,25 @@ export const es: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Código de referido de ${e.name}: ${e.referralCode} (${shortMonthYear}) – ${benefit(e)}`,
+    // Cuatro formulaciones, fijas por exchange, para que no todos los títulos empiecen igual.
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Código de referido de ${n}: ${c} (${shortMonthYear}) – ${b}`, `Código de referido de ${n}: ${c} (${shortMonthYear}) con bono`, `Código de referido de ${n}: ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${c}: código de referido de ${n} – ${b}`, `${c}: código de referido de ${n} y bono (${shortMonthYear})`, `${c}: código de referido de ${n} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: código de referido de ${n} ${c}`, `Bono de bienvenida ${y}: código de referido de ${n} ${c}`, `Código de referido de ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Cómo usar el código de referido de ${n} ${c} (${shortMonthYear})`, `Cómo usar el código de referido de ${n} ${c}`, `Código de referido de ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Código de referido de ${e.name}: ${e.referralCode}. ${benefit(e)} – dónde introducirlo, pasos de registro, KYC y comisiones, comprobado en ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Código de referido de ${e.name}: ${e.referralCode}. ${benefit(e)}. Dónde introducirlo, registro, KYC y comisiones, comprobado en ${monthYear}.`,
+        `Código de referido de ${e.name}: ${e.referralCode}. ${benefit(e)}. Dónde introducirlo, registro, KYC y comisiones (${monthYear}).`,
+        `Código de referido de ${e.name}: ${e.referralCode}. ${benefit(e)}. Dónde introducirlo, KYC y comisiones (${monthYear}).`,
+        `Código de referido de ${e.name}: ${e.referralCode}. ${benefit(e)}. Dónde introducirlo, pasos de registro, KYC y comisiones.`,
+        `Código de referido de ${e.name}: ${e.referralCode}. Dónde introducirlo, pasos de registro, KYC y comisiones, comprobado en ${monthYear}.`,
+      ),
     keywords: (e) => [
       `código de referido ${e.name}`,
       `código de referido de ${e.name} ${e.referralCode}`,

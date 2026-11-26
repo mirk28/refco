@@ -4,6 +4,7 @@ import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
 import { readingOf, withReading } from "./name-readings";
 import { slavicCount } from "./slavic-count";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 
 /**
  * Interface texts in Russian. Same keys as `en.tsx`.
@@ -152,9 +153,14 @@ export const ru: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Реферальные коды криптобирж (${monthYear}): бонусы на спот и фьючерсы`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `Реферальные коды криптобирж и бонусы (${monthYear})`, `Реферальные коды криптобирж (${monthYear})`),
     description: (monthYear) =>
-      `Проверенные реферальные коды Binance, OKX, Bybit, Bitget, Gate, KuCoin и MEXC: бонусы и возврат комиссий, одна ссылка для спота и фьючерсов (${monthYear}).`,
+      fit(
+        DESC_MAX,
+        `Проверенные реферальные коды Binance, OKX, Bybit, Bitget, Gate, KuCoin и MEXC: бонусы и возврат комиссий по одной ссылке. Обновлено: ${monthYear}.`,
+        `Проверенные реферальные коды Binance, OKX, Bybit, Bitget, Gate, KuCoin и MEXC: бонусы и возврат комиссий по одной ссылке.`,
+      ),
     listName: "Реферальные коды криптобирж для спота и фьючерсов",
     updated: (monthYear) => `Обновлено: ${monthYear}`,
     h1: (
@@ -327,9 +333,24 @@ export const ru: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `Реферальный код ${withReading(e, "ru")} ${e.referralCode} (${shortMonthYear}): ${lcCyr(benefit(e))}`,
+    // Four wordings, chosen per exchange, so the seven pages do not all start with «Реферальный код».
+    // The Cyrillic spelling in brackets stays where it fits and is dropped first.
+    title: (e, shortMonthYear) => {
+      const r = withReading(e, "ru"), n = e.name, c = e.referralCode, b = lcCyr(benefit(e)), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `Реферальный код ${r} ${c}: ${b}`, `Реферальный код ${r} ${c} (${shortMonthYear})`, `Реферальный код ${n} ${c} (${shortMonthYear})`, `Реферальный код ${n} ${c}`),
+        () => fit(TITLE_MAX, `${c} — реферальный код ${r}: ${b}`, `${c} — реферальный код ${r} и бонус (${shortMonthYear})`, `${c} — реферальный код ${n} и бонус (${shortMonthYear})`, `${c} — реферальный код ${n}`),
+        () => fit(TITLE_MAX, `${benefit(e)}: реферальный код ${r} ${c}`, `Бонус за регистрацию ${y}: реферальный код ${r} ${c}`, `Бонус за регистрацию ${y}: реферальный код ${n} ${c}`, `Реферальный код ${n} ${c} (${y})`),
+        () => fit(TITLE_MAX, `Как ввести реферальный код ${r} ${c} (${y})`, `Как ввести реферальный код ${n} ${c} (${y})`, `Как ввести реферальный код ${n} ${c}`, `Реферальный код ${n} ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `Реферальный код ${e.name}: ${e.referralCode}. ${benefit(e)} — где ввести код, регистрация, KYC и комиссии (проверено: ${monthYear}).`,
+      fit(
+        DESC_MAX,
+        `Реферальный код ${e.name}: ${e.referralCode}. ${asSentence(benefit(e))} Где ввести код, регистрация, KYC и комиссии — проверено: ${monthYear}.`,
+        `Реферальный код ${e.name}: ${e.referralCode}. ${asSentence(benefit(e))} Где ввести код, регистрация, KYC и комиссии.`,
+        `Реферальный код ${e.name}: ${e.referralCode} — где ввести код, шаги регистрации, KYC и комиссии (проверено: ${monthYear}).`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("ru-RU").replace(/[\s-]/g, "");
       const cn = e.referral.codeName.trim();

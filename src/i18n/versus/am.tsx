@@ -22,6 +22,7 @@ import { formatBn as formatBnIn, prettyDate as prettyDateIn } from "@/lib/seo";
 import type { ScoreRow, ScoreSummary } from "@/lib/versus";
 import { site } from "@/config/site";
 import { readingOf, withReading } from "../name-readings";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import type { HubFacts, VersusFaqGroup, VersusText } from "./en";
 
 const locale = "am";
@@ -332,9 +333,26 @@ export const am: VersusText = {
   /* ---- head-to-head page ---- */
   page: {
     /** Names with their Ethiopic spellings first; the month goes last, after the tail that may be cut off. */
-    title: (a, b, shortMonthYear) => `${named(a)} vs ${named(b)}፦ የክፍያ፣ የሌቨሬጅ፣ የKYC እና የቦነስ ንጽጽር (${shortMonthYear})`,
+    // Three wordings, chosen per pair; the Ethiopic spellings of the names where they fit.
+    title: (a, b, shortMonthYear) => {
+      const y = yearOf(shortMonthYear);
+      return fit(
+        TITLE_MAX,
+        ...[
+          [`${named(a)} vs ${named(b)} (${shortMonthYear})፦ የክፍያ ንጽጽር`, `${a.name} vs ${b.name} (${shortMonthYear})፦ የክፍያ፣ የሌቨሬጅ እና የቦነስ ንጽጽር`],
+          [`${named(a)} ወይስ ${named(b)}? የክፍያ እና የKYC ንጽጽር`, `${a.name} ወይስ ${b.name}? የክፍያ፣ የሌቨሬጅ እና የKYC ንጽጽር`],
+          [`${named(a)} vs ${named(b)}፦ በ${y} የትኛው ይሻላል?`, `${a.name} vs ${b.name}፦ በ${y} የትኛው መድረክ ይሻላል?`],
+        ][variant(3, a.slug, b.slug)],
+        `${a.name} vs ${b.name} (${shortMonthYear})፦ የክፍያ ንጽጽር`,
+        `${a.name} vs ${b.name} (${shortMonthYear})`,
+      );
+    },
     description: (a, b, monthYear) =>
-      `${a.name} vs ${b.name}፦ የፊውቸርስ ክፍያ ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}፣ ሌቨሬጅ ${leverageOf(a)}x vs ${leverageOf(b)}x፣ ምርቶች፣ አገሮች፣ KYC እና ሪፈራል ኮዶች – ይፋዊ መረጃ፣ ${monthYear}።`,
+      fit(
+        DESC_MAX,
+        `${a.name} vs ${b.name}፦ የፊውቸርስ ክፍያ ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}፣ ሌቨሬጅ ${leverageOf(a)}x vs ${leverageOf(b)}x፣ ምርቶች፣ አገሮች፣ KYC እና ሪፈራል ኮዶች – ይፋዊ መረጃ፣ ${monthYear}።`,
+        `${a.name} vs ${b.name}፦ የፊውቸርስ ክፍያ ${feePair(a.futuresFees)} vs ${feePair(b.futuresFees)}፣ ሌቨሬጅ ${leverageOf(a)}x vs ${leverageOf(b)}x፣ ምርቶች፣ አገሮች፣ KYC እና ሪፈራል ኮዶች።`,
+      ),
     keywords: (a, b, former) => {
       const ra = readingOf(a.slug, locale);
       const rb = readingOf(b.slug, locale);

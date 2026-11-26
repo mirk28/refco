@@ -1,3 +1,4 @@
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
@@ -143,9 +144,13 @@ export const de: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `Empfehlungscodes für Kryptobörsen (${monthYear}): Boni für Spot & Futures`,
+    title: (monthYear) => fit(TITLE_MAX, `Empfehlungscodes für Kryptobörsen & Boni (${monthYear})`, `Empfehlungscodes für Kryptobörsen (${monthYear})`),
     description: (monthYear) =>
-      `Geprüfte Empfehlungscodes (Referral-Codes) für Binance, OKX, Bybit, Bitget, Gate, KuCoin und MEXC: Neukundenboni und Gebührenrabatte für Spot und Futures mit einem Link – Stand: ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `Geprüfte Empfehlungscodes für Binance, OKX, Bybit, Bitget, Gate, KuCoin und MEXC: Neukundenboni und Gebührenrabatte mit einem Link. Stand: ${monthYear}.`,
+        `Geprüfte Empfehlungscodes für Binance, OKX, Bybit, Bitget, Gate, KuCoin und MEXC: Neukundenboni und Gebührenrabatte für Spot und Futures mit einem Link.`,
+      ),
     listName: "Empfehlungscodes von Kryptobörsen für Spot und Futures",
     updated: (monthYear) => `Stand: ${monthYear}`,
     h1: (
@@ -317,9 +322,24 @@ export const de: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${e.name} Empfehlungscode ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Vier Formulierungen, je Börse fest gewählt, damit nicht alle Titel mit "<Börse> Empfehlungscode" beginnen.
+    title: (e, shortMonthYear) => {
+      const n = e.name, c = e.referralCode, b = benefit(e), y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${n} Empfehlungscode ${c} (${shortMonthYear}): ${b}`, `${n} Empfehlungscode ${c} (${shortMonthYear}) – mit Bonus`, `${n} Empfehlungscode ${c} (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `Code ${c}: ${n} Empfehlungscode – ${b}`, `Code ${c}: ${n} Empfehlungscode mit Bonus (${shortMonthYear})`, `Code ${c}: ${n} Empfehlungscode (${shortMonthYear})`),
+        () => fit(TITLE_MAX, `${b}: ${n} Empfehlungscode ${c}`, `Neukundenbonus ${y}: ${n} Empfehlungscode ${c}`, `${n} Empfehlungscode ${c} (${y})`),
+        () => fit(TITLE_MAX, `So nutzt du den ${n} Empfehlungscode ${c} (${shortMonthYear})`, `So nutzt du den ${n} Empfehlungscode ${c}`, `${n} Empfehlungscode ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} Empfehlungscode (Referral-Code): ${e.referralCode}. ${benefit(e)} – Eingabe, Registrierung, KYC und Gebühren, geprüft im ${monthYear}.`,
+      fit(
+        DESC_MAX,
+        `${e.name} Empfehlungscode ${e.referralCode}: ${benefit(e)}. Wo du ihn eingibst, Registrierung, KYC und Gebühren – geprüft im ${monthYear}.`,
+        `${e.name} Empfehlungscode ${e.referralCode}: ${benefit(e)}. Eingabe, Registrierung, KYC und Gebühren – Stand: ${monthYear}.`,
+        `${e.name} Empfehlungscode ${e.referralCode}: ${benefit(e)}. Wo du ihn eingibst, Registrierung, KYC und Gebühren.`,
+        `${e.name} Empfehlungscode ${e.referralCode}: wo du ihn eingibst, Registrierung Schritt für Schritt, KYC und Gebühren – geprüft im ${monthYear}.`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLocaleLowerCase("de-DE").replace(/[\s-]/g, "");
       return [

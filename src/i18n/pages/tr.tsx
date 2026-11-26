@@ -141,7 +141,7 @@ export const tr: PageTexts = {
   /* ------------------------------ Affiliate disclosure ------------------------------ */
   affiliateDisclosure: {
     title: "Satış Ortaklığı Açıklaması",
-    description: `${site.name} sitesinin nasıl gelir elde ettiği, hangi bağlantıların reklam olduğu ve bunun kripto para borsaları hakkında yayınladığımız bilgileri neden etkilemediği.`,
+    description: `${site.name} nasıl gelir elde ediyor, hangi bağlantılar reklam ve bu neden kripto para borsaları hakkında yayınladığımız bilgileri etkilemiyor?`,
     intro: (c) => (
       <>
         <h1>Satış Ortaklığı Açıklaması</h1>
@@ -400,7 +400,7 @@ export const tr: PageTexts = {
   /* --------------------------------- Privacy policy --------------------------------- */
   privacy: {
     title: "Gizlilik Politikası",
-    description: `${site.domain} sitesinin kişisel verileri GDPR (AB Genel Veri Koruma Tüzüğü) kapsamında nasıl işlediği. Google Analytics yalnızca onayınla, reklam çerezi yok.`,
+    description: `${site.domain} sitesinin kişisel verileri AB GDPR kapsamında nasıl işlediği: Google Analytics yalnızca onayınla, reklam çerezi yok.`,
     intro: (c) => (
       <>
         <h1>Gizlilik Politikası</h1>

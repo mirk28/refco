@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/types";
 import type { Dictionary } from "./en";
+import { DESC_MAX, TITLE_MAX, fit, variant, yearOf } from "@/lib/fit";
 import { readingOf, withReading } from "./name-readings";
 
 /**
@@ -138,9 +139,15 @@ export const bn: Dictionary = {
 
   /* ------------------------------------ Home page ------------------------------------ */
   home: {
-    title: (monthYear) => `ক্রিপ্টো এক্সচেঞ্জ রেফারেল কোড (${monthYear}): স্পট ও ফিউচার্সে বোনাস`,
+    title: (monthYear) =>
+      fit(TITLE_MAX, `ক্রিপ্টো এক্সচেঞ্জ রেফারেল কোড ও বোনাস (${monthYear})`, `ক্রিপ্টো এক্সচেঞ্জ রেফারেল কোড (${monthYear})`),
     description: (monthYear) =>
-      `Binance, OKX, Bybit, Bitget, Gate, KuCoin ও MEXC-এর যাচাই করা রেফারেল কোড। এক লিংকেই স্পট ও ফিউচার্সে ওয়েলকাম বোনাস আর ফি রিবেট নিন – হালনাগাদ: ${monthYear}।`,
+      fit(
+        DESC_MAX,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin ও MEXC-এর যাচাই করা রেফারেল কোড: এক লিংকেই স্পট ও ফিউচার্সে ওয়েলকাম বোনাস আর ফি রিবেট – হালনাগাদ: ${monthYear}।`,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin ও MEXC-এর যাচাই করা রেফারেল কোড: এক লিংকেই ওয়েলকাম বোনাস আর ফি রিবেট – হালনাগাদ: ${monthYear}।`,
+        `Binance, OKX, Bybit, Bitget, Gate, KuCoin ও MEXC-এর যাচাই করা রেফারেল কোড: এক লিংকেই ওয়েলকাম বোনাস আর ফি রিবেট।`,
+      ),
     listName: "স্পট ও ফিউচার্সের জন্য ক্রিপ্টো এক্সচেঞ্জ রেফারেল কোড",
     updated: (monthYear) => `হালনাগাদ: ${monthYear}`,
     h1: (
@@ -306,9 +313,24 @@ export const bn: Dictionary = {
 
   /* ------------------------------- Exchange (referral-code) page ------------------------------- */
   exchange: {
-    title: (e, shortMonthYear) => `${withReading(e, "bn")} রেফারেল কোড ${e.referralCode} (${shortMonthYear}): ${benefit(e)}`,
+    // Four wordings, chosen per exchange, so the seven titles do not all start with "<Exchange> রেফারেল কোড". The
+    // Bengali reading in brackets goes first when the title gets too long.
+    title: (e, shortMonthYear) => {
+      const n = e.name, w = withReading(e, "bn"), c = e.referralCode, m = shortMonthYear, y = yearOf(shortMonthYear);
+      return [
+        () => fit(TITLE_MAX, `${w} রেফারেল কোড ${c} (${m}): ওয়েলকাম বোনাস`, `${w} রেফারেল কোড ${c} (${m})`, `${n} রেফারেল কোড ${c} (${m})`, `${n} রেফারেল কোড ${c}`),
+        () => fit(TITLE_MAX, `${c} – ${w} রেফারেল কোড ও বোনাস (${m})`, `${c} – ${w} রেফারেল কোড (${m})`, `${c} – ${n} রেফারেল কোড ও বোনাস (${m})`, `${c} – ${n} রেফারেল কোড`),
+        () => fit(TITLE_MAX, `নতুন ব্যবহারকারীর বোনাস: ${w} রেফারেল কোড ${c}`, `নতুনদের বোনাস: ${w} রেফারেল কোড ${c}`, `নতুনদের বোনাস: ${n} রেফারেল কোড ${c} (${y})`, `${n} রেফারেল কোড ${c} (${y})`),
+        () => fit(TITLE_MAX, `${w} রেফারেল কোড ${c} কীভাবে ব্যবহার করবেন`, `${n} রেফারেল কোড ${c} কীভাবে ব্যবহার করবেন (${m})`, `${n} রেফারেল কোড ${c} কীভাবে ব্যবহার করবেন`, `${n} রেফারেল কোড ${c}`),
+      ][variant(4, e.slug)]();
+    },
     description: (e, monthYear) =>
-      `${e.name} রেফারেল কোড: ${e.referralCode}। ${benefit(e)} – কোডটি কোথায় দিতে হয়, ধাপে ধাপে রেজিস্ট্রেশন, KYC ও ফি; যাচাই: ${monthYear}।`,
+      fit(
+        DESC_MAX,
+        `${e.name} রেফারেল কোড ${e.referralCode}: ${benefit(e)}। কোডটি কোথায় দিতে হয়, ধাপে ধাপে রেজিস্ট্রেশন, KYC ও ফি – যাচাই: ${monthYear}।`,
+        `${e.name} রেফারেল কোড ${e.referralCode}: ${benefit(e)}। কোডটি কোথায় দিতে হয়, ধাপে ধাপে রেজিস্ট্রেশন, KYC ও ফি।`,
+        `${e.name} রেফারেল কোড ${e.referralCode}: কোডটি কোথায় দিতে হয়, ধাপে ধাপে রেজিস্ট্রেশন, KYC ও ফি – যাচাই: ${monthYear}।`,
+      ),
     keywords: (e) => {
       const same = (k: string) => k.toLowerCase().replace(/[\s-]/g, "");
       const reading = readingOf(e.slug, "bn");
