@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
-import { exchangePath, hasAffiliate, qrUrl } from "@/data/exchanges";
+import { exchangePath, hasAffiliate, outboundUrl, qrUrl } from "@/data/exchanges";
+import { bannerFiles } from "@/data/banners";
 import type { Exchange } from "@/data/exchanges";
 import { exchangeFor } from "@/data/i18n";
 import { alternativesPath } from "@/data/alternatives";
@@ -201,6 +202,25 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
           </div>
         </div>
       </section>
+
+      {/* ---------------- Banner (linked to sign-up) ---------------- */}
+      {bannerFiles[e.slug] ? (
+        <div className="container lp-banner">
+          <a href={outboundUrl(e)} target="_blank" rel="sponsored nofollow noopener" data-exchange={e.slug} title={dict.layout.referralCodeOf(e.name)}>
+            <picture>
+              <source media="(max-width: 640px)" srcSet={`/banners/${locale}/${bannerFiles[e.slug]![locale]}-mobile.webp`} width={720} height={960} />
+              <img
+                src={`/banners/${locale}/${bannerFiles[e.slug]![locale]}.webp`}
+                alt={dict.layout.referralCodeOf(e.name)}
+                title={dict.layout.referralCodeOf(e.name)}
+                width={1200}
+                height={630}
+                decoding="async"
+              />
+            </picture>
+          </a>
+        </div>
+      ) : null}
 
       {/* ---------------- Body ---------------- */}
       <div className="section" style={{ paddingTop: 56 }}>

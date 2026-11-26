@@ -557,3 +557,8 @@ table.score { min-width: 640px; }
 [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
 /* Korean breaks lines between words, not inside them; a single overlong word may still wrap. */
 :lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
+
+/* Page banner below the hero, linked to sign-up. */
+.lp-banner { margin-top: 32px; }
+.lp-banner a { display: block; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+.lp-banner img { display: block; width: 100%; height: auto; }
