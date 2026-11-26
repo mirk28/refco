@@ -82,6 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Một hướng dẫn chi tiết hơn dạng danh sách kiểm tra về việc đăng ký bằng mã giới thiệu Binance được đăng trên Binance Square, nền tảng nội dung của chính Binance. Bản gốc bằng tiếng Tây Ban Nha; Binance Square có thể hiển thị bản dịch:",
     linkLabel: "Hỏi đáp về mã giới thiệu Binance",
+    videoLinkLabel: "Video: cách đăng ký Binance từng bước",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

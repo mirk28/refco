@@ -47,7 +47,7 @@ export function GET() {
     "",
     ...exchanges.flatMap(({ name, guides }) =>
       guides
-        ? [`## ${name}: ${guides.heading}`, ...guides.links.map((g) => `- [${guides.linkLabel} – ${g.name ? `${g.name} (${g.language})` : g.language}](${g.url})`), ""]
+        ? [`## ${name}: ${guides.heading}`, ...guides.links.map((g) => `- [${(g.kind === "video" && guides.videoLinkLabel ? guides.videoLinkLabel : guides.linkLabel)} – ${g.name ? `${g.name} (${g.language})` : g.language}](${g.url})`), ""]
         : [],
     ),
     ...locales

@@ -82,6 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Binance referans koduyla kayıt olmaya dair kontrol listeli daha kapsamlı bir rehber, Binance'in kendi içerik platformu Binance Square'de yayımlandı. Orijinali İspanyolca; Binance Square çevirisini gösterebilir:",
     linkLabel: "Binance referans kodu SSS",
+    videoLinkLabel: "Video: Binance'e adım adım nasıl kayıt olunur",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Marjin", "Vadeli İşlemler"],

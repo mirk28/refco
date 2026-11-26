@@ -82,6 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Ein ausführlicher Ratgeber mit Checkliste zur Anmeldung mit einem Binance Empfehlungscode ist auf Binance Square erschienen, der hauseigenen Content-Plattform von Binance. Das Original ist auf Spanisch; Binance Square kann es übersetzt anzeigen:",
     linkLabel: "FAQ zum Binance Empfehlungscode",
+    videoLinkLabel: "Video: Schritt für Schritt bei Binance registrieren",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

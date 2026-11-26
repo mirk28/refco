@@ -98,6 +98,7 @@ export const binance: Exchange = {
     intro:
       "A longer checklist-style guide to signing up with a Binance referral code is published on Binance Square, Binance's own content platform. The original is in Spanish; Binance Square can show it translated:",
     linkLabel: "Binance referral code FAQ",
+    videoLinkLabel: "Video: how to register on Binance, step by step",
     links: [
       {
         language: "English",
@@ -114,6 +115,23 @@ export const binance: Exchange = {
           ru: { language: "Русский", hreflang: "ru", url: "https://www.binance.com/ru/square/post/391114726726736" },
           uk: { language: "Українська", hreflang: "uk", url: "https://www.binance.com/uk-UA/square/post/391114726726736" },
           vi: { language: "Tiếng Việt", hreflang: "vi", url: "https://www.binance.com/vi/square/post/391114726726736" },
+        },
+      },
+      {
+        kind: "video",
+        language: "English",
+        hreflang: "en",
+        url: "https://www.binance.com/en/square/post/392240953624239",
+        byLocale: {
+          ar: { language: "العربية", hreflang: "ar", url: "https://www.binance.com/ar/square/post/392240953624239" },
+          de: { language: "Deutsch", hreflang: "de", url: "https://www.binance.com/de/square/post/392240953624239" },
+          es: { language: "Español", hreflang: "es", url: "https://www.binance.com/es/square/post/392240953624239" },
+          fr: { language: "Français", hreflang: "fr", url: "https://www.binance.com/fr/square/post/392240953624239" },
+          id: { language: "Bahasa Indonesia", hreflang: "id", url: "https://www.binance.com/id/square/post/392240953624239" },
+          pt: { language: "Português, Brasil", hreflang: "pt-BR", url: "https://www.binance.com/pt-BR/square/post/392240953624239" },
+          ru: { language: "Русский", hreflang: "ru", url: "https://www.binance.com/ru/square/post/392240953624239" },
+          uk: { language: "Українська", hreflang: "uk", url: "https://www.binance.com/uk-UA/square/post/392240953624239" },
+          vi: { language: "Tiếng Việt", hreflang: "vi", url: "https://www.binance.com/vi/square/post/392240953624239" },
         },
       },
     ],

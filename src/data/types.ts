@@ -15,6 +15,8 @@ export type Step = { title: string; text: string };
 export type GuideLink = {
   /** English name of the language, shown in front of `language`, e.g. "Hindi". Leave out where both are the same. */
   name?: string;
+  /** "video" uses the block's `videoLinkLabel` instead of `linkLabel`. */
+  kind?: "video";
   /** Language name as its readers write it, e.g. "Español". */
   language: string;
   /** BCP 47 language tag of the linked article, e.g. "pt-BR". */
@@ -32,6 +34,8 @@ export type ExternalGuides = {
   intro: string;
   /** What every linked article is; shown before the language name in the link text. */
   linkLabel: string;
+  /** Link text for links of kind "video". */
+  videoLinkLabel?: string;
   links: GuideLink[];
 };
 
@@ -68,7 +72,7 @@ export type ExchangeText = {
   /** Labels of `sources`, same order. The linked pages stay the official (English) ones. */
   sourceLabels: string[];
   /** Texts of the `guides` block; leave out if the English entry has none. */
-  guides?: { heading: string; intro: string; linkLabel: string };
+  guides?: { heading: string; intro: string; linkLabel: string; videoLinkLabel?: string };
   feeDiscount: string;
   referralCovers: string[];
   bonusHeadline: string;

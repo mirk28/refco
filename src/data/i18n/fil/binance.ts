@@ -82,6 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "May mas mahabang gabay na may checklist tungkol sa pag-sign up gamit ang Binance referral code sa Binance Square, ang sariling content platform ng Binance. Nasa Spanish ang orihinal; kayang ipakita ng Binance Square ang salin nito:",
     linkLabel: "Binance referral code FAQ",
+    videoLinkLabel: "Video: paano magparehistro sa Binance, hakbang-hakbang",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

@@ -82,6 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "មគ្គុទ្ទេសក៍លម្អិតជាងនេះ ជាបញ្ជីត្រួតពិនិត្យ អំពីការចុះឈ្មោះដោយប្រើកូដណែនាំ Binance ត្រូវបានផ្សព្វផ្សាយនៅលើ Binance Square ដែលជាវេទិកាមាតិការបស់ Binance ផ្ទាល់។ ច្បាប់ដើមជាភាសាអេស្ប៉ាញ ហើយ Binance Square អាចបង្ហាញការបកប្រែបាន៖",
     linkLabel: "សំណួរដែលសួរញឹកញាប់អំពីកូដណែនាំ Binance",
+    videoLinkLabel: "វីដេអូ៖ របៀបចុះឈ្មោះលើ Binance មួយជំហានម្តងៗ",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
