@@ -154,7 +154,7 @@ function profile(e: Exchange): string[] {
     `#### ${e.name} questions and answers`,
     "",
     ...faqs.flatMap((f) => [`Q: ${f.q}`, `A: ${f.a}`, ""]),
-    ...(e.guides ? [`#### ${e.name}: ${e.guides.heading}`, "", e.guides.intro, "", ...e.guides.links.map((g) => `- ${g.kind === "video" && e.guides!.videoLinkLabel ? e.guides!.videoLinkLabel : e.guides!.linkLabel} – ${g.name ? `${g.name} (${g.language})` : g.language}: ${g.url}`), ""] : []),
+    ...(e.guides ? [`#### ${e.name}: ${e.guides.heading}`, "", e.guides.intro, "", ...e.guides.links.map((g) => g.kind === "video" && e.guides!.videoLinkLabel ? `- ${e.guides!.videoLinkLabel}: ${g.url}` : `- ${e.guides!.linkLabel} – ${g.name ? `${g.name} (${g.language})` : g.language}: ${g.url}`), ""] : []),
     `#### ${e.name} sources`,
     "",
     ...[...e.sources, ...a.sources].map((s) => `- ${s.label}: ${s.url}`),

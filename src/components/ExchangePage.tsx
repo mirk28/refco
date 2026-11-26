@@ -552,7 +552,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
                     return (
                       <li key={g.url}>
                         <a href={g.url} hrefLang={g.hreflang} target="_blank" rel="noopener">
-                          {t.guideLink(link.kind === "video" && guides.videoLinkLabel ? guides.videoLinkLabel : guides.linkLabel, g.name, <bdi lang={g.hreflang}>{g.language}</bdi>)}
+                          {link.kind === "video" && guides.videoLinkLabel ? guides.videoLinkLabel : t.guideLink(guides.linkLabel, g.name, <bdi lang={g.hreflang}>{g.language}</bdi>)}
                         </a>
                       </li>
                     );

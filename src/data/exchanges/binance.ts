@@ -98,7 +98,7 @@ export const binance: Exchange = {
     intro:
       "A longer checklist-style guide to signing up with a Binance referral code is published on Binance Square, Binance's own content platform. The original is in Spanish; Binance Square can show it translated:",
     linkLabel: "Binance referral code FAQ",
-    videoLinkLabel: "Video: how to register on Binance, step by step",
+    videoLinkLabel: "Binance Referral Code Video FAQ",
     links: [
       {
         language: "English",

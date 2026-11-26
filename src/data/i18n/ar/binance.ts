@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "نُشر دليل أكثر تفصيلًا على شكل قائمة تحقق حول التسجيل برمز إحالة Binance على Binance Square، منصة المحتوى الخاصة بـ Binance. النص الأصلي بالإسبانية، ويمكن لـ Binance Square عرضه مترجمًا:",
     linkLabel: "الأسئلة الشائعة عن كود إحالة Binance",
-    videoLinkLabel: "فيديو: كيفية التسجيل في Binance خطوة بخطوة",
+    videoLinkLabel: "كود إحالة Binance – أسئلة شائعة بالفيديو",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

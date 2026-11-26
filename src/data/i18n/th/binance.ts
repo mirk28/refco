@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "คู่มือฉบับละเอียดแบบเช็กลิสต์เกี่ยวกับการสมัครด้วยรหัสแนะนำ Binance เผยแพร่อยู่บน Binance Square แพลตฟอร์มคอนเทนต์ของ Binance เอง ต้นฉบับเป็นภาษาสเปน และ Binance Square สามารถแสดงฉบับแปลได้:",
     linkLabel: "คำถามที่พบบ่อยเรื่องรหัสแนะนำ Binance",
-    videoLinkLabel: "วิดีโอ: วิธีสมัคร Binance ทีละขั้นตอน",
+    videoLinkLabel: "รหัสแนะนำ Binance – FAQ วิดีโอ",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

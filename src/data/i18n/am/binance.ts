@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "በBinance የሪፈራል ኮድ ስለ መመዝገብ የማረጋገጫ ዝርዝር ያለው ሰፋ ያለ መመሪያ በBinance የራሱ የይዘት መድረክ Binance Square ላይ ታትሟል። ዋናው በስፓኒሽ ነው፤ Binance Square ትርጉሙን ማሳየት ይችላል፦",
     linkLabel: "Binance ሪፈራል ኮድ ተደጋጋሚ ጥያቄዎች",
-    videoLinkLabel: "ቪዲዮ፦ በBinance ላይ ደረጃ በደረጃ እንዴት እንደሚመዘገቡ",
+    videoLinkLabel: "Binance ሪፈራል ኮድ የቪዲዮ FAQ",
   },
   feeDiscount: "",
   referralCovers: ["ስፖት", "ማርጂን", "ፊውቸርስ"],

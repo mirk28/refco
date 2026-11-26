@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Binance ریفرل کوڈ کے ساتھ سائن اپ کرنے کے بارے میں چیک لسٹ والی ایک مفصل گائیڈ Binance Square پر شائع ہوئی ہے، جو Binance کا اپنا مواد پلیٹ فارم ہے۔ اصل تحریر ہسپانوی میں ہے؛ Binance Square اس کا ترجمہ دکھا سکتا ہے:",
     linkLabel: "Binance ریفرل کوڈ کے سوال و جواب",
-    videoLinkLabel: "ویڈیو: Binance پر مرحلہ وار رجسٹر کرنے کا طریقہ",
+    videoLinkLabel: "Binance ریفرل کوڈ ویڈیو FAQ",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

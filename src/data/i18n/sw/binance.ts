@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Mwongozo mrefu zaidi wenye orodha ya ukaguzi kuhusu kujisajili kwa msimbo wa rufaa wa Binance umechapishwa kwenye Binance Square, jukwaa la maudhui la Binance yenyewe. Asili yake ni kwa Kihispania; Binance Square inaweza kuuonyesha ukiwa umetafsiriwa:",
     linkLabel: "Msimbo wa rufaa wa Binance: maswali na majibu",
-    videoLinkLabel: "Video: jinsi ya kujisajili kwenye Binance hatua kwa hatua",
+    videoLinkLabel: "Msimbo wa Rufaa Binance: FAQ ya video",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

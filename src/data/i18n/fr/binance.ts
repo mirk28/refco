@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Un guide plus complet, sous forme de liste de contrôle, sur l'inscription avec un code de parrainage Binance est publié sur Binance Square, la plateforme de contenu de Binance. L'original est en espagnol ; Binance Square peut l'afficher traduit :",
     linkLabel: "FAQ du code de parrainage Binance",
-    videoLinkLabel: "Vidéo : s’inscrire sur Binance étape par étape",
+    videoLinkLabel: "Code de parrainage Binance : FAQ vidéo",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Marge", "Futures"],

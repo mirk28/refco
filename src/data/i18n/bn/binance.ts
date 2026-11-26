@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Binance রেফারেল কোড দিয়ে সাইন আপ করা নিয়ে চেকলিস্টসহ একটি বিস্তারিত গাইড Binance Square-এ প্রকাশিত হয়েছে, যা Binance-এর নিজস্ব কনটেন্ট প্ল্যাটফর্ম। মূল লেখাটি স্প্যানিশে; Binance Square এর অনুবাদ দেখাতে পারে:",
     linkLabel: "Binance রেফারেল কোড নিয়ে প্রশ্নোত্তর",
-    videoLinkLabel: "ভিডিও: ধাপে ধাপে Binance-এ নিবন্ধন করার নিয়ম",
+    videoLinkLabel: "Binance রেফারেল কোড ভিডিও FAQ",
   },
   feeDiscount: "",
   referralCovers: ["স্পট", "মার্জিন", "ফিউচার্স"],

@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Докладніший посібник із чек-листом про реєстрацію з реферальним кодом Binance опубліковано на Binance Square — власній контент-платформі Binance. Оригінал іспанською; Binance Square може показати його в перекладі:",
     linkLabel: "Поширені запитання про реферальний код Binance",
-    videoLinkLabel: "Відео: як зареєструватися на Binance крок за кроком",
+    videoLinkLabel: "Реферальний код Binance: відео-FAQ",
   },
   feeDiscount: "",
   referralCovers: ["Спот", "Маржа", "Ф'ючерси"],

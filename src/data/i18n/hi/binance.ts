@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Binance रेफ़रल कोड के साथ साइन अप करने पर चेकलिस्ट वाली एक विस्तृत गाइड Binance Square पर प्रकाशित है, जो Binance का अपना कंटेंट प्लेटफ़ॉर्म है। मूल लेख स्पेनिश में है; Binance Square इसका अनुवाद दिखा सकता है:",
     linkLabel: "Binance रेफरल कोड FAQ",
-    videoLinkLabel: "वीडियो: Binance पर चरण-दर-चरण रजिस्टर कैसे करें",
+    videoLinkLabel: "Binance रेफरल कोड वीडियो FAQ",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],

@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "En Binance Square, la plataforma de contenido propia de Binance, hay una guía más extensa con checklist para registrarse con un código de referido de Binance. Está escrita en español; Binance Square puede mostrarla traducida a otros idiomas:",
     linkLabel: "Preguntas frecuentes sobre el código de referido de Binance",
-    videoLinkLabel: "Vídeo: cómo registrarte en Binance paso a paso",
+    videoLinkLabel: "Código de referido de Binance: FAQ en vídeo",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margen", "Futuros"],

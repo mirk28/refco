@@ -82,7 +82,7 @@ export const binance: ExchangeText = {
     intro:
       "Panduan yang lebih lengkap berbentuk daftar periksa tentang mendaftar dengan kode referral Binance diterbitkan di Binance Square, platform konten milik Binance. Aslinya berbahasa Spanyol; Binance Square dapat menampilkan terjemahannya:",
     linkLabel: "FAQ kode referral Binance",
-    videoLinkLabel: "Video: cara mendaftar di Binance langkah demi langkah",
+    videoLinkLabel: "Kode referral Binance: FAQ video",
   },
   feeDiscount: "",
   referralCovers: ["Spot", "Margin", "Futures"],
