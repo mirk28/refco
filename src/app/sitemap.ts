@@ -8,12 +8,33 @@ import type { Locale } from "@/i18n/config";
 import { absoluteUrl } from "@/lib/seo";
 import { bannerFiles } from "@/data/banners";
 
-type Row = { path: (locale: Locale) => string; changeFrequency: "weekly" | "monthly" | "yearly"; priority: number; updated?: string; image?: (locale: Locale) => string | undefined };
+type Row = { path: (locale: Locale) => string; changeFrequency: "weekly" | "monthly" | "yearly"; priority: number; updated?: string; image?: (locale: Locale) => string | undefined; video?: (locale: Locale) => VideoEntry | undefined };
+type VideoEntry = NonNullable<MetadataRoute.Sitemap[number]["videos"]>[number];
+
+/** "PT1M52S" → 112 (seconds). */
+const seconds = (iso: string) => {
+  const m = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(iso);
+  return m ? Number(m[1] ?? 0) * 3600 + Number(m[2] ?? 0) * 60 + Number(m[3] ?? 0) : undefined;
+};
 
 /** Every page of the site once; each exists in every language. */
 const rows: Row[] = [
   { path: homePath, changeFrequency: "weekly", priority: 1 },
-  ...exchanges.map((e): Row => ({ path: (l) => exchangePath(e.slug, l), changeFrequency: "weekly", priority: 0.9, updated: site.pagesUpdated, image: (l) => (bannerFiles[e.slug] ? `/banners/${l}/${bannerFiles[e.slug]![l]}.webp` : undefined) })),
+  ...exchanges.map((e): Row => ({ path: (l) => exchangePath(e.slug, l), changeFrequency: "weekly", priority: 0.9, updated: site.pagesUpdated, image: (l) => (bannerFiles[e.slug] ? `/banners/${l}/${bannerFiles[e.slug]![l]}.webp` : undefined),
+    // The tutorial video is on the English page only (ExchangePage: locale === "en").
+    video: (l) =>
+      l === "en" && e.video
+        ? {
+            title: e.video.title,
+            description: e.video.description,
+            thumbnail_loc: absoluteUrl(e.video.poster),
+            content_loc: absoluteUrl(e.video.src),
+            duration: seconds(e.video.duration),
+            publication_date: e.video.uploadDate,
+            family_friendly: "yes",
+          }
+        : undefined,
+  })),
   ...exchanges.map((e): Row => ({ path: (l) => alternativesPath(e.slug, l), changeFrequency: "weekly", priority: 0.8 })),
   { path: (l) => pagePath("compare", l), changeFrequency: "weekly", priority: 0.8 },
   ...versusPairs.map((p): Row => ({ path: (l) => versusPath(p.a, p.b, l), changeFrequency: "weekly", priority: 0.7 })),
@@ -35,6 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: locale === "en" ? row.priority : Math.max(0.1, Math.round((row.priority - 0.1) * 10) / 10),
       // The page banner (desktop version) as an image sitemap entry.
       ...(row.image?.(locale) ? { images: [absoluteUrl(row.image(locale)!)] } : {}),
+      ...(row.video?.(locale) ? { videos: [row.video(locale)!] } : {}),
       alternates: {
         languages: Object.fromEntries(Object.entries(languageAlternates(row.path)).map(([lang, path]) => [lang, absoluteUrl(path)])),
       },
