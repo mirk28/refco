@@ -25,7 +25,7 @@ export function rootMetadata(locale: Locale): Metadata {
     },
     description: t.siteDescription,
     applicationName: site.name,
-    authors: [{ name: site.name, url: site.url }],
+    authors: [{ name: site.name, url: absoluteUrl("/") }],
     creator: site.name,
     publisher: site.name,
     category: "finance",
@@ -34,7 +34,7 @@ export function rootMetadata(locale: Locale): Metadata {
     openGraph: {
       type: "website",
       locale: localeInfo[locale].ogLocale,
-      url: locale === "en" ? site.url : absoluteUrl(homePath(locale)),
+      url: absoluteUrl(homePath(locale)),
       siteName: `${site.name} – ${site.domain}`,
       title: t.siteTitle,
       description: t.siteDescription,

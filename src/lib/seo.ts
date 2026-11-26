@@ -47,7 +47,7 @@ export function organizationLd() {
     "@id": orgId,
     name: site.name,
     alternateName: site.domain,
-    url: site.url,
+    url: absoluteUrl("/"),
     logo: { "@type": "ImageObject", url: absoluteUrl("/icon.svg"), width: 512, height: 512 },
     email: site.contactEmail,
     ...(sameAs.length ? { sameAs } : {}),
@@ -58,7 +58,7 @@ export function websiteLd() {
   return {
     "@type": "WebSite",
     "@id": websiteId,
-    url: site.url,
+    url: absoluteUrl("/"),
     name: `${site.name} – ${site.domain}`,
     description: site.description,
     inLanguage: site.language,

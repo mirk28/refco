@@ -29,11 +29,14 @@ export function homeMetadata(locale: Locale): Metadata {
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: homePath(locale), languages: languageAlternates(homePath) },
+    // Canonical, hreflang and og:url of the home pages are rendered as tags in HomePage (HomeLinks), because
+    // Next.js strips the trailing slash from the root URL (trailingSlash: false). The sitemap and these tags
+    // both write the English home as https://referral-code.org/.
+    alternates: null, // no second canonical from the root layout
     openGraph:
       locale === "en"
-        ? { title, description, url: site.url, images: shareImages() }
-        : { title, description, url: absoluteUrl(homePath(locale)), locale: localeInfo[locale].ogLocale },
+        ? { title, description, images: shareImages() }
+        : { title, description, locale: localeInfo[locale].ogLocale },
     twitter: locale === "en" ? { card: "summary_large_image", title, description, images: shareImages() } : { card: "summary_large_image", title, description },
   };
 }
@@ -57,6 +60,20 @@ const trustIcons = [
 /** Which of the six cards carry the green icon tile. */
 const benefitGreen = [true, false, true, false, true, false];
 const trustGreen = [true, false, false, true, false, true];
+
+/** Canonical, hreflang and og:url of a home page with the exact URLs of the sitemap (React places them in <head>). */
+function HomeLinks({ locale }: { locale: Locale }) {
+  const alternates = languageAlternates(homePath);
+  return (
+    <>
+      <link rel="canonical" href={absoluteUrl(homePath(locale))} />
+      {Object.entries(alternates).map(([code, path]) => (
+        <link key={code} rel="alternate" hrefLang={code} href={absoluteUrl(path)} />
+      ))}
+      <meta property="og:url" content={absoluteUrl(homePath(locale))} />
+    </>
+  );
+}
 
 export function HomePage({ locale = "en" }: { locale?: Locale }) {
   const dict = getDictionary(locale);
@@ -109,6 +126,7 @@ export function HomePage({ locale = "en" }: { locale?: Locale }) {
 
   return (
     <>
+      <HomeLinks locale={locale} />
       <JsonLd data={graph(organizationLd(), pageNode, itemList, faqLd(faqs))} />
 
       {/* ---------------- Hero ---------------- */}
