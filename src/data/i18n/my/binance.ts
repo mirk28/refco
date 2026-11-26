@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Binance Square ရှိ လမ်းညွှန်များ",
     intro:
-      "Binance ရည်ညွှန်းကုဒ်ဖြင့် စာရင်းသွင်းခြင်းအကြောင်း စစ်ဆေးစာရင်းပါ ပိုမိုအသေးစိတ်သော လမ်းညွှန်ကို Binance ၏ ကိုယ်ပိုင် အကြောင်းအရာပလက်ဖောင်း Binance Square တွင် ထုတ်ဝေထားသည်။ မူရင်းမှာ စပိန်ဘာသာဖြစ်ပြီး Binance Square က ဘာသာပြန်ကို ပြသပေးနိုင်သည်-",
+      "Binance ၏ ကိုယ်ပိုင် content platform ဖြစ်သော Binance Square တွင် Binance Referral Code ဖြင့် စာရင်းသွင်းနည်း checklist ပါ လမ်းညွှန်အပြည့်အစုံနှင့် အလားတူ အကြောင်းအရာ ဗီဒီယို FAQ တိုတစ်ခု ရှိသည်။ နှစ်ခုစလုံးကို အင်္ဂလိပ်ဘာသာဖြင့် ဖတ်ရှုနိုင်သည် -",
     linkLabel: "Binance Referral Code အမေးအဖြေ",
     videoLinkLabel: "Binance Referral Code ဗီဒီယို FAQ",
   },

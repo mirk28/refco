@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Mga gabay sa Binance Square",
     intro:
-      "May mas mahabang gabay na may checklist tungkol sa pag-sign up gamit ang Binance referral code sa Binance Square, ang sariling content platform ng Binance. Nasa Spanish ang orihinal; kayang ipakita ng Binance Square ang salin nito:",
+      "Sa Binance Square, ang sariling content platform ng Binance, may mas mahabang gabay na may checklist sa pag-sign up gamit ang Binance referral code at isang maikling video FAQ tungkol sa parehong paksa. Pareho itong nasa Ingles:",
     linkLabel: "Binance referral code FAQ",
     videoLinkLabel: "Binance Referral Code Video FAQ",
   },

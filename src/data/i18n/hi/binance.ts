@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Binance Square पर गाइड",
     intro:
-      "Binance रेफ़रल कोड के साथ साइन अप करने पर चेकलिस्ट वाली एक विस्तृत गाइड Binance Square पर प्रकाशित है, जो Binance का अपना कंटेंट प्लेटफ़ॉर्म है। मूल लेख स्पेनिश में है; Binance Square इसका अनुवाद दिखा सकता है:",
+      "Binance के अपने कंटेंट प्लेटफ़ॉर्म Binance Square पर Binance रेफरल कोड के साथ साइन अप करने की चेकलिस्ट वाली एक विस्तृत गाइड और इसी विषय पर एक छोटा वीडियो FAQ है। दोनों अंग्रेज़ी में उपलब्ध हैं:",
     linkLabel: "Binance रेफरल कोड FAQ",
     videoLinkLabel: "Binance रेफरल कोड वीडियो FAQ",
   },

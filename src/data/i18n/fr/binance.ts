@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Guides sur Binance Square",
     intro:
-      "Un guide plus complet, sous forme de liste de contrôle, sur l'inscription avec un code de parrainage Binance est publié sur Binance Square, la plateforme de contenu de Binance. L'original est en espagnol ; Binance Square peut l'afficher traduit :",
+      "Sur Binance Square, la plateforme de contenu de Binance, se trouvent un guide détaillé avec checklist pour s’inscrire avec un code de parrainage Binance et une courte FAQ vidéo sur le même sujet. Binance Square les affiche tous deux en français :",
     linkLabel: "FAQ du code de parrainage Binance",
     videoLinkLabel: "Code de parrainage Binance : FAQ vidéo",
   },

@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "أدلة على Binance Square",
     intro:
-      "نُشر دليل أكثر تفصيلًا على شكل قائمة تحقق حول التسجيل برمز إحالة Binance على Binance Square، منصة المحتوى الخاصة بـ Binance. النص الأصلي بالإسبانية، ويمكن لـ Binance Square عرضه مترجمًا:",
+      "على Binance Square، منصة المحتوى الخاصة بـ Binance، يوجد دليل مفصّل مع قائمة تحقق للتسجيل باستخدام كود إحالة Binance، وأسئلة شائعة قصيرة بالفيديو حول الموضوع نفسه. يعرض Binance Square كليهما باللغة العربية:",
     linkLabel: "الأسئلة الشائعة عن كود إحالة Binance",
     videoLinkLabel: "كود إحالة Binance – أسئلة شائعة بالفيديو",
   },

@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Guias no Binance Square",
     intro:
-      "Um guia mais completo, em forma de checklist, sobre o cadastro com um código de indicação da Binance foi publicado no Binance Square, a plataforma de conteúdo da própria Binance. O original está em espanhol; o Binance Square pode exibi-lo traduzido:",
+      "No Binance Square, a plataforma de conteúdo da própria Binance, há um guia mais completo com checklist para se cadastrar com um código de indicação Binance e um FAQ em vídeo curto sobre o mesmo tema. O Binance Square mostra os dois em português:",
     linkLabel: "Perguntas frequentes sobre o código de indicação da Binance",
     videoLinkLabel: "Código de indicação Binance: FAQ em vídeo",
   },

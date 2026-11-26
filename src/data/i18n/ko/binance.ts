@@ -79,7 +79,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Binance Square 가이드",
     intro:
-      "Binance 추천 코드로 가입하는 방법을 체크리스트로 정리한 더 자세한 가이드가 Binance의 자체 콘텐츠 플랫폼인 Binance Square에 게시되어 있습니다. 원문은 스페인어이며, Binance Square에서 번역본을 볼 수 있습니다:",
+      "Binance의 자체 콘텐츠 플랫폼인 Binance Square에는 Binance 레퍼럴 코드로 가입하는 방법을 체크리스트로 정리한 자세한 가이드와 같은 주제의 짧은 동영상 FAQ가 있습니다. 두 콘텐츠 모두 영어로 제공됩니다:",
     linkLabel: "Binance 레퍼럴 코드 FAQ",
     videoLinkLabel: "Binance 레퍼럴 코드 동영상 FAQ",
   },

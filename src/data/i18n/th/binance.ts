@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "คู่มือบน Binance Square",
     intro:
-      "คู่มือฉบับละเอียดแบบเช็กลิสต์เกี่ยวกับการสมัครด้วยรหัสแนะนำ Binance เผยแพร่อยู่บน Binance Square แพลตฟอร์มคอนเทนต์ของ Binance เอง ต้นฉบับเป็นภาษาสเปน และ Binance Square สามารถแสดงฉบับแปลได้:",
+      "บน Binance Square แพลตฟอร์มคอนเทนต์ของ Binance เอง มีคู่มือแบบละเอียดพร้อมเช็กลิสต์สำหรับการสมัครด้วยรหัสแนะนำ Binance และ FAQ วิดีโอสั้นในหัวข้อเดียวกัน ทั้งสองมีให้อ่านเป็นภาษาอังกฤษ:",
     linkLabel: "คำถามที่พบบ่อยเรื่องรหัสแนะนำ Binance",
     videoLinkLabel: "รหัสแนะนำ Binance – FAQ วิดีโอ",
   },

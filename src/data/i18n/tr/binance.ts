@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Binance Square rehberleri",
     intro:
-      "Binance referans koduyla kayıt olmaya dair kontrol listeli daha kapsamlı bir rehber, Binance'in kendi içerik platformu Binance Square'de yayımlandı. Orijinali İspanyolca; Binance Square çevirisini gösterebilir:",
+      "Binance'in kendi içerik platformu Binance Square'de, Binance referans koduyla kayıt olmaya dair kontrol listeli ayrıntılı bir rehber ve aynı konuda kısa bir video SSS bulunuyor. İkisi de İngilizce olarak sunuluyor:",
     linkLabel: "Binance referans kodu SSS",
     videoLinkLabel: "Binance referans kodu video SSS",
   },

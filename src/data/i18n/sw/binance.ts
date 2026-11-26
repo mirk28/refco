@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Miongozo kwenye Binance Square",
     intro:
-      "Mwongozo mrefu zaidi wenye orodha ya ukaguzi kuhusu kujisajili kwa msimbo wa rufaa wa Binance umechapishwa kwenye Binance Square, jukwaa la maudhui la Binance yenyewe. Asili yake ni kwa Kihispania; Binance Square inaweza kuuonyesha ukiwa umetafsiriwa:",
+      "Kwenye Binance Square, jukwaa la maudhui la Binance yenyewe, kuna mwongozo wa kina wenye orodha ya ukaguzi wa kujisajili kwa msimbo wa rufaa wa Binance na FAQ fupi ya video kuhusu mada hiyo hiyo. Vyote viwili vinapatikana kwa Kiingereza:",
     linkLabel: "Msimbo wa rufaa wa Binance: maswali na majibu",
     videoLinkLabel: "Msimbo wa Rufaa Binance: FAQ ya video",
   },

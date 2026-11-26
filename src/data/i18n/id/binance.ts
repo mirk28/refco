@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Panduan di Binance Square",
     intro:
-      "Panduan yang lebih lengkap berbentuk daftar periksa tentang mendaftar dengan kode referral Binance diterbitkan di Binance Square, platform konten milik Binance. Aslinya berbahasa Spanyol; Binance Square dapat menampilkan terjemahannya:",
+      "Di Binance Square, platform konten milik Binance sendiri, ada panduan lengkap dengan checklist untuk mendaftar dengan kode referral Binance dan FAQ video singkat tentang topik yang sama. Binance Square menampilkan keduanya dalam bahasa Indonesia:",
     linkLabel: "FAQ kode referral Binance",
     videoLinkLabel: "Kode referral Binance: FAQ video",
   },

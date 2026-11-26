@@ -96,7 +96,7 @@ export const binance: Exchange = {
   guides: {
     heading: "Guides on Binance Square",
     intro:
-      "A longer checklist-style guide to signing up with a Binance referral code is published on Binance Square, Binance's own content platform. The original is in Spanish; Binance Square can show it translated:",
+      "Binance Square, Binance's own content platform, has a longer checklist-style guide to signing up with a Binance referral code and a short video FAQ on the same topic:",
     linkLabel: "Binance referral code FAQ",
     videoLinkLabel: "Binance Referral Code Video FAQ",
     links: [

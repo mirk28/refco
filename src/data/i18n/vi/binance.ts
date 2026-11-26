@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Hướng dẫn trên Binance Square",
     intro:
-      "Một hướng dẫn chi tiết hơn dạng danh sách kiểm tra về việc đăng ký bằng mã giới thiệu Binance được đăng trên Binance Square, nền tảng nội dung của chính Binance. Bản gốc bằng tiếng Tây Ban Nha; Binance Square có thể hiển thị bản dịch:",
+      "Trên Binance Square, nền tảng nội dung của chính Binance, có một hướng dẫn chi tiết kèm checklist về cách đăng ký bằng mã giới thiệu Binance và một FAQ video ngắn về cùng chủ đề. Binance Square hiển thị cả hai bằng tiếng Việt:",
     linkLabel: "Hỏi đáp về mã giới thiệu Binance",
     videoLinkLabel: "Mã giới thiệu Binance: FAQ video",
   },

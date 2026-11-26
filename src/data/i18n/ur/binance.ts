@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "Binance Square پر گائیڈز",
     intro:
-      "Binance ریفرل کوڈ کے ساتھ سائن اپ کرنے کے بارے میں چیک لسٹ والی ایک مفصل گائیڈ Binance Square پر شائع ہوئی ہے، جو Binance کا اپنا مواد پلیٹ فارم ہے۔ اصل تحریر ہسپانوی میں ہے؛ Binance Square اس کا ترجمہ دکھا سکتا ہے:",
+      "Binance کے اپنے کنٹینٹ پلیٹ فارم Binance Square پر Binance ریفرل کوڈ کے ساتھ سائن اپ کرنے کی چیک لسٹ والی تفصیلی گائیڈ اور اسی موضوع پر ایک مختصر ویڈیو FAQ موجود ہے۔ دونوں انگریزی میں دستیاب ہیں:",
     linkLabel: "Binance ریفرل کوڈ کے سوال و جواب",
     videoLinkLabel: "Binance ریفرل کوڈ ویڈیو FAQ",
   },

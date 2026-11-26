@@ -80,7 +80,7 @@ export const binance: ExchangeText = {
   guides: {
     heading: "በBinance Square ላይ ያሉ መመሪያዎች",
     intro:
-      "በBinance የሪፈራል ኮድ ስለ መመዝገብ የማረጋገጫ ዝርዝር ያለው ሰፋ ያለ መመሪያ በBinance የራሱ የይዘት መድረክ Binance Square ላይ ታትሟል። ዋናው በስፓኒሽ ነው፤ Binance Square ትርጉሙን ማሳየት ይችላል፦",
+      "Binance Square፣ የBinance የራሱ የይዘት መድረክ ላይ፣ በBinance ሪፈራል ኮድ ለመመዝገብ የሚረዳ ዝርዝር መመሪያ ከማረጋገጫ ዝርዝር ጋር እና በዚሁ ርዕስ ላይ አጭር የቪዲዮ FAQ አለ። ሁለቱም በእንግሊዝኛ ይገኛሉ፦",
     linkLabel: "Binance ሪፈራል ኮድ ተደጋጋሚ ጥያቄዎች",
     videoLinkLabel: "Binance ሪፈራል ኮድ የቪዲዮ FAQ",
   },
