@@ -83,7 +83,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  trailingSlash: false,
+  // Every page URL ends with "/" (Marko, 2026-11-27); old URLs without it get a permanent redirect from Next.js.
+  trailingSlash: true,
   images: { formats: ["image/avif", "image/webp"] },
   // Every language has its own root layout (src/app/(en), src/app/es), so the 404 page for unmatched URLs
   // is src/app/global-not-found.tsx.

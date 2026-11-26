@@ -6,6 +6,7 @@
  * from those same facts, so they appear as comparison tables and one short verdict per page instead
  * of being repeated. Everything is read from the data files, so this file cannot differ from the pages.
  */
+import { pagePath } from "@/i18n/config";
 import { site } from "@/config/site";
 import type { Exchange } from "@/data/exchanges";
 import { exchanges, exchangePath, outboundUrl } from "@/data/exchanges";
@@ -277,10 +278,10 @@ export function buildLlmsFull(): string {
     ]),
     "## About this website",
     "",
-    `- About and methodology: ${absoluteUrl("/about")}`,
-    `- Affiliate disclosure: ${absoluteUrl("/affiliate-disclosure")} – links and referral codes that lead to an exchange are advertising; the exchange may pay the operator a commission, and the user never pays more because of it.`,
-    `- Imprint (operator and legal notice): ${absoluteUrl("/imprint")}`,
-    `- Privacy policy: ${absoluteUrl("/privacy")}`,
+    `- About and methodology: ${absoluteUrl(pagePath("about"))}`,
+    `- Affiliate disclosure: ${absoluteUrl(pagePath("affiliateDisclosure"))} – links and referral codes that lead to an exchange are advertising; the exchange may pay the operator a commission, and the user never pays more because of it.`,
+    `- Imprint (operator and legal notice): ${absoluteUrl(pagePath("imprint"))}`,
+    `- Privacy policy: ${absoluteUrl(pagePath("privacy"))}`,
     "",
   ];
   return lines.join("\n");

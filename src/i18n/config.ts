@@ -296,13 +296,14 @@ const segments: Record<Locale, Segments> = {
 /** Head-to-head pages are spelled the same way in every language: `binance-vs-okx`. */
 const versusPattern = /^([a-z0-9]+)-vs-([a-z0-9]+)$/;
 
-const withLocale = (locale: Locale, segment: string) => (locale === defaultLocale ? `/${segment}` : `/${locale}/${segment}`);
+/** Every page path ends with "/" (next.config.mjs: trailingSlash: true). */
+const withLocale = (locale: Locale, segment: string) => (locale === defaultLocale ? `/${segment}/` : `/${locale}/${segment}/`);
 
 /* ----------------------------------- paths ---------------------------------- */
 
-export const homePath = (locale: Locale = defaultLocale) => (locale === defaultLocale ? "/" : `/${locale}`);
-/** A section of the home page, e.g. `homeAnchor("es", "exchanges")` → `/es#exchanges`. */
-export const homeAnchor = (locale: Locale, id: string) => (locale === defaultLocale ? `/#${id}` : `/${locale}#${id}`);
+export const homePath = (locale: Locale = defaultLocale) => (locale === defaultLocale ? "/" : `/${locale}/`);
+/** A section of the home page, e.g. `homeAnchor("es", "exchanges")` → `/es/#exchanges`. */
+export const homeAnchor = (locale: Locale, id: string) => (locale === defaultLocale ? `/#${id}` : `/${locale}/#${id}`);
 
 export const referralPageSlug = (slug: string, locale: Locale = defaultLocale) => segments[locale].referral(slug);
 export const referralPath = (slug: string, locale: Locale = defaultLocale) => withLocale(locale, segments[locale].referral(slug));
@@ -317,7 +318,7 @@ export const versusPageSlug = (a: string, b: string) => `${a}-vs-${b}`;
 export const versusPagePath = (a: string, b: string, locale: Locale = defaultLocale) => withLocale(locale, versusPageSlug(a, b));
 
 export const staticPageSlug = (page: StaticPage, locale: Locale = defaultLocale) => segments[locale].static[page];
-/** Path of a page that exists once per language: `pagePath("privacy", "es")` → `/es/privacidad`. */
+/** Path of a page that exists once per language: `pagePath("privacy", "es")` → `/es/privacidad/`. */
 export const pagePath = (page: StaticPage, locale: Locale = defaultLocale) => withLocale(locale, segments[locale].static[page]);
 
 /* ------------------------- which page is this segment? ------------------------ */

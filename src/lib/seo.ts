@@ -32,7 +32,8 @@ export const formatBn = (n: number, locale: Locale = "en") => getDictionary(loca
  * @param path  Path of the page whose own card is meant, e.g. `/binance-referral-code`; empty for the general card.
  */
 export const shareImages = (path = "", alt = "RefCo – verified crypto exchange referral codes") => [
-  { url: `${path}/opengraph-image?v=${site.lastReviewed}`, width: 1200, height: 630, type: "image/png", alt },
+  // Page paths end with "/" (trailingSlash: true); so does the image route, so it is served without a redirect.
+  { url: `${path.replace(/\/$/, "")}/opengraph-image/?v=${site.lastReviewed}`, width: 1200, height: 630, type: "image/png", alt },
 ];
 
 /* ----------------------------- JSON-LD builders ---------------------------- */
@@ -129,7 +130,7 @@ export function exchangePageLd(e: Exchange, title: string, description: string, 
     dateModified: site.pagesUpdated,
     lastReviewed: site.lastReviewed,
     reviewedBy: { "@id": orgId },
-    primaryImageOfPage: { "@type": "ImageObject", url: `${url}/opengraph-image` },
+    primaryImageOfPage: { "@type": "ImageObject", url: `${url}opengraph-image/` },
     speakable: { "@type": "SpeakableSpecification", cssSelector: [".answer", "#code-facts"] },
     citation: e.sources.map((s) => ({ "@type": "WebPage", name: s.label, url: s.url })),
     about: {
@@ -220,7 +221,7 @@ export function alternativesPageLd(
     dateModified: site.lastReviewed,
     lastReviewed: site.lastReviewed,
     reviewedBy: { "@id": orgId },
-    primaryImageOfPage: { "@type": "ImageObject", url: `${url}/opengraph-image` },
+    primaryImageOfPage: { "@type": "ImageObject", url: `${url}opengraph-image/` },
     speakable: { "@type": "SpeakableSpecification", cssSelector: [".answer", "#at-a-glance"] },
     citation: citations.map((s) => ({ "@type": "WebPage", name: s.label, url: s.url })),
     about: { "@type": "Organization", name: x.name, url: x.homepage, foundingDate: x.founded },
@@ -310,7 +311,7 @@ export function versusPageLd(
     dateModified: site.lastReviewed,
     lastReviewed: site.lastReviewed,
     reviewedBy: { "@id": orgId },
-    primaryImageOfPage: { "@type": "ImageObject", url: `${url}/opengraph-image` },
+    primaryImageOfPage: { "@type": "ImageObject", url: `${url}opengraph-image/` },
     speakable: { "@type": "SpeakableSpecification", cssSelector: [".answer", "#at-a-glance"] },
     citation: citations.map((s) => ({ "@type": "WebPage", name: s.label, url: s.url })),
     about: [org(a), org(b)],
