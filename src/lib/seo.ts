@@ -171,6 +171,26 @@ export function howToLd(e: Exchange, locale: Locale = "en") {
   };
 }
 
+/** The page's tutorial video as a VideoObject. */
+export function videoLd(e: Exchange, locale: Locale = "en") {
+  const v = e.video;
+  if (!v) return null;
+  const url = absoluteUrl(exchangePath(e.slug, locale));
+  return {
+    "@type": "VideoObject",
+    "@id": `${url}#video`,
+    name: v.title,
+    description: v.description,
+    thumbnailUrl: absoluteUrl(v.poster),
+    contentUrl: absoluteUrl(v.src),
+    uploadDate: v.uploadDate,
+    duration: v.duration,
+    inLanguage: "en",
+    transcript: v.transcript,
+    publisher: { "@id": orgId },
+  };
+}
+
 /* ------------------------- "[Exchange] alternatives" pages ------------------------- */
 
 /** WebPage node of an alternatives page: the exchange it is about, the exchanges it compares and its sources. */

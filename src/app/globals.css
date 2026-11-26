@@ -293,6 +293,9 @@ td.offer-cell { white-space: normal; min-width: 200px; font-weight: 650; color: 
 .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0 0 1em; }
 .chips li { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.86rem; font-weight: 600; color: var(--ink-2); }
 
+.video-embed { margin: 18px 0 6px; }
+.video-embed video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: var(--radius); background: #061127; border: 1px solid var(--line); }
+.video-embed figcaption { margin-top: 8px; font-size: 0.9rem; color: var(--muted, #5b6576); }
 .how { list-style: none; padding: 0; counter-reset: how; display: grid; gap: 12px; }
 .how li { counter-increment: how; display: grid; grid-template-columns: 36px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
 .how li::before { content: counter(how); width: 36px; height: 36px; border-radius: 10px; background: var(--brand-soft); color: var(--brand); font-weight: 800; display: grid; place-items: center; }

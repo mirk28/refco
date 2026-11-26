@@ -82,6 +82,17 @@ export const binance: Exchange = {
     { label: "Binance: SAFU fund", url: "https://www.binance.com/en/support/faq/detail/028799e730294ae4a9b382d60d350116" },
     { label: "Binance: About", url: "https://www.binance.com/en/about" },
   ],
+  video: {
+    src: "/video/binance-referral-code-guide.mp4",
+    poster: "/video/binance-referral-code-guide.jpg",
+    captions: "/video/binance-referral-code-guide.en.vtt",
+    title: "Binance referral code REFCO888: how to enter it and what it gives you",
+    description:
+      "Step-by-step video: where the Referral ID field is in Binance registration, what the REFCO888 Referral Pro code gives you, and three mistakes that cost you the referral.",
+    duration: "PT1M52S",
+    uploadDate: "2026-11-26",
+    transcript: "A referral code on Binance only works if you enter it at the right moment. Here are the four steps, and then the three mistakes that make a code count for nothing. First, on binance.com, choose register and enter your email or phone number. Confirm it is you with the 6-digit code Binance sends. Choose a password with at least eight characters, a number and an uppercase letter. Now the final screen. Find the optional field called Referral ID and type REFCO888, spelled R-E-F-C-O-8-8-8. If you used the sign-up link on referral-code.org, the field is already filled in for you. So why use a code at all? First, REFCO888 is a Referral Pro code, so you get part of your own trading fees back, paid in USDC. Binance shows your exact rate on the sign-up page. Second, one code covers spot, margin and futures. Third, it costs you nothing. Your fee rate stays the same, and the rebate comes back on top. Mistake one. Depositing before the code is linked. After your first deposit or trade, a code can no longer be added. Mistake two. Typing a different code into the Futures Referral ID field. It only accepts the code from whoever referred your main account. Mistake three. Not checking your region. Since July 2026, users registered in EEA countries cannot take part in the referral programme. The code is REFCO888. The full rules and answers are on referral-code.org.",
+  },
   guides: {
     heading: "Guides on Binance Square",
     intro:

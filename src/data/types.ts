@@ -35,6 +35,19 @@ export type ExternalGuides = {
   links: GuideLink[];
 };
 
+export type ExchangeVideo = {
+  /** Paths under public/, e.g. "/video/x.mp4". */
+  src: string;
+  poster: string;
+  captions: string;
+  title: string;
+  description: string;
+  /** ISO 8601 duration, e.g. "PT1M52S". */
+  duration: string;
+  uploadDate: string;
+  transcript: string;
+};
+
 /* ------------------------------ Language versions ------------------------------ */
 
 /**
@@ -236,6 +249,8 @@ export type Exchange = {
   sources: Source[];
   /** Guides about this exchange on another platform; shown on the exchange page and listed in llms.txt. */
   guides?: ExternalGuides;
+  /** Tutorial video (English, self-hosted under /public/video). Shown on the English page only. */
+  video?: ExchangeVideo;
   /**
    * Fee discount YOU pass on to users (kickback set in your affiliate dashboard),
    * e.g. "10% off trading fees for life". Leave empty if you don't share commission.

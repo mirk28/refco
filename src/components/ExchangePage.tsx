@@ -16,7 +16,7 @@ import { Breadcrumbs, CtaLink, ExchangeCard, FaqList } from "@/components/Blocks
 import { CopyCode } from "@/components/CopyCode";
 import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, MinusIcon } from "@/components/Icons";
-import { breadcrumbLd, exchangePageLd, faqLd, graph, howToLd, monthYearFor, prettyDate, shareImages, shortMonthYearFor } from "@/lib/seo";
+import { breadcrumbLd, exchangePageLd, faqLd, graph, howToLd, videoLd, monthYearFor, prettyDate, shareImages, shortMonthYearFor } from "@/lib/seo";
 import { buildFaqs, groupFaqs } from "@/lib/faqs";
 import { alternativesTo, altInfo } from "@/lib/compare";
 import { compareText } from "@/i18n/compare";
@@ -114,10 +114,13 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
     links,
   );
   const closedWhereYouLive = t.closedWhereYouLive(e, links);
+  // The tutorial video is English, so it is shown (and marked up) on the English page only.
+  const video = locale === "en" ? e.video : undefined;
+  const videoNode = video ? videoLd(e, locale) : null;
 
   return (
     <>
-      <JsonLd data={graph(exchangePageLd(e, title, description, locale), breadcrumbLd(crumbs), howToLd(e, locale), faqLd(faqs))} />
+      <JsonLd data={graph(exchangePageLd(e, title, description, locale), breadcrumbLd(crumbs), howToLd(e, locale), faqLd(faqs), ...(videoNode ? [videoNode] : []))} />
 
       {/* ---------------- Hero ---------------- */}
       <section className="lp-hero">
@@ -331,6 +334,15 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
                 ))}
               </ol>
               <p style={{ marginTop: 14 }}>{e.signupTip}</p>
+              {video ? (
+                <figure className="video-embed">
+                  <video controls preload="none" playsInline poster={video.poster} width={1920} height={1080}>
+                    <source src={video.src} type="video/mp4" />
+                    <track kind="captions" src={video.captions} srcLang="en" label="English" default />
+                  </video>
+                  <figcaption>{video.title}</figcaption>
+                </figure>
+              ) : null}
               <p>
                 <CtaLink exchange={e}>{t.startRegistration(e)}</CtaLink>
               </p>
