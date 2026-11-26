@@ -49,7 +49,7 @@ export function exchangeMetadata(e: Exchange, locale: Locale): Metadata {
       title,
       description,
       url: path,
-      modifiedTime: site.lastReviewed,
+      modifiedTime: site.pagesUpdated,
       ...(locale === "en" ? { images: shareImages(path, title) } : { locale: localeInfo[locale].ogLocale }),
     },
     twitter: { card: "summary_large_image", title, description, ...(locale === "en" ? { images: shareImages(path, title) } : {}) },
@@ -130,7 +130,7 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
           <div className="lp-hero-inner">
             <div>
               <span className="updated">
-                <span className="dot" aria-hidden="true" /> {t.updated(reviewed)}
+                <span className="dot" aria-hidden="true" /> {t.updated(prettyDate(site.pagesUpdated, locale))}
               </span>
               <div className="lp-title-row">
                 <ExchangeLogo exchange={e} size={60} />
@@ -202,25 +202,6 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
           </div>
         </div>
       </section>
-
-      {/* ---------------- Banner (linked to sign-up) ---------------- */}
-      {bannerFiles[e.slug] ? (
-        <div className="container lp-banner">
-          <a href={outboundUrl(e)} target="_blank" rel="sponsored nofollow noopener" data-exchange={e.slug} title={dict.layout.referralCodeOf(e.name)}>
-            <picture>
-              <source media="(max-width: 640px)" srcSet={`/banners/${locale}/${bannerFiles[e.slug]![locale]}-mobile.webp`} width={720} height={960} />
-              <img
-                src={`/banners/${locale}/${bannerFiles[e.slug]![locale]}.webp`}
-                alt={dict.layout.referralCodeOf(e.name)}
-                title={dict.layout.referralCodeOf(e.name)}
-                width={1200}
-                height={630}
-                decoding="async"
-              />
-            </picture>
-          </a>
-        </div>
-      ) : null}
 
       {/* ---------------- Body ---------------- */}
       <div className="section" style={{ paddingTop: 56 }}>
@@ -647,6 +628,25 @@ export function ExchangePage({ exchange: e, locale = "en" }: { exchange: Exchang
           </aside>
         </div>
       </div>
+
+      {/* ---------------- Banner (linked to sign-up) ---------------- */}
+      {bannerFiles[e.slug] ? (
+        <div className="container lp-banner lp-banner-bottom">
+          <a href={outboundUrl(e)} target="_blank" rel="sponsored nofollow noopener" data-exchange={e.slug} title={dict.layout.referralCodeOf(e.name)}>
+            <picture>
+              <source media="(max-width: 640px)" srcSet={`/banners/${locale}/${bannerFiles[e.slug]![locale]}-mobile.webp`} width={720} height={960} />
+              <img
+                src={`/banners/${locale}/${bannerFiles[e.slug]![locale]}.webp`}
+                alt={dict.layout.referralCodeOf(e.name)}
+                title={dict.layout.referralCodeOf(e.name)}
+                width={1200}
+                height={630}
+                decoding="async"
+              />
+            </picture>
+          </a>
+        </div>
+      ) : null}
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">

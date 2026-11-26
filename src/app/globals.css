@@ -560,5 +560,6 @@ table.score { min-width: 640px; }
 
 /* Page banner below the hero, linked to sign-up. */
 .lp-banner { margin-top: 32px; }
+.lp-banner-bottom { margin: 0 auto 28px; }
 .lp-banner a { display: block; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
 .lp-banner img { display: block; width: 100%; height: auto; }
